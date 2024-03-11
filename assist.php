@@ -1,0 +1,204 @@
+<html lang="en">
+<head>
+  <title>assist</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #chat-container {
+      width: 1300px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    #chat-messages {
+      height: 300px;
+      overflow-y: scroll;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    #input-container {
+      display: flex;
+      margin-top: 10px;
+    }
+    #input-message {
+      flex: 1;
+      padding: 5px;
+    }
+    #send-button {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+.d1
+{
+text-align: center;
+}
+
+    #video-container {
+        margin-top: 20px;
+    }
+    video {
+        width: 100%;
+        height: auto;
+    }
+  </style>
+</head>
+<body>
+<div>
+<marquee style="color:red">u can ask any to TWSS  assistance</marquee>
+</div>
+<div id="chat-container">
+    <div id="chat-messages"></div>
+    <div id="input-container">
+      <input type="text" id="input-message" placeholder="Type your message...">
+      <button id="send-button">Send</button>
+    </div>
+  </div>
+<div class="d1">
+<h2>For search of any exam or about courses u can search here</h2>
+</div>
+<div class="d2">
+<form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+<input type="text" name="query" placeholder="enter filename">
+<button type="submit">enter</button>
+</form>
+</div>
+<script>
+    const chatMessages = document.getElementById('chat-messages');
+    const inputMessage = document.getElementById('input-message');
+    const sendButton = document.getElementById('send-button');
+    // Function to add a message to the chat interface
+    function addMessage(message, sender) {
+      const newMessage = document.createElement('div');
+      newMessage.innerHTML = `<strong>${sender}:</strong> ${message}`;
+      chatMessages.appendChild(newMessage);
+    }
+
+    // Event listener for when the send button is clicked
+    sendButton.addEventListener('click', function() {
+      const message = inputMessage.value.trim();
+      if (message !== '') {
+        addMessage(message, 'You');
+        inputMessage.value = '';
+
+        // Send message to  (Here you would make an API call to )
+        // For demonstration purposes, we'll just simulate a response after a short delay
+        setTimeout(function() {
+   
+if(message=="hi")
+{
+response1="hi";
+          addMessage(response1, 'assistant');
+}
+else
+{
+ const newMessage1 = document.createElement('div');
+response1="open this";
+response2="ur details are matched with this link";
+          addMessage(response1, 'assistant');
+var a=document.createElement('a');
+var link=document.createTextNode("click");
+a.appendChild(link);
+a.title="click on this";
+a.href="https://www.google.com/search?"+"q="+message; 
+chatMessages.appendChild(a);
+}
+  
+        }, 1000);
+      }
+    });
+
+  
+    setTimeout(function() {
+      const greeting = "Hello! How can I assist you today?";
+      addMessage(greeting, 'assistant');
+    }, 500);
+</script>
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") 
+{
+ $redirectOption = $_POST["query"];
+$redirectOption1 =  $redirectOption;
+ $redirectOption3 = 'ex';
+if($redirectOption1!==" "  &&  str_contains($redirectOption1 ,$redirectOption3))
+{
+ switch ($redirectOption)
+ {
+        case "cexam":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/validate2.php/");
+            break;
+         case "javaexam":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/validate2.php/");
+            break;
+      case "c++exam":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/validate2.php/");
+            break;
+}
+}
+else
+{
+ switch ($redirectOption)
+ {
+        case "c":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/c.php/");
+            break;
+         case "c++":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/c++.php/");
+            break;
+      case "java":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/java.php/");
+            break;
+      case "python":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/python.php/");
+            break;
+      case "html":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/html.php/");
+            break;
+      case "php":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/php1.php/");
+            break;
+      case "data structures":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/data.php/");
+            break;
+      case "operating systems":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/os.php/");
+            break;
+      case "java script":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/javascript.php/");
+            break;
+      case "css":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/css.php/");
+            break;
+      case "angular js":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/as.php/");
+            break;
+      case "networking":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/networking.php/");
+            break;
+      case "data base":
+ $_SESSION['cname'] = $_POST["email"];
+            header("Location: http://localhost/database.php/");
+            break;
+}
+}
+}
+?>
+</body>
+</html>

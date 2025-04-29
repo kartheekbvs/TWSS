@@ -89,6 +89,22 @@ nav {
     animation: fadeInUp 1s ease;
 }
 
+.profile-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    border: 4px solid white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .typewriter {
     font-size: 1.5rem;
     margin-bottom: 2rem;
@@ -110,6 +126,27 @@ nav {
 
 .social-links a:hover {
     transform: translateY(-3px);
+}
+
+.download-resume {
+    margin-top: 2rem;
+}
+
+.download-btn {
+    background-color: white;
+    color: #0984e3;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.download-btn:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* About Section */
@@ -532,12 +569,18 @@ footer {
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
+            <div class="profile-photo">
+                <img src="https://media.licdn.com/dms/image/v2/D4D03AQHRpgg8szguaA/profile-displayphoto-shrink_200_200/B4DZST2xRXHUAY-/0/1737647399645?e=1751500800&v=beta&t=3pTnHcXTUf4nI7ZeAAFy_bkIt93t7loJCGPMcRKrSXI" alt="Kartheek BVS">
+            </div>
             <h1>Hi, I'm Kartheek BVS</h1>
             <p class="typewriter"></p>
             <div class="social-links">
                 <a href="https://www.linkedin.com/in/kartheek-bvs-2a82562b9/" target="_blank"><i class="fab fa-linkedin"></i></a>
-                <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://github.com/kartheekbvs" target="_blank"><i class="fab fa-github"></i></a>
                 <a href="#" target="_blank"><i class="fas fa-envelope"></i></a>
+            </div>
+            <div class="download-resume">
+                <a href="resume.pdf" download class="download-btn"><i class="fas fa-download"></i> Download Resume</a>
             </div>
         </div>
     </section>
@@ -699,7 +742,7 @@ footer {
             
             <div class="project-card">
                 <div class="project-info">
-                    <h3>Student Record Management System</h3>
+                    <h3>TWSSKAT</h3>
                     <p class="project-desc">Built an application to manage student data with search, filter, and secure login. Implemented database schemas and validations for real-time data accuracy.</p>
                 </div>
             </div>

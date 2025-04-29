@@ -935,5 +935,17 @@ footer {
             }
         });
     </script>
+    <script>
+  document.onkeydown = function(e) {
+    if (
+      e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S') ||
+      e.key === 'F12' ||
+      (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i'))
+    ) {
+      return false;
+    }
+  };
+</script>
+
 </body>
 </html>

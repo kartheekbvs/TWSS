@@ -794,16 +794,16 @@ footer {
         <div class="contact-content">
             <form id="contact-form">
                 <div class="form-group">
-                    <input type="text" placeholder="Your Name" required>
+                    <input type="text" placeholder="Your Name" name="name" required>
                 </div>
                 <div class="form-group">
-                    <input type="email" placeholder="Your Email" required>
+                    <input type="email" placeholder="Your Email" name="email" required>
                 </div>
                 <div class="form-group">
-                    <input type="text" placeholder="Subject">
+                    <input type="text" placeholder="Subject" name="subject" >
                 </div>
                 <div class="form-group">
-                    <textarea placeholder="Your Message" required></textarea>
+                    <textarea placeholder="Your Message" name="message" required></textarea>
                 </div>
                 <button type="submit">Send Message</button>
             </form>
@@ -951,6 +951,59 @@ footer {
 <script>
   document.addEventListener('contextmenu', event => event.preventDefault());
 </script>
+ <script>
+        // Initialize EmailJS with your user ID (you need to sign up at emailjs.com)
+        (function() {
+            emailjs.init("YOUR_USER_ID"); // Replace with your actual EmailJS user ID
+        })();
 
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Send email to yourself (site owner)
+            emailjs.send(
+                "service_ood6pkb", // Replace with your EmailJS service ID
+                "template_ri7qwvd", // Replace with your EmailJS template ID for site owner notification
+                {
+                    from_name: name,
+                    from_email: email,
+                    subject: subject,
+                    message: message
+                }
+            ).then(function() {
+                console.log('Email to site owner sent successfully');
+                
+                // Send thank you email to the user
+                return emailjs.send(
+                    "YOUR_SERVICE_ID", // Replace with your EmailJS service ID
+                    "YOUR_THANK_YOU_TEMPLATE_ID", // Replace with your EmailJS template ID for thank you emails
+                    {
+                        to_name: name,
+                        to_email: email,
+                        subject: "Thank you for contacting me"
+                    }
+                );
+            }).then(function() {
+                console.log('Thank you email sent successfully');
+                document.getElementById('contact-form').reset();
+                document.getElementById('success-message').style.display = 'block';
+                setTimeout(function() {
+                    document.getElementById('success-message').style.display = 'none';
+                }, 5000);
+            }).catch(function(error) {
+                console.error('Error:', error);
+                document.getElementById('error-message').style.display = 'block';
+                setTimeout(function() {
+                    document.getElementById('error-message').style.display = 'none';
+                }, 5000);
+            });
+        });
+    </script>
 </body>
 </html>

@@ -794,21 +794,28 @@ footer {
     <section id="contact" class="contact">
         <h2>Contact Me</h2>
         <div class="contact-content">
-            <form id="contact-form">
-                <div class="form-group">
-                    <input type="text" placeholder="Your Name" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" placeholder="Your Email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="subject" placeholder="Subject" name="subject" >
-                </div>
-                <div class="form-group">
-                    <textarea placeholder="Your Message"  id="message" name="message" required></textarea>
-                </div>
-                <button type="submit">Send Message</button>
-            </form>
+        <form id="contact-form">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" required>
+        </div>
+        <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+        </div>
+        <button type="submit">Send Message</button>
+    </form>
+    <p id="success-message">Thank you for your message! I'll contact you soon.</p>
+    <p id="error-message">Something went wrong. Please try again later.</p>
+
         </div>
     </section>
 
@@ -943,47 +950,58 @@ footer {
 <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 
 <script>
-  // Initialize EmailJS
   (function() {
-    emailjs.init("3BMbctG8PLkgdT2XV"); // Replace with your actual EmailJS public key
-  })();
+            emailjs.init("YOUR_USER_ID"); // Replace with your actual EmailJS user ID
+        })();
 
-  const contactForm = document.getElementById('contact-form');
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Send email to yourself (site owner)
+            emailjs.send(
+                "service_ood6pkb", // Replace with your EmailJS service ID
+                "template_ri7qwvd", // Replace with your EmailJS template ID for site owner notification
+                {
+                    from_name: name,
+                    from_email: email,
+                    subject: subject,
+                    message: message
+                }
+            ).then(function() {
+                console.log('Email to site owner sent successfully');
+                
+                // Send thank you email to the user
+                return emailjs.send(
+                    "YOUR_SERVICE_ID", // Replace with your EmailJS service ID
+                    "YOUR_THANK_YOU_TEMPLATE_ID", // Replace with your EmailJS template ID for thank you emails
+                    {
+                        to_name: name,
+                        to_email: email,
+                        subject: "Thank you for contacting me"
+                    }
+                );
+            }).then(function() {
+                console.log('Thank you email sent successfully');
+                document.getElementById('contact-form').reset();
+                document.getElementById('success-message').style.display = 'block';
+                setTimeout(function() {
+                    document.getElementById('success-message').style.display = 'none';
+                }, 5000);
+            }).catch(function(error) {
+                console.error('Error:', error);
+                document.getElementById('error-message').style.display = 'block';
+                setTimeout(function() {
+                    document.getElementById('error-message').style.display = 'none';
+                }, 5000);
+            });
+        });
 
-  contactForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    // Get form data
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const subject = document.getElementById('subject').value;
-    const message = document.getElementById('message').value;
-
-    // Send email to site owner
-    emailjs.send("service_ood6pkb", "template_ri7qwvd", {
-      from_name: name,
-      from_email: email,
-      subject: subject,
-      message: message
-    })
-    .then(function() {
-      console.log('Email sent successfully');
-      document.getElementById('contact-form').reset();
-      document.getElementById('success-message').style.display = 'block';
-      document.getElementById('error-message').style.display = 'none';
-      setTimeout(() => {
-        document.getElementById('success-message').style.display = 'none';
-      }, 5000);
-    })
-    .catch(function(error) {
-      console.error('Email error:', error);
-      document.getElementById('error-message').style.display = 'block';
-      document.getElementById('success-message').style.display = 'none';
-      setTimeout(() => {
-        document.getElementById('error-message').style.display = 'none';
-      }, 5000);
-    });
-  });
 </script>
 
 

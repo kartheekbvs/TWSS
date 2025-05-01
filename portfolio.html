@@ -950,57 +950,71 @@ footer {
 <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 
 <script>
-  (function() {
-            emailjs.init("YOUR_USER_ID"); // Replace with your actual EmailJS user ID
-        })();
+// Initialize EmailJS
+(function() {
+  // Initialize the EmailJS SDK as early as possible in your application
+  emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your actual EmailJS public key
+})();
 
-        document.getElementById('contact-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Get form data
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
-            
-            // Send email to yourself (site owner)
-            emailjs.send(
-                "service_ood6pkb", // Replace with your EmailJS service ID
-                "template_ri7qwvd", // Replace with your EmailJS template ID for site owner notification
-                {
-                    from_name: name,
-                    from_email: email,
-                    subject: subject,
-                    message: message
-                }
-            ).then(function() {
-                console.log('Email to site owner sent successfully');
-                
-                // Send thank you email to the user
-                return emailjs.send(
-                    "YOUR_SERVICE_ID", // Replace with your EmailJS service ID
-                    "YOUR_THANK_YOU_TEMPLATE_ID", // Replace with your EmailJS template ID for thank you emails
-                    {
-                        to_name: name,
-                        to_email: email,
-                        subject: "Thank you for contacting me"
-                    }
-                );
-            }).then(function() {
-                console.log('Thank you email sent successfully');
-                document.getElementById('contact-form').reset();
-                document.getElementById('success-message').style.display = 'block';
-                setTimeout(function() {
-                    document.getElementById('success-message').style.display = 'none';
-                }, 5000);
-            }).catch(function(error) {
-                console.error('Error:', error);
-                document.getElementById('error-message').style.display = 'block';
-                setTimeout(function() {
-                    document.getElementById('error-message').style.display = 'none';
-                }, 5000);
-            });
-        });
+// Hide success and error messages initially
+document.getElementById('success-message').style.display = 'none';
+document.getElementById('error-message').style.display = 'none';
+
+// Contact form submission handler
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+  
+  // Show loading state
+  const submitButton = this.querySelector('button[type="submit"]');
+  const originalButtonText = submitButton.textContent;
+  submitButton.textContent = 'Sending...';
+  submitButton.disabled = true;
+  
+  // Get form data
+  const templateParams = {
+    from_name: document.getElementById('name').value,
+    from_email: document.getElementById('email').value,
+    subject: document.getElementById('subject').value,
+    message: document.getElementById('message').value
+  };
+  
+  // Send email using EmailJS
+  emailjs.send(
+    'service_ood6pkb', // Your EmailJS service ID
+    'template_ri7qwvd', // Your EmailJS template ID
+    templateParams
+  )
+  .then(function(response) {
+    console.log('SUCCESS!', response.status, response.text);
+    
+    // Reset form
+    document.getElementById('contact-form').reset();
+    
+    // Show success message
+    document.getElementById('success-message').style.display = 'block';
+    
+    // Hide success message after 5 seconds
+    setTimeout(function() {
+      document.getElementById('success-message').style.display = 'none';
+    }, 5000);
+  })
+  .catch(function(error) {
+    console.error('FAILED...', error);
+    
+    // Show error message
+    document.getElementById('error-message').style.display = 'block';
+    
+    // Hide error message after 5 seconds
+    setTimeout(function() {
+      document.getElementById('error-message').style.display = 'none';
+    }, 5000);
+  })
+  .finally(function() {
+    // Reset button state
+    submitButton.textContent = originalButtonText;
+    submitButton.disabled = false;
+  });
+});
 
 </script>
 

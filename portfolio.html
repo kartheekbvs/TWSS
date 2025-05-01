@@ -1028,33 +1028,7 @@ footer {
                     submitBtn.disabled = false;
                 });
                 
-         /*
-            const templateParams = {
-                from_name: document.getElementById('name').value,
-                from_email: document.getElementById('email').value,
-                subject: document.getElementById('subject').value,
-                message: document.getElementById('message').value
-            };
-            
-            emailjs.send('service_ood6pkb', 'template_ri7qwvd', templateParams)
-                .then(function(response) {
-                    console.log('SUCCESS!', response.status, response.text);
-                    form.reset();
-                    successMsg.style.display = 'block';
-                    setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
-                })
-                .catch(function(error) {
-                    console.error('FAILED...', error);
-                    if (error.text) {
-                        errorMsg.textContent = "Error: " + error.text;
-                    }
-                    errorMsg.style.display = 'block';
-                })
-                .finally(function() {
-                    submitBtn.textContent = originalBtnText;
-                    submitBtn.disabled = false;
-                });
-            */
+       
         });
     });
 </script>

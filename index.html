@@ -18,8 +18,9 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
-            background-color: #ffffff;
+            background-color: #f7f7f7;
             min-height: 100vh;
+            position: relative;
         }
         
         .container {
@@ -28,26 +29,66 @@
             padding: 0 20px;
         }
         
-        /* Header styles - Black like Expedia */
+        /* Diagonal design elements */
+        .diagonal-divider {
+            height: 80px;
+            background: #FFDD00;
+            position: absolute;
+            width: 100%;
+            transform: skewY(-3deg);
+            z-index: -1;
+        }
+        
+        .diagonal-top {
+            top: 280px;
+        }
+        
+        .diagonal-bottom {
+            bottom: 220px;
+            background: #000;
+        }
+        
+        /* Header styles */
         header {
-            background-color: #000000;
-            color: #fff;
-            padding: 15px 0;
+            background-color: #000;
+            padding: 0;
             position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .nav-stripe {
+            height: 8px;
+            background: #FFDD00;
+            width: 100%;
         }
         
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 15px 0;
         }
         
         .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #FFCE00; /* Expedia yellow */
+            font-size: 26px;
+            font-weight: 800;
+            color: #fff;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            letter-spacing: 0.5px;
+        }
+        
+        .logo::before {
+            content: "│";
+            color: #FFDD00;
+            font-size: 30px;
+            margin-right: 10px;
+            font-weight: 300;
+        }
+        
+        .logo span {
+            color: #FFDD00;
         }
         
         /* Desktop Navigation */
@@ -58,34 +99,30 @@
         .desktop-nav ul {
             display: flex;
             list-style: none;
+            background: rgba(255,221,0,0.1);
+            border-radius: 25px;
+            padding: 0 10px;
         }
         
         .desktop-nav ul li {
-            margin-left: 20px;
+            margin: 0 5px;
         }
         
         .desktop-nav ul li a {
             color: #fff;
             text-decoration: none;
             font-weight: 500;
-            padding: 10px 5px;
-            position: relative;
+            padding: 8px 15px;
+            border-radius: 20px;
             transition: all 0.3s ease;
+            display: block;
+            font-size: 14px;
+            letter-spacing: 0.5px;
         }
         
-        .desktop-nav ul li a:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: #FFCE00; /* Expedia yellow */
-            transition: width 0.3s ease;
-        }
-        
-        .desktop-nav ul li a:hover:after {
-            width: 100%;
+        .desktop-nav ul li a:hover {
+            background-color: #FFDD00;
+            color: #000;
         }
         
         /* Mobile Navigation */
@@ -112,7 +149,7 @@
             display: block;
             width: 100%;
             height: 3px;
-            background-color: #FFCE00; /* Expedia yellow */
+            background-color: #FFDD00;
             border-radius: 3px;
             transition: all 0.3s ease;
         }
@@ -123,10 +160,11 @@
             right: 0;
             background-color: #000;
             width: 250px;
-            border-radius: 4px;
+            border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             overflow: hidden;
             display: none;
+            border: 2px solid #FFDD00;
         }
         
         .dropdown-menu.active {
@@ -143,8 +181,8 @@
         }
         
         .dropdown-menu a:hover {
-            background-color: #222;
-            color: #FFCE00; /* Expedia yellow */
+            background-color: #FFDD00;
+            color: #000;
         }
         
         .dropdown-menu hr {
@@ -153,72 +191,245 @@
             margin: 0;
         }
         
-        /* Marquee styles - Yellow like Expedia */
+        /* Announcement styles */
         .announcement {
-            background-color: #FFCE00; /* Expedia yellow */
-            color: #000;
-            padding: 10px 0;
+            background-color: #000;
+            color: #FFDD00;
+            padding: 12px 0;
             text-align: center;
             font-weight: 600;
+            letter-spacing: 0.5px;
+            border-bottom: 4px solid #FFDD00;
+            border-top: 1px solid #333;
         }
         
         .announcement marquee {
-            padding: 5px 0;
+            padding: 0;
         }
         
-        /* Hero section - Black background with white text */
+        /* Hero section */
         .hero {
-            padding: 100px 0;
+            padding: 100px 0 120px;
             text-align: center;
-            color: #ffffff;
-            background-color: #000000;
-            margin: 50px 0;
-            border-top: 5px solid #FFCE00; /* Yellow accent */
-            border-bottom: 5px solid #FFCE00; /* Yellow accent */
+            color: #000;
+            background-color: #fff;
+            margin: 40px 0 80px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 8px;
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: #FFDD00;
+        }
+        
+        .hero::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 70%;
+            height: 20px;
+            background: #FFDD00;
+            transform: skewX(-20deg) translateX(30px);
         }
         
         .hero h1 {
-            font-size: 36px;
+            font-size: 42px;
             margin-bottom: 15px;
-            color: #FFCE00; /* Expedia yellow */
+            color: #000;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero h1::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 30%;
+            width: 40%;
+            height: 5px;
+            background: #FFDD00;
         }
         
         .hero h3 {
             font-size: 24px;
             margin-bottom: 20px;
-            color: #ffffff;
+            color: #444;
         }
         
         .hero p {
             max-width: 800px;
-            margin: 0 auto 30px;
+            margin: 0 auto 40px;
             font-size: 18px;
-            line-height: 1.6;
-            color: #ffffff;
+            line-height: 1.7;
+            color: #555;
+        }
+        
+        .hero-accent {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            background: #FFDD00;
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .hero-accent-2 {
+            position: absolute;
+            bottom: 80px;
+            left: 50px;
+            width: 150px;
+            height: 150px;
+            background: #FFDD00;
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 0;
         }
         
         .registration-links {
             margin-top: 30px;
+            position: relative;
+            z-index: 2;
         }
         
         .btn {
             display: inline-block;
-            padding: 12px 24px;
-            background-color: #FFCE00; /* Expedia yellow */
-            color: #000;
+            padding: 14px 32px;
+            background-color: #000;
+            color: #fff;
             text-decoration: none;
-            border-radius: 4px;
-            font-weight: 700;
+            border-radius: 50px;
+            font-weight: 600;
             margin: 10px;
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -50px;
+            width: 40px;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            transform: skewX(-30deg);
+            transition: 0.8s;
+            filter: blur(5px);
+        }
+        
+        .btn:hover::before {
+            left: 200%;
         }
         
         .btn:hover {
-            background-color: #FFD930;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(255,206,0,0.3);
+            background-color: #FFDD00;
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .btn-primary {
+            background-color: #FFDD00;
+            color: #000;
+        }
+        
+        .btn-primary:hover {
+            background-color: #000;
+            color: #fff;
+        }
+        
+        /* Features section */
+        .features {
+            background: #fff;
+            padding: 60px 0;
+            margin-bottom: 80px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .features-heading {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .features-heading h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .features-heading h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 30%;
+            width: 40%;
+            height: 3px;
+            background: #FFDD00;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-bottom: 3px solid #FFDD00;
+        }
+        
+        .feature-icon {
+            background: #000;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: #FFDD00;
+            font-size: 24px;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .feature-card p {
+            color: #666;
+            font-size: 14px;
         }
         
         /* Assistance button */
@@ -226,47 +437,136 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            padding: 12px 20px;
-            background-color: #FFCE00; /* Expedia yellow */
-            color: #000;
+            padding: 15px 25px;
+            background-color: #000;
+            color: #fff;
             text-decoration: none;
-            border-radius: 30px;
-            font-weight: 700;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             display: flex;
             align-items: center;
             transition: all 0.3s ease;
+            z-index: 10;
+            letter-spacing: 0.5px;
         }
         
         .assistance-btn i {
-            margin-right: 8px;
+            margin-right: 10px;
+            color: #FFDD00;
+            font-size: 18px;
         }
         
         .assistance-btn:hover {
-            background-color: #FFD930;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            background-color: #FFDD00;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .assistance-btn:hover i {
+            color: #000;
         }
         
         /* Footer */
         footer {
-            background-color: #000000;
+            background-color: #000;
             color: #fff;
-            padding: 20px 0;
+            padding: 40px 0 20px;
             text-align: center;
-            margin-top: 50px;
+            position: relative;
+            margin-top: 100px;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: #FFDD00;
         }
         
         footer a {
-            color: #FFCE00;
+            color: #FFDD00;
             text-decoration: none;
+            font-weight: 600;
         }
         
         footer a:hover {
             text-decoration: underline;
         }
         
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        
+        .footer-logo span {
+            color: #FFDD00;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #FFDD00;
+            text-decoration: none;
+        }
+        
+        .footer-social {
+            margin: 20px 0;
+        }
+        
+        .footer-social a {
+            display: inline-block;
+            margin: 0 10px;
+            width: 40px;
+            height: 40px;
+            background: #222;
+            border-radius: 50%;
+            line-height: 40px;
+            text-align: center;
+            color: #FFDD00;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-social a:hover {
+            background: #FFDD00;
+            color: #000;
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            border-top: 1px solid #222;
+            padding-top: 20px;
+            font-size: 14px;
+            color: #999;
+        }
+        
         /* Responsive styles */
+        @media (max-width: 992px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
         @media (max-width: 768px) {
             .desktop-nav {
                 display: none;
@@ -277,12 +577,12 @@
             }
             
             .hero {
-                padding: 60px 20px;
-                margin: 20px 0;
+                padding: 60px 20px 80px;
+                margin: 20px 0 60px;
             }
             
             .hero h1 {
-                font-size: 28px;
+                font-size: 32px;
             }
             
             .hero h3 {
@@ -291,6 +591,10 @@
             
             .hero p {
                 font-size: 16px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
             }
             
             .registration-links {
@@ -303,25 +607,64 @@
                 width: 80%;
                 margin: 8px 0;
             }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            
+            .diagonal-divider {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 20px;
+            }
+            
+            .hero h1 {
+                font-size: 26px;
+            }
+            
+            .hero p {
+                font-size: 14px;
+            }
+            
+            .assistance-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Diagonal design elements -->
+    <div class="diagonal-divider diagonal-top"></div>
+    <div class="diagonal-divider diagonal-bottom"></div>
+    
     <header>
+        <div class="nav-stripe"></div>
         <div class="container">
             <div class="header-content">
-                <a href="#" class="logo">TWSS INTERNSHIP</a>
+                <a href="#" class="logo">TWSS <span>INTERNSHIP</span></a>
                 
                 <!-- Desktop Navigation -->
                 <nav class="desktop-nav">
                     <ul>
-                        <li><a href="http://localhost/registration.php/">Registration</a></li>
-                        <li><a href="http://localhost/intern.php">Internship</a></li>
-                        <li><a href="http://localhost/training.php">Training</a></li>
-                        <li><a href="http://localhost/validate2.php">Attend Exam</a></li>
-                        <li><a href="http://localhost/certification.php">Certification</a></li>
-                        <li><a href="http://localhost/about.php">About</a></li>
-                        <li><a href="http://localhost/contactus.php">Contact Us</a></li>
+                        <li><a href="/registration.php/">Registration</a></li>
+                        <li><a href="/intern.php">Internship</a></li>
+                        <li><a href="/training.php">Training</a></li>
+                        <li><a href="/validate2.php">Attend Exam</a></li>
+                        <li><a href="/certification.php">Certification</a></li>
+                        <li><a href="/about.php">About</a></li>
+                        <li><a href="/contactus.php">Contact Us</a></li>
                     </ul>
                 </nav>
                 
@@ -333,17 +676,17 @@
                         <span></span>
                     </button>
                     <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="http://localhost/validate1.php">Login</a>
-                        <a href="http://localhost/validate.php">Sign In</a>
+                        <a href="/validate1.php">Login</a>
+                        <a href="/validate.php">Sign In</a>
                         <hr>
-                        <a href="http://localhost/registration.php/">Registration</a>
-                        <a href="http://localhost/intern.php">Internship</a>
-                        <a href="http://localhost/training.php">Training</a>
-                        <a href="http://localhost/validate2.php">Attend Exam</a>
-                        <a href="http://localhost/certification.php">Certification</a>
-                        <a href="http://localhost/about.php">About</a>
-                        <a href="http://localhost/contactus.php">Contact Us</a>
-                        <a href="http://localhost/hr1.php">Home</a>
+                        <a href="/registration.php/">Registration</a>
+                        <a href="/intern.php">Internship</a>
+                        <a href="/training.php">Training</a>
+                        <a href="/validate2.php">Attend Exam</a>
+                        <a href="/certification.php">Certification</a>
+                        <a href="/about.php">About</a>
+                        <a href="/contactus.php">Contact Us</a>
+                        <a href="/hr1.php">Home</a>
                     </div>
                 </div>
             </div>
@@ -354,26 +697,76 @@
         <marquee direction="left">Note: Registration is only for details of a candidate. For conductance of exam please kindly login</marquee>
     </div>
     
-    <section class="hero">
-        <div class="container">
+    <div class="container">
+        <section class="hero">
+            <div class="hero-accent"></div>
+            <div class="hero-accent-2"></div>
             <h1>Give the Best Start to Your Career</h1>
             <h3>Learn, practice, and get hired!</h3>
             <p>A 50-day transformational journey to help your college students meet their career goals while you win exciting rewards and learn real-world skills like marketing, communication & leadership</p>
             
             <div class="registration-links">
-                <a href="http://localhost/student.php" class="btn">Student Registration</a>
+                <a href="http://localhost/student.php" class="btn btn-primary">Student Registration</a>
                 <a href="http://localhost/college.php" class="btn">College Registration</a>
             </div>
-        </div>
-    </section>
+        </section>
+        
+        <section class="features">
+            <div class="features-heading">
+                <h2>Why Choose TWSS Internship?</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>Practical Skills</h3>
+                    <p>Gain hands-on experience with industry-relevant projects and tools that employers demand.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3>Certification</h3>
+                    <p>Earn recognized certifications that validate your skills and enhance your resume.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3>Job Placement</h3>
+                    <p>Connect with our network of hiring partners looking for fresh talent with proven abilities.</p>
+                </div>
+            </div>
+        </section>
+    </div>
     
-    <a href="http://localhost/assist.php" class="assistance-btn">
+    <a href="/assist.html" class="assistance-btn">
         <i class="fas fa-headset"></i> TWSS Assistance
     </a>
     
     <footer>
         <div class="container">
-            <p>&copy; 2024 TWSS. All rights reserved. DEVELOPED BY <a href="https://twsskat.vercel.app/portfolio.html">KARTHEEK</a></p>
+            <div class="footer-content">
+                <div class="footer-logo">TWSS <span>INTERNSHIP</span></div>
+                <div class="footer-links">
+                    <a href="/privacy.php">Privacy Policy</a>
+                    <a href="/terms.php">Terms of Service</a>
+                    <a href="/faq.php">FAQs</a>
+                    <a href="/contactus.php">Support</a>
+                </div>
+            </div>
+            
+            <div class="footer-social">
+                <a href=""><i class="fab fa-facebook-f"></i></a>
+                <a href="x.com/kartheekbvs"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/in/kartheek-bvs-2a82562b9/"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://www.instagram.com/kartheek3693/"><i class="fab fa-instagram"></i></a>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 TWSS. All rights reserved. DEVELOPED BY <a href="https://twsskat.vercel.app/portfolio.html">KARTHEEK</a></p>
+            </div>
         </div>
     </footer>
     

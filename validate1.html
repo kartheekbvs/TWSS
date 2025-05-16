@@ -106,18 +106,20 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div class="login-form">
-        <h2>Login</h2>
-        <form id="loginForm">
-            <input type="text" id="email" name="email" placeholder="User ID" required>
-            <div class="password-container">
-                <input type="password" name="password" id="password" placeholder="Password" required>
-                <span id="togglePassword" onclick="togglePasswordVisibility()" class="password-toggle">👁️</span>
-            </div>
-            <button type="submit">Login</button>
-        </form>
-        <div id="statusMessage" class="status-message"></div>
-    </div>
+  <form id="loginForm">
+    <input type="text" id="email" placeholder="Enter ID" required />
+    <input type="password" id="password" placeholder="Enter Password" required />
+    <span id="togglePassword" onclick="togglePasswordVisibility()">🔒</span>
+    <button type="submit">Login</button>
+</form>
+
+<div id="statusMessage" class="status-message" style="display:none;"></div>
+
+<!-- Loading overlay (optional) -->
+<div id="loadingOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#00000088;color:white;text-align:center;padding-top:20%;">
+    Loading...
+</div>
+
 
     <!-- Loading indicator -->
     <div id="loadingOverlay">
@@ -127,42 +129,20 @@
         </div>
     </div>
 
-    <script>
-        
-        
-        // Show/hide loading overlay functions
-        function showLoading() {
-            document.getElementById('loadingOverlay').style.display = 'block';
-        }
-        
-        function hideLoading() {
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
-        
-        function togglePasswordVisibility() {
-            var passwordInput = document.getElementById("password");
-            var toggleIcon = document.getElementById("togglePassword");
-            
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                toggleIcon.textContent = "👁️";
-            } else {
-                passwordInput.type = "password";
-                toggleIcon.textContent = "🔒";
-            }
-        }
-        
-      
-    </script>
-    <script>
-    const SUPABASE_URL = 'https://ctmmhxkuckvseqzzonzm.supabase.co';
-    const SUPABASE_ANON_KEY = 'your_anon_key_here';  // You had it right, just hide it in production
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <!-- Include Supabase client library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+    const SUPABASE_URL = 'https://ctmmhxkuckvseqzzonzm.supabase.co';
+    const SUPABASE_ANON_KEY = 'your_anon_key_here'; // 👈 REPLACE with your real anon key
+    const supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY); // Fixed this
+
+    // Setup login form listener
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('loginForm').addEventListener('submit', handleLogin);
     });
 
+    // Handle login
     async function handleLogin(e) {
         e.preventDefault();
 
@@ -172,7 +152,7 @@
         showLoading();
 
         try {
-            const { data, error } = await supabaseClient
+            const { data, error } = await supabase
                 .from('auth')
                 .select('*')
                 .eq('id', userId)
@@ -183,53 +163,75 @@
             if (error) {
                 console.error("Supabase query error:", error);
                 statusMsg.textContent = 'Login failed due to server error.';
-                statusMsg.className = 'status-message error';
                 statusMsg.style.display = 'block';
                 return;
             }
 
-            if (data && data.length > 0) {
-                console.log("Login success:", data);
+            if (data.length > 0) {
+                console.log("Login successful:", data);
                 statusMsg.textContent = 'Login successful!';
-                statusMsg.className = 'status-message success';
                 statusMsg.style.display = 'block';
-                sessionStorage.setItem('user', JSON.stringify({ userId: data[0].id, isLoggedIn: true }));
-                setTimeout(() => {
-                    window.location.href = 'http://localhost/hr1.php/';
-                }, 1500);
+                sessionStorage.setItem('user', JSON.stringify({ userId: data[0].id }));
+                setTimeout(() => window.location.href = 'http://localhost/hr1.php/', 1500);
             } else {
-                console.warn("No matching user found.");
                 statusMsg.textContent = 'Invalid username or password.';
-                statusMsg.className = 'status-message error';
                 statusMsg.style.display = 'block';
             }
         } catch (err) {
             hideLoading();
-            console.error("Unexpected login error:", err);
-            statusMsg.textContent = 'Error: ' + err.message;
-            statusMsg.className = 'status-message error';
+            console.error("Unexpected error:", err);
+            statusMsg.textContent = 'Unexpected error: ' + err.message;
             statusMsg.style.display = 'block';
         }
     }
-</script>
-<script>
+
+    // Utility Functions
+    function showLoading() {
+        document.getElementById('loadingOverlay').style.display = 'block';
+    }
+
+    function hideLoading() {
+        document.getElementById('loadingOverlay').style.display = 'none';
+    }
+
+    function togglePasswordVisibility() {
+        var passwordInput = document.getElementById("password");
+        var toggleIcon = document.getElementById("togglePassword");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.textContent = "👁️";
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.textContent = "🔒";
+        }
+    }
+
+    function createSupabaseClient(url, key) {
+        try {
+            return window.supabase.createClient(url, key);
+        } catch (e) {
+            alert("Supabase not loaded properly.");
+            throw e;
+        }
+    }
+
+    // Optional: Insert test user (delete after running once)
     async function insertTestUser() {
-        const { data, error } = await supabaseClient
+        const { data, error } = await supabase
             .from('auth')
-            .insert([
-                { id: 'admin1', pass: '1234' } // Your credentials
-            ]);
+            .insert([{ id: 'admin1', pass: '1234' }]);
 
         if (error) {
             console.error("Insert Error:", error.message);
         } else {
-            console.log("Inserted successfully:", data);
+            console.log("User inserted:", data);
         }
     }
 
-    // Call once to insert test user (you can delete this after)
-    insertTestUser();
+    // Uncomment below line ONLY ONCE to insert a test user, then comment it out
+    // insertTestUser();
 </script>
+
 
 </body>
 </html>

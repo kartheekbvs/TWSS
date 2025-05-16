@@ -1,9 +1,4 @@
-
-
-
-
-
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Login Form with Supabase</title>
@@ -106,12 +101,12 @@
                     // Show loading indicator
                     showLoading();
                     
-                    // Query the database to check if credentials match
+                    // Query the auth table to check if credentials match
                     const { data, error } = await supabaseClient
-                        .from('validate') // Use your actual table name
+                        .from('auth')  // Using your auth table
                         .select('*')
-                        .eq('email', email)
-                        .eq('password', password)
+                        .eq('email', email)  // Assuming email column exists
+                        .eq('password', password)  // Assuming password column exists
                         .single();
                     
                     // Hide loading indicator
@@ -128,6 +123,13 @@
                         statusMsg.className = 'status-message success';
                         statusMsg.style.display = 'block';
                         
+                        // Store user info in session storage or local storage (optional)
+                        sessionStorage.setItem('user', JSON.stringify({
+                            email: data.email,
+                            userId: data.id, // Assuming id column exists
+                            isLoggedIn: true
+                        }));
+                        
                         // Redirect after successful login
                         setTimeout(() => {
                             window.location.href = '/dashboard'; // Change to your destination page
@@ -140,6 +142,9 @@
                     }
                     
                 } catch (error) {
+                    // Hide loading indicator
+                    hideLoading();
+                    
                     // Show error message
                     statusMsg.textContent = 'Error: ' + error.message;
                     statusMsg.className = 'status-message error';

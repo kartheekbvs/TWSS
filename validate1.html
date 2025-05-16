@@ -128,10 +128,7 @@
     </div>
 
     <script>
-        // Initialize Supabase client with your actual key
-        const SUPABASE_URL = 'https://ctmmhxkuckvseqzzonzm.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0bW1oeGt1Y2t2c2VxenpvbnptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0MTc5MjIsImV4cCI6MjA2Mjk5MzkyMn0.eQLaCEY0Vd-Rk1U2u7BVrzeg5Abb6fRedUS4EvVqnuc';
-        let supabaseClient;
+        
         
         // Show/hide loading overlay functions
         function showLoading() {
@@ -155,84 +152,84 @@
             }
         }
         
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                // Initialize Supabase when document is ready
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                console.log("Supabase client initialized successfully");
-                
-                // Add form submission handler
-                document.getElementById('loginForm').addEventListener('submit', handleLogin);
-            } catch (error) {
-                console.error("Error initializing Supabase client:", error);
-                const statusMsg = document.getElementById('statusMessage');
-                statusMsg.textContent = 'Error connecting to the server. Please try again later.';
-                statusMsg.className = 'status-message error';
-                statusMsg.style.display = 'block';
-            }
-        });
-        
-        async function handleLogin(e) {
-            e.preventDefault();
-            
-            const userId = document.getElementById('email').value;  // Using email field for user ID
-            const userPass = document.getElementById('password').value;
-            const statusMsg = document.getElementById('statusMessage');
-            
-            try {
-                // Show loading indicator
-                showLoading();
-                
-                // Query the auth table to check if credentials match
-                const { data, error } = await supabaseClient
-                    .from('auth')  // Using your auth table
-                    .select('*')
-                    .eq('id', userId)  // Using id column
-                    .eq('pass', userPass);  // Using pass column
-                
-                // Hide loading indicator
-                hideLoading();
-                
-                if (error) {
-                    console.error("Query error:", error);
-                    throw error;
-                }
-                
-                // Check if user exists (data should be an array)
-                if (data && data.length > 0) {
-                    // Valid credentials - login successful
-                    statusMsg.textContent = 'Login successful!';
-                    statusMsg.className = 'status-message success';
-                    statusMsg.style.display = 'block';
-                    
-                    // Store user info in session storage or local storage (optional)
-                    sessionStorage.setItem('user', JSON.stringify({
-                        userId: data[0].id,
-                        isLoggedIn: true
-                    }));
-                    
-                    // Redirect after successful login
-                    setTimeout(() => {
-                        window.location.href = 'http://localhost/hr1.php/';
-                    }, 1500);
-                } else {
-                    // Invalid credentials
-                    statusMsg.textContent = 'Invalid username or password';
-                    statusMsg.className = 'status-message error';
-                    statusMsg.style.display = 'block';
-                }
-                
-            } catch (error) {
-                // Hide loading indicator
-                hideLoading();
-                
-                // Show error message
-                statusMsg.textContent = 'Error: ' + (error.message || 'Unknown error occurred');
-                statusMsg.className = 'status-message error';
-                statusMsg.style.display = 'block';
-                console.error('Login error:', error);
-            }
-        }
+      
     </script>
+    <script>
+    const SUPABASE_URL = 'https://ctmmhxkuckvseqzzonzm.supabase.co';
+    const SUPABASE_ANON_KEY = 'your_anon_key_here';  // You had it right, just hide it in production
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+    });
+
+    async function handleLogin(e) {
+        e.preventDefault();
+
+        const userId = document.getElementById('email').value.trim();
+        const userPass = document.getElementById('password').value.trim();
+        const statusMsg = document.getElementById('statusMessage');
+        showLoading();
+
+        try {
+            const { data, error } = await supabaseClient
+                .from('auth')
+                .select('*')
+                .eq('id', userId)
+                .eq('pass', userPass);
+
+            hideLoading();
+
+            if (error) {
+                console.error("Supabase query error:", error);
+                statusMsg.textContent = 'Login failed due to server error.';
+                statusMsg.className = 'status-message error';
+                statusMsg.style.display = 'block';
+                return;
+            }
+
+            if (data && data.length > 0) {
+                console.log("Login success:", data);
+                statusMsg.textContent = 'Login successful!';
+                statusMsg.className = 'status-message success';
+                statusMsg.style.display = 'block';
+                sessionStorage.setItem('user', JSON.stringify({ userId: data[0].id, isLoggedIn: true }));
+                setTimeout(() => {
+                    window.location.href = 'http://localhost/hr1.php/';
+                }, 1500);
+            } else {
+                console.warn("No matching user found.");
+                statusMsg.textContent = 'Invalid username or password.';
+                statusMsg.className = 'status-message error';
+                statusMsg.style.display = 'block';
+            }
+        } catch (err) {
+            hideLoading();
+            console.error("Unexpected login error:", err);
+            statusMsg.textContent = 'Error: ' + err.message;
+            statusMsg.className = 'status-message error';
+            statusMsg.style.display = 'block';
+        }
+    }
+</script>
+<script>
+    async function insertTestUser() {
+        const { data, error } = await supabaseClient
+            .from('auth')
+            .insert([
+                { id: 'admin1', pass: '1234' } // Your credentials
+            ]);
+
+        if (error) {
+            console.error("Insert Error:", error.message);
+        } else {
+            console.log("Inserted successfully:", data);
+        }
+    }
+
+    // Call once to insert test user (you can delete this after)
+    insertTestUser();
+</script>
+
 </body>
 </html>

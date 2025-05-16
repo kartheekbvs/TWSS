@@ -80,9 +80,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
-        // Initialize Supabase client
+        // Initialize Supabase client with your actual key
         const SUPABASE_URL = 'https://ctmmhxkuckvseqzzonzm.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0bW1oeGt1Y2t2c2VxenpvbnptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0MTc5MjIsImV4cCI6MjA2Mjk5MzkyMn0.eQLaCEY0Vd-Rk1U2u7BVrzeg5Abb6fRedUS4EvVqnuc'; // Replace with your actual anon key
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0bW1oeGt1Y2t2c2VxenpvbnptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0MTc5MjIsImV4cCI6MjA2Mjk5MzkyMn0.eQLaCEY0Vd-Rk1U2u7BVrzeg5Abb6fRedUS4EvVqnuc';
         
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize Supabase when document is ready
@@ -131,7 +131,7 @@
                         
                         // Redirect after successful login
                         setTimeout(() => {
-                            window.location.href = '/dashboard'; // Change to your destination page
+                            window.location.href = 'http://localhost/hr1.php/'; // Changed to match your original redirect
                         }, 1500);
                     } else {
                         // Invalid credentials

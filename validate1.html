@@ -1,4 +1,9 @@
-<!DOCTYPE html>
+
+
+
+
+
+        <!DOCTYPE html>
 <html>
 <head>
     <title>Login Form with Supabase</title>
@@ -86,7 +91,8 @@
         
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize Supabase when document is ready
-            const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const { createClient } = supabase;
+            const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
             // Add form submission handler
             document.getElementById('loginForm').addEventListener('submit', async function(e) {
@@ -97,24 +103,41 @@
                 const statusMsg = document.getElementById('statusMessage');
                 
                 try {
-                    // Insert login data into Supabase table
-                    const { data, error } = await supabase
-                        .from('validate') // Use your actual table name
-                        .insert([{ email: email, password: password }]);
+                    // Show loading indicator
+                    showLoading();
                     
-                    if (error) {
+                    // Query the database to check if credentials match
+                    const { data, error } = await supabaseClient
+                        .from('validate') // Use your actual table name
+                        .select('*')
+                        .eq('email', email)
+                        .eq('password', password)
+                        .single();
+                    
+                    // Hide loading indicator
+                    hideLoading();
+                    
+                    if (error && error.code !== 'PGRST116') { // PGRST116 means no rows returned
                         throw error;
                     }
                     
-                    // Show success message
-                    statusMsg.textContent = 'Login successful!';
-                    statusMsg.className = 'status-message success';
-                    statusMsg.style.display = 'block';
-                    
-                    // Redirect after successful login (optional)
-                    setTimeout(() => {
-                        window.location.href = 'https://twsskat.vercel.app/mysqltutorial.html'; // Change to your destination page
-                    }, 1500);
+                    // Check if user exists
+                    if (data) {
+                        // Valid credentials - login successful
+                        statusMsg.textContent = 'Login successful!';
+                        statusMsg.className = 'status-message success';
+                        statusMsg.style.display = 'block';
+                        
+                        // Redirect after successful login
+                        setTimeout(() => {
+                            window.location.href = '/dashboard'; // Change to your destination page
+                        }, 1500);
+                    } else {
+                        // Invalid credentials
+                        statusMsg.textContent = 'Invalid username or password';
+                        statusMsg.className = 'status-message error';
+                        statusMsg.style.display = 'block';
+                    }
                     
                 } catch (error) {
                     // Show error message
@@ -153,5 +176,31 @@
         </form>
         <div id="statusMessage" class="status-message"></div>
     </div>
+
+    <!-- Loading indicator -->
+    <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center;">
+            <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; margin: 0 auto 15px; animation: spin 2s linear infinite;"></div>
+            <p>Verifying credentials...</p>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+    <script>
+        // Show/hide loading overlay
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'block';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+    </script>
 </body>
 </html>

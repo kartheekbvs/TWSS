@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -74,164 +75,84 @@
             background-color: #f8d7da;
             color: #721c24;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #loadingOverlay {
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-color: rgba(0,0,0,0.5); 
-            z-index: 1000;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3; 
-            border-top: 4px solid #3498db; 
-            border-radius: 50%; 
-            width: 30px; 
-            height: 30px; 
-            margin: 0 auto 15px; 
-            animation: spin 2s linear infinite;
-        }
     </style>
     
     <!-- Import Supabase JS library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Initialize Supabase client
+        const SUPABASE_URL = 'https://ctmmhxkuckvseqzzonzm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0bW1oeGt1Y2t2c2VxenpvbnptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0MTc5MjIsImV4cCI6MjA2Mjk5MzkyMn0.eQLaCEY0Vd-Rk1U2u7BVrzeg5Abb6fRedUS4EvVqnuc'; // Replace with your actual anon key
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Supabase when document is ready
+            const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            // Add form submission handler
+            document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const statusMsg = document.getElementById('statusMessage');
+                
+                try {
+                    // Insert login data into Supabase table
+                    const { data, error } = await supabase
+                        .from('validate') // Use your actual table name
+                        .insert([{ email: email, password: password }]);
+                    
+                    if (error) {
+                        throw error;
+                    }
+                    
+                    // Show success message
+                    statusMsg.textContent = 'Login successful!';
+                    statusMsg.className = 'status-message success';
+                    statusMsg.style.display = 'block';
+                    
+                    // Redirect after successful login (optional)
+                    setTimeout(() => {
+                        window.location.href = '/mysqltutorial.html'; // Change to your destination page
+                    }, 1500);
+                    
+                } catch (error) {
+                    // Show error message
+                    statusMsg.textContent = 'Error: ' + error.message;
+                    statusMsg.className = 'status-message error';
+                    statusMsg.style.display = 'block';
+                    console.error('Login error:', error);
+                }
+            });
+        });
+
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById("password");
+            var toggleIcon = document.getElementById("togglePassword");
+            
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.textContent = "👁️";
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.textContent = "🔒";
+            }
+        }
+    </script>
 </head>
 <body>
-  <form id="loginForm">
-    <input type="text" id="email" placeholder="Enter ID" required />
-    <input type="password" id="password" placeholder="Enter Password" required />
-    <span id="togglePassword" onclick="togglePasswordVisibility()">🔒</span>
-    <button type="submit">Login</button>
-</form>
-
-<div id="statusMessage" class="status-message" style="display:none;"></div>
-
-<!-- Loading overlay (optional) -->
-<div id="loadingOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#00000088;color:white;text-align:center;padding-top:20%;">
-    Loading...
-</div>
-
-
-    <!-- Loading indicator -->
-    <div id="loadingOverlay">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center;">
-            <div class="spinner"></div>
-            <p>Verifying credentials...</p>
-        </div>
+    <div class="login-form">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="email" name="email" placeholder="Username" required>
+            <div class="password-container">
+                <input type="password" name="password" id="password" placeholder="Password" required>
+                <span id="togglePassword" onclick="togglePasswordVisibility()" class="password-toggle">👁️</span>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div id="statusMessage" class="status-message"></div>
     </div>
-
-    <!-- Include Supabase client library -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-    const SUPABASE_URL = 'https://ctmmhxkuckvseqzzonzm.supabase.co';
-    const SUPABASE_ANON_KEY = 'your_anon_key_here'; // 👈 REPLACE with your real anon key
-    const supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY); // Fixed this
-
-    // Setup login form listener
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('loginForm').addEventListener('submit', handleLogin);
-    });
-
-    // Handle login
-    async function handleLogin(e) {
-        e.preventDefault();
-
-        const userId = document.getElementById('email').value.trim();
-        const userPass = document.getElementById('password').value.trim();
-        const statusMsg = document.getElementById('statusMessage');
-        showLoading();
-
-        try {
-            const { data, error } = await supabase
-                .from('auth')
-                .select('*')
-                .eq('id', userId)
-                .eq('pass', userPass);
-
-            hideLoading();
-
-            if (error) {
-                console.error("Supabase query error:", error);
-                statusMsg.textContent = 'Login failed due to server error.';
-                statusMsg.style.display = 'block';
-                return;
-            }
-
-            if (data.length > 0) {
-                console.log("Login successful:", data);
-                statusMsg.textContent = 'Login successful!';
-                statusMsg.style.display = 'block';
-                sessionStorage.setItem('user', JSON.stringify({ userId: data[0].id }));
-                setTimeout(() => window.location.href = 'http://localhost/hr1.php/', 1500);
-            } else {
-                statusMsg.textContent = 'Invalid username or password.';
-                statusMsg.style.display = 'block';
-            }
-        } catch (err) {
-            hideLoading();
-            console.error("Unexpected error:", err);
-            statusMsg.textContent = 'Unexpected error: ' + err.message;
-            statusMsg.style.display = 'block';
-        }
-    }
-
-    // Utility Functions
-    function showLoading() {
-        document.getElementById('loadingOverlay').style.display = 'block';
-    }
-
-    function hideLoading() {
-        document.getElementById('loadingOverlay').style.display = 'none';
-    }
-
-    function togglePasswordVisibility() {
-        var passwordInput = document.getElementById("password");
-        var toggleIcon = document.getElementById("togglePassword");
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            toggleIcon.textContent = "👁️";
-        } else {
-            passwordInput.type = "password";
-            toggleIcon.textContent = "🔒";
-        }
-    }
-
-    function createSupabaseClient(url, key) {
-        try {
-            return window.supabase.createClient(url, key);
-        } catch (e) {
-            alert("Supabase not loaded properly.");
-            throw e;
-        }
-    }
-
-    // Optional: Insert test user (delete after running once)
-    async function insertTestUser() {
-        const { data, error } = await supabase
-            .from('auth')
-            .insert([{ id: 'admin1', pass: '1234' }]);
-
-        if (error) {
-            console.error("Insert Error:", error.message);
-        } else {
-            console.log("User inserted:", data);
-        }
-    }
-
-    // Uncomment below line ONLY ONCE to insert a test user, then comment it out
-    // insertTestUser();
-</script>
-
-
 </body>
 </html>

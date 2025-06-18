@@ -8,14 +8,7 @@
 <title>Kartheek BVS - Portfolio</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style type="text/css">
-    body {
-    padding-top: 0px; /* Adjust based on your nav height */
-    line-height: 1.6;
-    color: #ffffff;
-    background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
-    background-attachment: fixed;
-    min-height: 100vh;
-}
+    
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -120,8 +113,10 @@ nav.scrolled {
     background: transparent;
     color: white;
     text-align: center;
-    padding: 80px 2rem 0 2rem;
+    padding: 0 2rem;
     position: relative;
+    padding-top: 100px; /* Add space for fixed nav */
+    box-sizing: border-box; /* Important: include padding in height calculation */
 }
 
 .hero::before {

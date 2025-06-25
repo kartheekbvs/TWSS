@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login Form with Supabase</title>
+    <title>Login Form </title>
     <style>
         body {
             display: flex;
@@ -85,12 +85,12 @@
     
     <script>
         // Initialize Supabase client with your new project URL and anon key
-        const SUPABASE_URL = 'https://fzwvxesrtdilljgrntpw.supabase.co'; //
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'; //
+        const SUPABASE_URL = 'https://fzwvxesrtdilljgrntpw.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'; 
         
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize Supabase when document is ready
-            const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); // Corrected 'supabase' to 'Supabase'
+            const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
             // Add form submission handler
             document.getElementById('loginForm').addEventListener('submit', async function(e) {
@@ -101,41 +101,44 @@
                 const statusMsg = document.getElementById('statusMessage');
                 
                 try {
-                    // Perform user login using Supabase authentication
-                    // This uses Supabase's built-in authentication system, not a direct table insert
-                    const { data, error } = await supabase.auth.signInWithPassword({
-                        email: email,
-                        password: password,
-                    });
+                    // *** WARNING: This directly inserts unhashed passwords into your table. ***
+                    // *** This is NOT the secure way to handle user login/authentication. ***
+                    // *** For secure user login, use supabase.auth.signInWithPassword or signUp. ***
+
+                    // Insert login data into your 'users_login' table
+                    // You must have Row Level Security (RLS) policies configured on 'users_login'
+                    // to allow inserts from authenticated (or anonymous, if you permit) users.
+                    const { data, error } = await supabase
+                        .from('users_login') // Use your actual table name as shown in the screenshot
+                        .insert([
+                            { 
+                                email: email, 
+                                password: password 
+                                // id and created_at columns are typically handled by Supabase defaults
+                                // if you've set them up as primary key, auto-incrementing, and default timestamps.
+                            }
+                        ]);
                     
                     if (error) {
                         throw error;
                     }
                     
-                    // Check if user data exists after successful sign-in
-                    if (data.user) {
-                        // Show success message
-                        statusMsg.textContent = 'Login successful! Welcome, ' + data.user.email;
-                        statusMsg.className = 'status-message success';
-                        statusMsg.style.display = 'block';
-                        
-                        // Redirect after successful login (optional)
-                        setTimeout(() => {
-                            window.location.href = '/mysqltutorial.html'; // Change to your destination page
-                        }, 1500);
-                    } else {
-                        // This case might happen if signInWithPassword succeeds but returns no user (e.g., email not confirmed)
-                        statusMsg.textContent = 'Login successful, but no user session found. Please check your email for confirmation or try again.';
-                        statusMsg.className = 'status-message error'; // Treat as error for user attention
-                        statusMsg.style.display = 'block';
-                    }
+                    // Show success message
+                    statusMsg.textContent = 'Data inserted into users_login table successfully!';
+                    statusMsg.className = 'status-message success';
+                    statusMsg.style.display = 'block';
+                    
+                    // Redirect after successful operation (optional)
+                    setTimeout(() => {
+                        window.location.href = '/mysqltutorial.html'; // Change to your destination page
+                    }, 1500);
                     
                 } catch (error) {
                     // Show error message
                     statusMsg.textContent = 'Error: ' + error.message;
                     statusMsg.className = 'status-message error';
                     statusMsg.style.display = 'block';
-                    console.error('Login error:', error);
+                    console.error('Operation error:', error);
                 }
             });
         });
@@ -146,10 +149,10 @@
             
             if (passwordInput.type === "password") {
                 passwordInput.type = "text";
-                toggleIcon.textContent = "🔒"; // Change icon to lock when visible
+                toggleIcon.textContent = "🔒"; 
             } else {
                 passwordInput.type = "password";
-                toggleIcon.textContent = "👁️"; // Change icon to eye when hidden
+                toggleIcon.textContent = "👁️"; 
             }
         }
     </script>

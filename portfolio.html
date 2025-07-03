@@ -8,14 +8,53 @@
 <title>Kartheek BVS - Portfolio</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style type="text/css">
-     #pdfViewer {
-    display: none; /* hide initially */
-    width: 100%;
-    height: 600px;
-    border: none;
-    margin-top: 20px;
-  }
+ 
 /* Reset and Base Styles */
+
+     /* Resume Modal styles */
+.modal {
+  display: none; 
+  position: fixed;
+  z-index: 10000; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.8);
+}
+
+.modal-content {
+  background-color: #222;
+  margin: 5% auto;
+  padding: 10px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 800px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.modal-content iframe {
+  width: 100%;
+  height: 500px;
+  border: none;
+  margin-bottom: 10px;
+}
+
+.close-btn {
+  color: #fff;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.close-btn:hover {
+  color: #ccc;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -751,12 +790,16 @@ footer {
 <a href="mailto:bvskartheek83@gmail.com" target="_blank"><i class="fas fa-envelope"></i></a>
 </div>
 <div class="download-resume">
-    <a href="#" onclick="showPDF(); return false;">View PDF</a>
+  <a href="#" class="download-btn" onclick="showResume(); return false;">View Resume</a>
+</div>
 
-<iframe id="pdfViewer"></iframe>
-
-
- 
+<!-- Resume Modal -->
+<div id="resumeModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeResume()">&times;</span>
+    <iframe src="" id="resumeFrame"></iframe>
+    <a href="/resume (2).pdf" download class="download-btn">Download PDF</a>
+  </div>
 </div>
 </div>
 </section>
@@ -1086,13 +1129,17 @@ window.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-    <script>
-function showPDF() {
-  var pdfFrame = document.getElementById('pdfViewer');
-  pdfFrame.src = '/resume (2).pdf'; // adjust path to your PDF
-  pdfFrame.style.display = 'block';
+     <script>
+  function showResume() {
+  document.getElementById('resumeFrame').src = '/resume (2).pdf'; // replace with correct path
+  document.getElementById('resumeModal').style.display = 'block';
 }
-</script>
 
+function closeResume() {
+  document.getElementById('resumeModal').style.display = 'none';
+  document.getElementById('resumeFrame').src = ''; // stop loading PDF
+}
+
+     </script>
 </body>
 </html>

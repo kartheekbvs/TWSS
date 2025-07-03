@@ -8,7 +8,13 @@
 <title>Kartheek BVS - Portfolio</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style type="text/css">
-    
+     #pdfViewer {
+    display: none; /* hide initially */
+    width: 100%;
+    height: 600px;
+    border: none;
+    margin-top: 20px;
+  }
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -745,7 +751,12 @@ footer {
 <a href="mailto:bvskartheek83@gmail.com" target="_blank"><i class="fas fa-envelope"></i></a>
 </div>
 <div class="download-resume">
-    <iframe src="/resume (2).pdf" width="100%" height="600px"></iframe>
+    <a href="#" onclick="showPDF(); return false;">View PDF</a>
+
+<iframe id="pdfViewer"></iframe>
+
+
+ 
 </div>
 </div>
 </section>
@@ -1074,6 +1085,13 @@ window.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+</script>
+    <script>
+function showPDF() {
+  var pdfFrame = document.getElementById('pdfViewer');
+  pdfFrame.src = '/resume (2).pdf'; // adjust path to your PDF
+  pdfFrame.style.display = 'block';
+}
 </script>
 
 </body>

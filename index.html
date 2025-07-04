@@ -41,7 +41,7 @@
         .profile-icon {
             width: 32px;
             height: 32px;
-            background-color: #4CAF50; /* Green background for user icon */
+            background-color: #4CAF50; /* Green background for user icon if image fails */
             color: white;
             border-radius: 50%;
             display: flex;
@@ -49,6 +49,13 @@
             justify-content: center;
             font-size: 16px;
             margin-right: 8px;
+            overflow: hidden; /* Ensure image fits within circle */
+        }
+
+        .profile-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover the area, cropping if necessary */
         }
 
         .profile-btn span {
@@ -108,7 +115,7 @@
             color: #888;
             cursor: pointer; /* Indicate it's clickable */
             padding: 5px 0;
-            border-radius: 5px;
+            border-radius: 50px; /* Rounded corners for the clickable area */
             transition: background-color 0.2s ease;
         }
 
@@ -563,7 +570,8 @@
                     <div class="profile-dropdown" id="profileDropdown">
                         <div class="profile-btn" onclick="toggleProfileMenu()">
                             <div class="profile-icon">
-                                <i class="fas fa-user"></i>
+                                <!-- Replaced Font Awesome icon with a placeholder image -->
+                                <img src="https://placehold.co/32x32/4CAF50/ffffff?text=U" alt="User Profile">
                             </div>
                             <span id="profileName">User</span>
                         </div>
@@ -769,20 +777,16 @@
         const REQUIRED_EMAIL_DOMAIN = '@twss.jyot';
 
         // Helper function to normalize email
-        function normalizeEmail(email) {
+        function normalizeEmail(email, isSignup = false) {
             email = email.toLowerCase().trim();
-            // If the email already contains '@', check if it ends with the required domain.
-            // If it doesn't, or if it doesn't contain '@' at all, append the required domain.
-            if (email.includes('@')) {
-                if (!email.endsWith(REQUIRED_EMAIL_DOMAIN)) {
-                    // This case handles user@gmail.com -> user@gmail.com@twss.jyot
-                    // If you want to strictly *replace* non-twss.jyot domains,
-                    // you'd need more complex logic here (e.g., email.split('@')[0] + REQUIRED_EMAIL_DOMAIN)
-                    // For now, based on previous interpretation, it appends.
-                    return email + REQUIRED_EMAIL_DOMAIN;
-                }
-            } else {
-                // Handles 'username' -> 'username@twss.jyot'
+            // If it's a signup and the email contains '@' but doesn't end with the required domain,
+            // we assume the user intends to use that domain, but we'll still append our domain for consistency
+            // as per previous instructions (e.g., user@gmail.com becomes user@gmail.com@twss.jyot).
+            // If it doesn't contain '@' at all, or if it's for login, we always append/ensure @twss.jyot.
+            if (!email.includes('@')) {
+                return email + REQUIRED_EMAIL_DOMAIN;
+            } else if (!email.endsWith(REQUIRED_EMAIL_DOMAIN)) {
+                // If an email with a different domain is provided, append our required domain.
                 return email + REQUIRED_EMAIL_DOMAIN;
             }
             return email;
@@ -829,7 +833,7 @@
             const password = document.getElementById('loginPassword').value;
 
             // Ensure email ends with the required domain for login lookup
-            email = normalizeEmail(email);
+            email = normalizeEmail(email, false); // Not for signup
 
             try {
                 const { data, error } = await supabaseClient
@@ -896,7 +900,7 @@
         // Enhanced signup function with turtle points and email domain enforcement
         async function signup() {
             const name = document.getElementById('signupName').value;
-            let email = document.getElementById('signupEmail').value.toLowerCase().trim(); // Convert to lowercase and trim
+            let email = document.getElementById('signupEmail').value; // Get raw email
             const password = document.getElementById('signupPassword').value;
             const confirmPassword = document.getElementById('signupConfirmPassword').value;
 
@@ -908,13 +912,7 @@
             }
 
             // Enforce @twss.jyot domain for signup
-            if (!email.endsWith(REQUIRED_EMAIL_DOMAIN)) {
-                // If it doesn't end with the required domain, append it.
-                // This means "user" becomes "user@twss.jyot", "user@gmail.com" becomes "user@gmail.com@twss.jyot"
-                // For strict validation, you might want to prevent non-@twss.jyot emails entirely.
-                // For this request, I'll append it.
-                email += REQUIRED_EMAIL_DOMAIN;
-            }
+            email = normalizeEmail(email, true); // Pass true for signup to handle domain enforcement
 
             try {
                 // Check if user already exists
@@ -970,7 +968,10 @@
         // Logout function
         function logout() {
             localStorage.removeItem('loggedInUser');
-            localStorage.removeItem('lastLogin_' + profileEmailDiv.textContent); // Clear last login for that user
+            // Ensure profileEmailDiv exists before trying to clear its last login
+            if (profileEmailDiv) {
+                localStorage.removeItem('lastLogin_' + profileEmailDiv.textContent); 
+            }
             checkAuthState(); // Update UI
             profileMenu.classList.remove('active'); // Close dropdown
             window.location.href = '/'; // Redirect to home page or login page

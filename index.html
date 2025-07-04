@@ -6,7 +6,443 @@
     <title>TWSS INTERNSHIP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-   <link rel="stylesheet" href="index.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="index.css">
+    <style>
+        /* Custom CSS for the profile section and turtle frame */
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .profile-dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #f0f0f0;
+            border-radius: 9999px; /* Full rounded */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .profile-btn:hover {
+            background-color: #e0e0e0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #3b82f6; /* Blue border */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #bfdbfe; /* Light blue background for icon */
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-image .fas {
+            font-size: 1.5rem;
+            color: #1e40af; /* Darker blue for icon */
+        }
+
+        .profile-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background-color: #fff;
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 1rem;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .profile-dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .profile-info {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .profile-name {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .turtle-points {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4b5563;
+            font-size: 0.875rem;
+            cursor: pointer; /* Make it clickable */
+            padding: 0.25rem 0; /* Add padding for better click area */
+            border-radius: 0.5rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .turtle-points:hover {
+            background-color: #f3f4f6;
+        }
+
+        .turtle-icon {
+            width: 20px;
+            height: 20px;
+            background-image: url('https://placehold.co/20x20/008000/ffffff?text=%F0%9F%90%A2'); /* Green turtle emoji placeholder */
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #ef4444; /* Red */
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #dc2626; /* Darker red */
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .auth-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .auth-btn:first-child {
+            background-color: #3b82f6; /* Blue */
+            color: white;
+            border: none;
+        }
+
+        .auth-btn:first-child:hover {
+            background-color: #2563eb; /* Darker blue */
+            transform: translateY(-1px);
+        }
+
+        .auth-btn:last-child {
+            background-color: #e5e7eb; /* Light gray */
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .auth-btn:last-child:hover {
+            background-color: #d1d5db; /* Darker light gray */
+            transform: translateY(-1px);
+        }
+
+        /* Turtle Frame (Side Panel) */
+        .turtle-frame-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .turtle-frame-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .turtle-frame {
+            position: fixed;
+            top: 0;
+            right: -400px; /* Hidden by default */
+            width: 350px; /* Adjust width as needed */
+            height: 100%;
+            background-color: #fff;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 2500;
+            transition: right 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #e5e7eb;
+        }
+
+        .turtle-frame.active {
+            right: 0;
+        }
+
+        .turtle-frame-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #a7f3d0 0%, #34d399 100%); /* Green gradient */
+            color: #10b981;
+            border-bottom: 1px solid #d1d5db;
+            position: relative;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .turtle-frame-close {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #10b981;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+
+        .turtle-frame-close:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .turtle-frame-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: #065f46;
+        }
+
+        .turtle-frame-title .turtle-icon {
+            width: 30px;
+            height: 30px;
+            background-image: url('https://placehold.co/30x30/008000/ffffff?text=%F0%9F%90%A2'); /* Larger turtle emoji */
+        }
+
+        .turtle-frame-subtitle {
+            font-size: 0.9rem;
+            color: #065f46;
+            margin-top: 0.25rem;
+            opacity: 0.8;
+        }
+
+        .turtle-frame-content {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            background-color: #f9fafb;
+        }
+
+        .points-display {
+            text-align: center;
+            margin-bottom: 2rem;
+            background-color: #ecfdf5; /* Light green background */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #d1fae5;
+        }
+
+        .points-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #10b981; /* Green */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .points-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .points-label {
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .points-display .points-label {
+            color: #065f46;
+        }
+
+        .points-section {
+            background-color: #fff;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .points-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .points-activity {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed #e5e7eb;
+        }
+
+        .points-activity:last-child {
+            border-bottom: none;
+        }
+
+        .activity-name {
+            color: #374151;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .activity-points {
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .activity-points.positive {
+            color: #10b981; /* Green for positive points */
+        }
+
+        /* Points Notification */
+        .points-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            color: #b8860b;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(253, 203, 110, 0.4);
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .points-notification-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .points-notification .turtle-icon {
+            width: 24px;
+            height: 24px;
+            background-image: url('https://placehold.co/24x24/008000/ffffff?text=%F0%9F%90%A2');
+        }
+
+        .notification-points {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #8b5c00;
+        }
+
+        .notification-reason {
+            font-size: 0.85rem;
+            color: #a16207;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .header-content {
+                justify-content: space-between;
+            }
+
+            .profile-section {
+                order: 1; /* Move profile section to the left on mobile */
+                margin-right: auto; /* Push it to the left */
+            }
+
+            .auth-buttons {
+                display: none; /* Hide auth buttons on mobile, handled by modal */
+            }
+
+            .profile-dropdown-menu {
+                left: 0; /* Align to left on mobile */
+                right: auto;
+                min-width: unset;
+                width: calc(100% - 2rem); /* Full width minus padding */
+                margin-left: 1rem;
+                margin-right: 1rem;
+                transform: translateY(-10px);
+            }
+
+            .turtle-frame {
+                width: 100%; /* Full width on mobile */
+                right: -100%;
+            }
+
+            .turtle-frame.active {
+                right: 0;
+            }
+
+            .turtle-frame-close {
+                left: unset;
+                right: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Diagonal design elements -->
@@ -35,17 +471,18 @@
                 <!-- Profile Section -->
                 <div class="profile-section">
                     <!-- Profile Dropdown (when logged in) -->
-                    <div class="profile-dropdown" id="profileDropdown">
+                    <div class="profile-dropdown" id="profileDropdown" style="display: none;">
                         <div class="profile-btn" onclick="toggleProfileMenu()">
-                            <div class="profile-icon">
-                                <i class="fas fa-user"></i>
+                            <div class="profile-image">
+                                <!-- Placeholder image or user's profile picture -->
+                                <img id="profileImage" src="https://placehold.co/40x40/cccccc/333333?text=P" alt="Profile">
                             </div>
                             <span id="profileName">User</span>
                         </div>
                         <div class="profile-dropdown-menu" id="profileMenu">
                             <div class="profile-info">
                                 <div class="profile-name" id="profileFullName">John Doe</div>
-                                <div class="turtle-points">
+                                <div class="turtle-points" onclick="openTurtleFrame()">
                                     <div class="turtle-icon"></div>
                                     <span id="turtlePoints">250</span> Turtle Points
                                 </div>
@@ -55,7 +492,7 @@
                     </div>
 
                     <!-- Auth Buttons (when not logged in) -->
-                    <div class="auth-buttons" id="authButtons">
+                    <div class="auth-buttons" id="authButtons" style="display: flex;">
                         <button class="auth-btn" onclick="openAuthModal('login')">Login</button>
                         <button class="auth-btn" onclick="openAuthModal('signup')">Sign Up</button>
                     </div>
@@ -76,6 +513,28 @@
                         <a href="#" onclick="checkAuth('/certification.php')">Certification</a>
                         <a href="#" onclick="checkAuth('/about.php')">About</a>
                         <a href="#" onclick="checkAuth('/contactus.php')">Contact Us</a>
+                        <!-- Add login/signup for mobile if not already present -->
+                        <div class="mobile-auth-links" id="mobileAuthLinks" style="display: none;">
+                            <hr class="my-2">
+                            <a href="#" onclick="openAuthModal('login'); closeMobileMenu();">Login</a>
+                            <a href="#" onclick="openAuthModal('signup'); closeMobileMenu();">Sign Up</a>
+                        </div>
+                        <div class="mobile-profile-info" id="mobileProfileInfo" style="display: none;">
+                            <hr class="my-2">
+                            <div class="flex items-center gap-2 px-4 py-2">
+                                <div class="profile-image">
+                                    <img id="mobileProfileImage" src="https://placehold.co/40x40/cccccc/333333?text=P" alt="Profile">
+                                </div>
+                                <span class="font-semibold" id="mobileProfileName">User</span>
+                            </div>
+                            <a href="#" onclick="openTurtleFrame(); closeMobileMenu();">
+                                <div class="turtle-points px-4 py-2">
+                                    <div class="turtle-icon"></div>
+                                    <span id="mobileTurtlePoints">250</span> Turtle Points
+                                </div>
+                            </a>
+                            <a href="#" onclick="logout(); closeMobileMenu();">Logout</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -220,6 +679,11 @@
             }
         });
 
+        // Function to close mobile menu
+        function closeMobileMenu() {
+            dropdownMenu.classList.remove('active');
+        }
+
         // Supabase client initialization (replace with your actual Supabase details)
         const SUPABASE_URL = 'https://fzwvxesrtdilljgrntpw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U';
@@ -239,6 +703,13 @@
         const profileFullNameDiv = document.getElementById('profileFullName');
         const turtlePointsSpan = document.getElementById('turtlePoints');
         const authButtons = document.getElementById('authButtons');
+        const profileImage = document.getElementById('profileImage'); // Desktop profile image
+        const mobileProfileImage = document.getElementById('mobileProfileImage'); // Mobile profile image
+        const mobileProfileName = document.getElementById('mobileProfileName'); // Mobile profile name
+        const mobileTurtlePoints = document.getElementById('mobileTurtlePoints'); // Mobile turtle points
+        const mobileAuthLinks = document.getElementById('mobileAuthLinks');
+        const mobileProfileInfo = document.getElementById('mobileProfileInfo');
+
 
         let redirectAfterAuth = null;
 
@@ -408,11 +879,23 @@
                 profileFullNameDiv.textContent = user.full_name;
                 turtlePointsSpan.textContent = user.turtle_points || 0; // Display turtle points
 
+                // Update profile image (using a placeholder or actual image if available)
+                profileImage.src = user.profile_picture || "https://placehold.co/40x40/cccccc/333333?text=P";
+                mobileProfileImage.src = user.profile_picture || "https://placehold.co/40x40/cccccc/333333?text=P";
+                mobileProfileName.textContent = user.full_name;
+                mobileTurtlePoints.textContent = user.turtle_points || 0;
+
+
                 profileDropdown.style.display = 'block';
                 authButtons.style.display = 'none';
+                mobileAuthLinks.style.display = 'none';
+                mobileProfileInfo.style.display = 'block';
+
             } else {
                 profileDropdown.style.display = 'none';
                 authButtons.style.display = 'flex';
+                mobileAuthLinks.style.display = 'block';
+                mobileProfileInfo.style.display = 'none';
             }
         }
 
@@ -458,7 +941,7 @@ function createTurtleFrame() {
     turtleFrame.className = 'turtle-frame';
     turtleFrame.innerHTML = `
         <div class="turtle-frame-header">
-            <button class="turtle-frame-close" onclick="closeTurtleFrame()">×</button>
+            <button class="turtle-frame-close" onclick="closeTurtleFrame()">&times;</button>
             <div class="turtle-frame-title">
                 <div class="turtle-icon"></div>
                 Turtle Points
@@ -517,11 +1000,11 @@ function createTurtleFrame() {
             <div class="points-section">
                 <h3>Achievements</h3>
                 <div class="points-activity">
-                    <span class="activity-name">🎯 First Steps</span>
+                    <span class="activity-name">🏆 First Steps</span>
                     <span class="activity-points">Unlocked</span>
                 </div>
                 <div class="points-activity">
-                    <span class="activity-name">🏆 Learning Enthusiast</span>
+                    <span class="activity-name">🏅 Learning Enthusiast</span>
                     <span class="activity-points">250+ Points</span>
                 </div>
                 <div class="points-activity">
@@ -594,6 +1077,10 @@ async function updateTurtlePoints(pointsToAdd, reason) {
         if (turtlePointsSpan) {
             turtlePointsSpan.textContent = newPoints;
         }
+        const mobileTurtlePoints = document.getElementById('mobileTurtlePoints');
+        if (mobileTurtlePoints) {
+            mobileTurtlePoints.textContent = newPoints;
+        }
         
         // Show notification
         showPointsNotification(pointsToAdd, reason);
@@ -615,22 +1102,6 @@ function showPointsNotification(points, reason) {
                 <div class="notification-reason">${reason}</div>
             </div>
         </div>
-    `;
-    
-    // Add styles
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-        color: #b8860b;
-        padding: 1rem 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(253, 203, 110, 0.4);
-        z-index: 3000;
-        transform: translateX(400px);
-        transition: transform 0.3s ease;
-        font-weight: 600;
     `;
     
     document.body.appendChild(notification);
@@ -721,7 +1192,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add click event to turtle points section
     setTimeout(() => {
-        const turtlePointsDiv = document.querySelector('.turtle-points');
+        const turtlePointsDiv = document.querySelector('.profile-dropdown .turtle-points');
         if (turtlePointsDiv) {
             turtlePointsDiv.addEventListener('click', openTurtleFrame);
         }

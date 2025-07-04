@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login with Supabase Table Validation</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f5f5f5; }
+    .form-box { width: 300px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    input { width: 100%; margin-bottom: 10px; padding: 8px; }
+    button { width: 100%; padding: 10px; background: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer; }
+    .status { margin-top: 10px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="form-box">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="signIn()">Login</button>
+    <div class="status" id="status"></div>
+  </div>
+
+<script>
+  const { createClient } = supabase;
+  const supabaseClient = createClient(
+    'https://fzwvxesrtdilljgrntpw.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'
+  );
+
+  async function signIn() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const status = document.getElementById('status');
+
+    try {
+      const { data, error } = await supabaseClient
+        .from('users_login')
+        .select('*')
+        .eq('email', email)
+        .eq('password', password);
+
+      if (error) {
+        console.error('Select error:', error);
+        status.textContent = "❌ " + error.message;
+        status.style.color = "red";
+      } else if (data.length > 0) {
+        status.textContent = "✅ Login successful! Redirecting...";
+        status.style.color = "green";
+        console.log('User found:', data);
+        setTimeout(() => {
+          window.location.href = "https://twss.netlify.app"; // change to your dashboard
+        }, 1500);
+      } else {
+        status.textContent = "❌ Invalid email or password.";
+        status.style.color = "red";
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      status.textContent = "❌ Unexpected error: " + err.message;
+      status.style.color = "red";
+    }
+  }
+</script>
+</body>
+</html>

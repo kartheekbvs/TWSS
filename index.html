@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TWSS INTERNSHIP</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="index.css"> 
     <style>
@@ -50,8 +50,6 @@
             font-size: 16px; /* Font size for the icon */
             margin-right: 8px;
         }
-
-        /* Removed .profile-icon img specific styles as we are now using <i> tag */
 
         .profile-btn span {
             font-weight: 600;
@@ -565,20 +563,20 @@
                     <div class="profile-dropdown" id="profileDropdown">
                         <div class="profile-btn" onclick="toggleProfileMenu()">
                             <div class="profile-icon">
-                                <i class="fas fa-user"></i> <!-- Changed back to Font Awesome icon -->
+                                <i class="fas fa-user"></i> 
                             </div>
                             <span id="profileName">User</span>
                         </div>
                         <div class="profile-dropdown-menu" id="profileMenu">
                             <div class="profile-info">
                                 <div class="profile-name" id="profileFullName">John Doe</div>
-                                <div class="profile-email" id="profileEmail">user@twss.jyot</div> <!-- Retained profile-email -->
-                                <div class="turtle-points" onclick="openTurtleFrame()"> <!-- Added onclick -->
+                                <div class="profile-email" id="profileEmail">user@twss.jyot</div> 
+                                <div class="turtle-points" onclick="openTurtleFrame()"> 
                                     <div class="turtle-icon"></div>
                                     <span id="turtlePoints">250</span> Turtle Points
                                 </div>
                             </div>
-                            <button class="logout-btn" onclick="logout()">Sign Out</button> <!-- Kept "Sign Out" -->
+                            <button class="logout-btn" onclick="logout()">Sign Out</button> 
                         </div>
                     </div>
 
@@ -773,14 +771,9 @@
         // Helper function to normalize email
         function normalizeEmail(email, isSignup = false) {
             email = email.toLowerCase().trim();
-            // If it's a signup and the email contains '@' but doesn't end with the required domain,
-            // we assume the user intends to use that domain, but we'll still append our domain for consistency
-            // as per previous instructions (e.g., user@gmail.com becomes user@gmail.com@twss.jyot).
-            // If it doesn't contain '@' at all, or if it's for login, we always append/ensure @twss.jyot.
             if (!email.includes('@')) {
                 return email + REQUIRED_EMAIL_DOMAIN;
             } else if (!email.endsWith(REQUIRED_EMAIL_DOMAIN)) {
-                // If an email with a different domain is provided, append our required domain.
                 return email + REQUIRED_EMAIL_DOMAIN;
             }
             return email;
@@ -973,7 +966,10 @@
 
         // Function to toggle profile dropdown menu
         function toggleProfileMenu() {
+            console.log('toggleProfileMenu called');
+            console.log('profileMenu before toggle:', profileMenu.classList);
             profileMenu.classList.toggle('active');
+            console.log('profileMenu after toggle:', profileMenu.classList);
         }
 
         // Check authentication state on page load

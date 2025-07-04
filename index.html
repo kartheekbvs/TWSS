@@ -438,5 +438,390 @@
         // Initialize auth state on page load
         document.addEventListener('DOMContentLoaded', checkAuthState);
     </script>
+    <script>
+        // Add this JavaScript code to your existing script section
+
+// Turtle Frame Elements
+let turtleFrame = null;
+let turtleFrameOverlay = null;
+
+// Function to create turtle points frame
+function createTurtleFrame() {
+    // Create overlay
+    turtleFrameOverlay = document.createElement('div');
+    turtleFrameOverlay.className = 'turtle-frame-overlay';
+    turtleFrameOverlay.onclick = closeTurtleFrame;
+    document.body.appendChild(turtleFrameOverlay);
+
+    // Create frame
+    turtleFrame = document.createElement('div');
+    turtleFrame.className = 'turtle-frame';
+    turtleFrame.innerHTML = `
+        <div class="turtle-frame-header">
+            <button class="turtle-frame-close" onclick="closeTurtleFrame()">×</button>
+            <div class="turtle-frame-title">
+                <div class="turtle-icon"></div>
+                Turtle Points
+            </div>
+            <div class="turtle-frame-subtitle">Your Learning Journey</div>
+        </div>
+        <div class="turtle-frame-content">
+            <div class="points-display">
+                <div class="points-circle">
+                    <div class="points-number" id="framePointsNumber">250</div>
+                    <div class="points-label">Points</div>
+                </div>
+                <div class="points-label">Keep learning to earn more!</div>
+            </div>
+            
+            <div class="points-section">
+                <h3>How to Earn Points</h3>
+                <div class="points-activity">
+                    <span class="activity-name">Complete Registration</span>
+                    <span class="activity-points positive">+10</span>
+                </div>
+                <div class="points-activity">
+                    <span class="activity-name">Complete Internship</span>
+                    <span class="activity-points positive">+50</span>
+                </div>
+                <div class="points-activity">
+                    <span class="activity-name">Pass Training Module</span>
+                    <span class="activity-points positive">+25</span>
+                </div>
+                <div class="points-activity">
+                    <span class="activity-name">Pass Exam</span>
+                    <span class="activity-points positive">+100</span>
+                </div>
+                <div class="points-activity">
+                    <span class="activity-name">Get Certification</span>
+                    <span class="activity-points positive">+75</span>
+                </div>
+            </div>
+            
+            <div class="points-section">
+                <h3>Recent Activity</h3>
+                <div class="points-activity">
+                    <span class="activity-name">Account Created</span>
+                    <span class="activity-points positive">+10</span>
+                </div>
+                <div class="points-activity">
+                    <span class="activity-name">Profile Updated</span>
+                    <span class="activity-points positive">+5</span>
+                </div>
+                <div class="points-activity">
+                    <span class="activity-name">Welcome Bonus</span>
+                    <span class="activity-points positive">+25</span>
+                </div>
+            </div>
+            
+            <div class="points-section">
+                <h3>Achievements</h3>
+                <div class="points-activity">
+                    <span class="activity-name">🎯 First Steps</span>
+                    <span class="activity-points">Unlocked</span>
+                </div>
+                <div class="points-activity">
+                    <span class="activity-name">🏆 Learning Enthusiast</span>
+                    <span class="activity-points">250+ Points</span>
+                </div>
+                <div class="points-activity">
+                    <span class="activity-name">🌟 Rising Star</span>
+                    <span class="activity-points">500+ Points</span>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(turtleFrame);
+}
+
+// Function to open turtle frame
+function openTurtleFrame() {
+    if (!turtleFrame) {
+        createTurtleFrame();
+    }
+    
+    // Update points display
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if (loggedInUser) {
+        const user = JSON.parse(loggedInUser);
+        const framePointsNumber = document.getElementById('framePointsNumber');
+        if (framePointsNumber) {
+            framePointsNumber.textContent = user.turtle_points || 0;
+        }
+    }
+    
+    // Show frame
+    turtleFrame.classList.add('active');
+    turtleFrameOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Prevent background scroll
+}
+
+// Function to close turtle frame
+function closeTurtleFrame() {
+    if (turtleFrame) {
+        turtleFrame.classList.remove('active');
+        turtleFrameOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto'; // Restore scroll
+    }
+}
+
+// Function to update turtle points
+async function updateTurtlePoints(pointsToAdd, reason) {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if (!loggedInUser) return;
+    
+    const user = JSON.parse(loggedInUser);
+    const newPoints = (user.turtle_points || 0) + pointsToAdd;
+    
+    try {
+        // Update in database
+        const { data, error } = await supabaseClient
+            .from('users_login')
+            .update({ turtle_points: newPoints })
+            .eq('email', user.email);
+            
+        if (error) {
+            console.error('Error updating turtle points:', error);
+            return;
+        }
+        
+        // Update local storage
+        user.turtle_points = newPoints;
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
+        
+        // Update UI
+        const turtlePointsSpan = document.getElementById('turtlePoints');
+        if (turtlePointsSpan) {
+            turtlePointsSpan.textContent = newPoints;
+        }
+        
+        // Show notification
+        showPointsNotification(pointsToAdd, reason);
+        
+    } catch (err) {
+        console.error('Error updating turtle points:', err);
+    }
+}
+
+// Function to show points notification
+function showPointsNotification(points, reason) {
+    const notification = document.createElement('div');
+    notification.className = 'points-notification';
+    notification.innerHTML = `
+        <div class="points-notification-content">
+            <div class="turtle-icon"></div>
+            <div class="notification-text">
+                <div class="notification-points">+${points} Turtle Points</div>
+                <div class="notification-reason">${reason}</div>
+            </div>
+        </div>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        color: #b8860b;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(253, 203, 110, 0.4);
+        z-index: 3000;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        font-weight: 600;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(400px)';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+// Enhanced signup function with turtle points
+async function signupWithPoints() {
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+    if (password !== confirmPassword) {
+        signupStatus.textContent = "Passwords do not match.";
+        signupStatus.classList.add('error');
+        signupStatus.classList.remove('success');
+        return;
+    }
+
+    try {
+        // Check if user already exists
+        const { data: existingUsers, error: checkError } = await supabaseClient
+            .from('users_login')
+            .select('email')
+            .eq('email', email);
+
+        if (checkError) {
+            throw checkError;
+        }
+
+        if (existingUsers && existingUsers.length > 0) {
+            signupStatus.textContent = "Account with this email already exists.";
+            signupStatus.classList.add('error');
+            signupStatus.classList.remove('success');
+            return;
+        }
+
+        // Insert new user with initial turtle points
+        const { data, error } = await supabaseClient
+            .from('users_login')
+            .insert([
+                { full_name: name, email: email, password: password, turtle_points: 10 } // Start with 10 points for registration
+            ]);
+
+        if (error) {
+            console.error('Signup error:', error);
+            signupStatus.textContent = "Signup failed: " + error.message;
+            signupStatus.classList.add('error');
+            signupStatus.classList.remove('success');
+        } else {
+            console.log('User signed up:', data);
+            signupStatus.textContent = "Signup successful! You earned 10 turtle points! Please login.";
+            signupStatus.classList.add('success');
+            signupStatus.classList.remove('error');
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signupConfirmPassword').value = '';
+            setTimeout(() => {
+                switchToLogin();
+            }, 2000);
+        }
+    } catch (err) {
+        console.error('Unexpected error during signup:', err);
+        signupStatus.textContent = "An unexpected error occurred.";
+        signupStatus.classList.add('error');
+        signupStatus.classList.remove('success');
+    }
+}
+
+// Add event listeners when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Override the existing signup function
+    window.signup = signupWithPoints;
+    
+    // Add click event to turtle points section
+    setTimeout(() => {
+        const turtlePointsDiv = document.querySelector('.turtle-points');
+        if (turtlePointsDiv) {
+            turtlePointsDiv.addEventListener('click', openTurtleFrame);
+        }
+    }, 1000);
+    
+    // Add escape key listener
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && turtleFrame && turtleFrame.classList.contains('active')) {
+            closeTurtleFrame();
+        }
+    });
+});
+
+// Function to award points for various activities
+function awardPoints(activity) {
+    const pointsMap = {
+        'registration': { points: 10, reason: 'Registration Completed' },
+        'internship': { points: 50, reason: 'Internship Completed' },
+        'training': { points: 25, reason: 'Training Module Completed' },
+        'exam': { points: 100, reason: 'Exam Passed' },
+        'certification': { points: 75, reason: 'Certification Earned' },
+        'login': { points: 2, reason: 'Daily Login' },
+        'profile_update': { points: 5, reason: 'Profile Updated' }
+    };
+    
+    const reward = pointsMap[activity];
+    if (reward) {
+        updateTurtlePoints(reward.points, reward.reason);
+    }
+}
+
+// Enhanced login function with daily login points
+async function loginWithPoints() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    try {
+        const { data, error } = await supabaseClient
+            .from('users_login')
+            .select('*')
+            .eq('email', email)
+            .eq('password', password);
+
+        if (error) {
+            console.error('Login error:', error);
+            loginStatus.textContent = "Login failed: " + error.message;
+            loginStatus.classList.add('error');
+            loginStatus.classList.remove('success');
+        } else if (data.length > 0) {
+            const user = data[0];
+            
+            // Check if user logged in today
+            const lastLogin = localStorage.getItem('lastLogin_' + user.email);
+            const today = new Date().toDateString();
+            
+            if (lastLogin !== today) {
+                // Award daily login points
+                const newPoints = (user.turtle_points || 0) + 2;
+                await supabaseClient
+                    .from('users_login')
+                    .update({ turtle_points: newPoints })
+                    .eq('email', email);
+                
+                user.turtle_points = newPoints;
+                localStorage.setItem('lastLogin_' + user.email, today);
+                
+                // Show login bonus notification
+                setTimeout(() => {
+                    showPointsNotification(2, 'Daily Login Bonus');
+                }, 1500);
+            }
+            
+            localStorage.setItem('loggedInUser', JSON.stringify(user));
+            loginStatus.textContent = "Login successful! Redirecting...";
+            loginStatus.classList.add('success');
+            loginStatus.classList.remove('error');
+            
+            setTimeout(() => {
+                closeAuthModal();
+                checkAuthState();
+                if (redirectAfterAuth) {
+                    window.location.href = redirectAfterAuth;
+                    redirectAfterAuth = null;
+                }
+            }, 1000);
+        } else {
+            loginStatus.textContent = "Invalid email or password.";
+            loginStatus.classList.add('error');
+            loginStatus.classList.remove('success');
+        }
+    } catch (err) {
+        console.error('Unexpected error during login:', err);
+        loginStatus.textContent = "An unexpected error occurred.";
+        loginStatus.classList.add('error');
+        loginStatus.classList.remove('success');
+    }
+}
+
+// Override the existing login function
+window.login = loginWithPoints;
+    </script>
 </body>
 </html>

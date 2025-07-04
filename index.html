@@ -41,22 +41,17 @@
         .profile-icon {
             width: 32px;
             height: 32px;
-            background-color: #4CAF50; /* Green background for user icon if image fails */
+            background-color: #4CAF50; /* Green background for user icon */
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 16px; /* Font size for the icon */
             margin-right: 8px;
-            overflow: hidden; /* Ensure image fits within circle */
         }
 
-        .profile-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Cover the area, cropping if necessary */
-        }
+        /* Removed .profile-icon img specific styles as we are now using <i> tag */
 
         .profile-btn span {
             font-weight: 600;
@@ -570,21 +565,20 @@
                     <div class="profile-dropdown" id="profileDropdown">
                         <div class="profile-btn" onclick="toggleProfileMenu()">
                             <div class="profile-icon">
-                                <!-- Replaced Font Awesome icon with a placeholder image -->
-                                <img src="https://placehold.co/32x32/4CAF50/ffffff?text=U" alt="User Profile">
+                                <i class="fas fa-user"></i> <!-- Changed back to Font Awesome icon -->
                             </div>
                             <span id="profileName">User</span>
                         </div>
                         <div class="profile-dropdown-menu" id="profileMenu">
                             <div class="profile-info">
                                 <div class="profile-name" id="profileFullName">John Doe</div>
-                                <div class="profile-email" id="profileEmail">user@twss.jyot</div>
-                                <div class="turtle-points" onclick="openTurtleFrame()">
+                                <div class="profile-email" id="profileEmail">user@twss.jyot</div> <!-- Retained profile-email -->
+                                <div class="turtle-points" onclick="openTurtleFrame()"> <!-- Added onclick -->
                                     <div class="turtle-icon"></div>
                                     <span id="turtlePoints">250</span> Turtle Points
                                 </div>
                             </div>
-                            <button class="logout-btn" onclick="logout()">Sign Out</button>
+                            <button class="logout-btn" onclick="logout()">Sign Out</button> <!-- Kept "Sign Out" -->
                         </div>
                     </div>
 

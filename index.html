@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TWSS INTERNSHIP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* Reset styles */
         * {
@@ -89,6 +90,159 @@
         
         .logo span {
             color: #FFDD00;
+        }
+
+        /* Profile Section Styles */
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-dropdown {
+            position: relative;
+            display: none;
+        }
+
+        .profile-dropdown.active {
+            display: block;
+        }
+
+        .profile-btn {
+            background: rgba(255,221,0,0.1);
+            border: 2px solid #FFDD00;
+            border-radius: 50px;
+            padding: 8px 20px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .profile-btn:hover {
+            background: #FFDD00;
+            color: #000;
+        }
+
+        .profile-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #FFDD00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 16px;
+        }
+
+        .turtle-icon {
+            width: 20px;
+            height: 20px;
+            background: #2D5A27;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .turtle-icon::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: #4A7C59;
+            border-radius: 50%;
+        }
+
+        .turtle-icon::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 8px;
+            height: 8px;
+            background: #2D5A27;
+            border-radius: 50%;
+        }
+
+        .profile-dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: #000;
+            border: 2px solid #FFDD00;
+            border-radius: 8px;
+            padding: 20px;
+            width: 250px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .profile-dropdown-menu.active {
+            display: block;
+        }
+
+        .profile-info {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .turtle-points {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 14px;
+            color: #FFDD00;
+            margin-bottom: 15px;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-btn {
+            background: #FFDD00;
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .auth-btn:hover {
+            background: #fff;
+            color: #000;
         }
         
         /* Desktop Navigation */
@@ -432,6 +586,126 @@
             font-size: 14px;
         }
         
+        /* Auth Modal */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .auth-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .auth-modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .auth-modal-close:hover {
+            color: #000;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-form h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #000;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: #FFDD00;
+        }
+
+        .auth-form button {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .auth-form button:hover {
+            background: #FFDD00;
+            color: #000;
+        }
+
+        .auth-switch {
+            text-align: center;
+            color: #666;
+        }
+
+        .auth-switch a {
+            color: #000;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-switch a:hover {
+            color: #FFDD00;
+        }
+
+        .auth-status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .auth-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .auth-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
         /* Assistance button */
         .assistance-btn {
             position: fixed;
@@ -575,6 +849,30 @@
             .mobile-menu {
                 display: block;
             }
+
+            .profile-section {
+                gap: 10px;
+            }
+
+            .profile-btn {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+
+            .profile-dropdown-menu {
+                width: 200px;
+                right: -50px;
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .auth-btn {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
             
             .hero {
                 padding: 60px 20px 80px;
@@ -641,6 +939,11 @@
                 padding: 10px 15px;
                 font-size: 14px;
             }
+
+            .auth-modal-content {
+                padding: 20px;
+                margin: 10px;
+            }
         }
     </style>
 </head>
@@ -658,15 +961,44 @@
                 <!-- Desktop Navigation -->
                 <nav class="desktop-nav">
                     <ul>
-                        <li><a href="/registration.php/">Registration</a></li>
-                        <li><a href="/intern.php">Internship</a></li>
-                        <li><a href="/login/signup.html">Training</a></li>
-                        <li><a href="/login/signup.html">Attend Exam</a></li>
-                        <li><a href="/certification.php">Certification</a></li>
-                        <li><a href="/about.php">About</a></li>
-                        <li><a href="/contactus.php">Contact Us</a></li>
+                        <li><a href="#" onclick="checkAuth('/registration.php/')">Registration</a></li>
+                        <li><a href="#" onclick="checkAuth('/intern.php')">Internship</a></li>
+                        <li><a href="#" onclick="checkAuth('/login/signup.html')">Training</a></li>
+                        <li><a href="#" onclick="checkAuth('/login/signup.html')">Attend Exam</a></li>
+                        <li><a href="#" onclick="checkAuth('/certification.php')">Certification</a></li>
+                        <li><a href="#" onclick="checkAuth('/about.php')">About</a></li>
+                        <li><a href="#" onclick="checkAuth('/contactus.php')">Contact Us</a></li>
                     </ul>
                 </nav>
+
+                <!-- Profile Section -->
+                <div class="profile-section">
+                    <!-- Profile Dropdown (when logged in) -->
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-btn" onclick="toggleProfileMenu()">
+                            <div class="profile-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span id="profileName">User</span>
+                        </div>
+                        <div class="profile-dropdown-menu" id="profileMenu">
+                            <div class="profile-info">
+                                <div class="profile-name" id="profileFullName">John Doe</div>
+                                <div class="turtle-points">
+                                    <div class="turtle-icon"></div>
+                                    <span id="turtlePoints">250</span> Turtle Points
+                                </div>
+                            </div>
+                            <button class="logout-btn" onclick="logout()">Logout</button>
+                        </div>
+                    </div>
+
+                    <!-- Auth Buttons (when not logged in) -->
+                    <div class="auth-buttons" id="authButtons">
+                        <button class="auth-btn" onclick="openAuthModal('login')">Login</button>
+                        <button class="auth-btn" onclick="openAuthModal('signup')">Sign Up</button>
+                    </div>
+                </div>
                 
                 <!-- Mobile Navigation -->
                 <div class="mobile-menu">
@@ -676,22 +1008,51 @@
                         <span></span>
                     </button>
                     <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="/validate1.php">Login</a>
-                        <a href="/validate.php">Sign In</a>
-                        <hr>
-                        <a href="/registration.php/">Registration</a>
-                        <a href="/intern.php">Internship</a>
-                        <a href="/login/signup.html">Training</a>
-                        <a href="/login/signup.html">Attend Exam</a>
-                        <a href="/certification.php">Certification</a>
-                        <a href="/about.php">About</a>
-                        <a href="/contactus.php">Contact Us</a>
-                        <a href="/hr1.php">Home</a>
+                        <a href="#" onclick="checkAuth('/registration.php/')">Registration</a>
+                        <a href="#" onclick="checkAuth('/intern.php')">Internship</a>
+                        <a href="#" onclick="checkAuth('/login/signup.html')">Training</a>
+                        <a href="#" onclick="checkAuth('/login/signup.html')">Attend Exam</a>
+                        <a href="#" onclick="checkAuth('/certification.php')">Certification</a>
+                        <a href="#" onclick="checkAuth('/about.php')">About</a>
+                        <a href="#" onclick="checkAuth('/contactus.php')">Contact Us</a>
                     </div>
                 </div>
             </div>
         </div>
     </header>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <span class="auth-modal-close" onclick="closeAuthModal()">&times;</span>
+            
+            <!-- Login Form -->
+            <div class="auth-form" id="loginForm">
+                <h2>Login to TWSS</h2>
+                <input type="email" id="loginEmail" placeholder="Email Address" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button onclick="login()">Login</button>
+                <div class="auth-switch">
+                    Don't have an account? <a href="#" onclick="switchToSignup()">Sign up here</a>
+                </div>
+                <div class="auth-status" id="loginStatus"></div>
+            </div>
+
+            <!-- Signup Form -->
+            <div class="auth-form" id="signupForm">
+                <h2>Join TWSS</h2>
+                <input type="text" id="signupName" placeholder="Full Name" required>
+                <input type="email" id="signupEmail" placeholder="Email Address" required>
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+                <button onclick="signup()">Sign Up</button>
+                <div class="auth-switch">
+                    Already have an account? <a href="#" onclick="switchToLogin()">Login here</a>
+                </div>
+                <div class="auth-status" id="signupStatus"></div>
+            </div>
+        </div>
+    </div>
     
     <div class="announcement">
         <marquee direction="left">Note: Registration is only for details of a candidate. For conductance of exam please kindly login</marquee>
@@ -701,90 +1062,320 @@
         <section class="hero">
             <div class="hero-accent"></div>
             <div class="hero-accent-2"></div>
-            <h1>Give the Best Start to Your Career</h1>
-            <h3>Learn, practice, and get hired!</h3>
-            <p>A 50-day transformational journey to help your college students meet their career goals while you win exciting rewards and learn real-world skills like marketing, communication & leadership</p>
-            
+           <h1>Give the Best Start to Your Career with TWSS Internships!</h1>
+            <h3>Your Gateway to Real-World Experience and Skill Development</h3>
+            <p>
+                Welcome to TWSS Internships, where aspiring professionals like you can gain invaluable hands-on experience,
+                develop essential skills, and kickstart a successful career. Our comprehensive internship programs are designed
+                to bridge the gap between academic knowledge and industry demands.
+            </p>
             <div class="registration-links">
-                <a href="http://localhost/student.php" class="btn btn-primary">Student Registration</a>
-                <a href="http://localhost/college.php" class="btn">College Registration</a>
+                <a href="#" class="btn btn-primary" onclick="openAuthModal('signup')">Register Now</a>
+                <a href="#" class="btn" onclick="openAuthModal('login')">Already Registered? Login</a>
             </div>
         </section>
-        
+
         <section class="features">
             <div class="features-heading">
-                <h2>Why Choose TWSS Internship?</h2>
+                <h2>Why Choose TWSS Internships?</h2>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-laptop-code"></i>
-                    </div>
-                    <h3>Practical Skills</h3>
-                    <p>Gain hands-on experience with industry-relevant projects and tools that employers demand.</p>
+                    <div class="feature-icon"><i class="fas fa-handshake"></i></div>
+                    <h3>Real-World Projects</h3>
+                    <p>Work on live projects that challenge your abilities and enhance your portfolio.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-certificate"></i>
-                    </div>
-                    <h3>Certification</h3>
-                    <p>Earn recognized certifications that validate your skills and enhance your resume.</p>
+                    <div class="feature-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <h3>Expert Mentorship</h3>
+                    <p>Learn from industry veterans who provide guidance and support throughout your journey.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <h3>Job Placement</h3>
-                    <p>Connect with our network of hiring partners looking for fresh talent with proven abilities.</p>
+                    <div class="feature-icon"><i class="fas fa-laptop-code"></i></div>
+                    <h3>Skill Development</h3>
+                    <p>Acquire in-demand technical and soft skills crucial for career advancement.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-certificate"></i></div>
+                    <h3>Valuable Certification</h3>
+                    <p>Receive a recognized certificate upon successful completion, boosting your resume.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-network-wired"></i></div>
+                    <h3>Networking Opportunities</h3>
+                    <p>Connect with professionals and peers, building a strong network for your future.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Career Advancement</h3>
+                    <p>Gain a competitive edge and open doors to exciting career opportunities.</p>
                 </div>
             </div>
         </section>
     </div>
-    
-    <a href="/assist.html" class="assistance-btn">
-        <i class="fas fa-headset"></i> TWSS Assistance
+
+    <a href="/contactus.php" class="assistance-btn">
+        <i class="fas fa-life-ring"></i> Need Assistance?
     </a>
-    
+
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">TWSS <span>INTERNSHIP</span></div>
                 <div class="footer-links">
-                    <a href="/privacy.php">Privacy Policy</a>
+                    <a href="/privacypolicy.php">Privacy Policy</a>
                     <a href="/terms.php">Terms of Service</a>
                     <a href="/faq.php">FAQs</a>
                     <a href="/contactus.php">Support</a>
                 </div>
             </div>
-            
+
             <div class="footer-social">
                 <a href=""><i class="fab fa-facebook-f"></i></a>
                 <a href="x.com/kartheekbvs"><i class="fab fa-twitter"></i></a>
                 <a href="https://www.linkedin.com/in/kartheek-bvs-2a82562b9/"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://www.instagram.com/kartheek3693/"><i class="fab fa-instagram"></i></a>
             </div>
-            
+
             <div class="copyright">
                 <p>&copy; 2024 TWSS. All rights reserved. DEVELOPED BY <a href="/portfolio.html">KARTHEEK</a></p>
             </div>
         </div>
     </footer>
-    
+
     <script>
         // Mobile menu toggle
         const menuBtn = document.getElementById('menuBtn');
         const dropdownMenu = document.getElementById('dropdownMenu');
-        
+
         menuBtn.addEventListener('click', function() {
             dropdownMenu.classList.toggle('active');
         });
-        
+
         // Close menu when clicking outside
         document.addEventListener('click', function(event) {
             if (!menuBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
                 dropdownMenu.classList.remove('active');
             }
         });
+
+        // Supabase client initialization (replace with your actual Supabase details)
+        const SUPABASE_URL = 'https://fzwvxesrtdilljgrntpw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Auth Modal Elements
+        const authModal = document.getElementById('authModal');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const loginStatus = document.getElementById('loginStatus');
+        const signupStatus = document.getElementById('signupStatus');
+
+        // Profile Elements
+        const profileDropdown = document.getElementById('profileDropdown');
+        const profileMenu = document.getElementById('profileMenu');
+        const profileNameSpan = document.getElementById('profileName');
+        const profileFullNameDiv = document.getElementById('profileFullName');
+        const turtlePointsSpan = document.getElementById('turtlePoints');
+        const authButtons = document.getElementById('authButtons');
+
+        let redirectAfterAuth = null;
+
+        // Function to open auth modal
+        function openAuthModal(formType) {
+            authModal.classList.add('active');
+            if (formType === 'login') {
+                loginForm.classList.add('active');
+                signupForm.classList.remove('active');
+            } else {
+                signupForm.classList.add('active');
+                loginForm.classList.remove('active');
+            }
+            // Clear previous messages
+            loginStatus.textContent = '';
+            loginStatus.className = 'auth-status';
+            signupStatus.textContent = '';
+            signupStatus.className = 'auth-status';
+        }
+
+        // Function to close auth modal
+        function closeAuthModal() {
+            authModal.classList.remove('active');
+        }
+
+        // Function to switch between login and signup forms
+        function switchToSignup() {
+            loginForm.classList.remove('active');
+            signupForm.classList.add('active');
+            loginStatus.textContent = ''; // Clear login status
+        }
+
+        function switchToLogin() {
+            signupForm.classList.remove('active');
+            loginForm.classList.add('active');
+            signupStatus.textContent = ''; // Clear signup status
+        }
+
+        // Login function
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('users_login') // Assuming your table is named 'users_login'
+                    .select('*')
+                    .eq('email', email)
+                    .eq('password', password);
+
+                if (error) {
+                    console.error('Login error:', error);
+                    loginStatus.textContent = "Login failed: " + error.message;
+                    loginStatus.classList.add('error');
+                    loginStatus.classList.remove('success');
+                } else if (data.length > 0) {
+                    const user = data[0];
+                    localStorage.setItem('loggedInUser', JSON.stringify(user));
+                    loginStatus.textContent = "Login successful! Redirecting...";
+                    loginStatus.classList.add('success');
+                    loginStatus.classList.remove('error');
+                    setTimeout(() => {
+                        closeAuthModal();
+                        checkAuthState();
+                        if (redirectAfterAuth) {
+                            window.location.href = redirectAfterAuth;
+                            redirectAfterAuth = null; // Clear after redirect
+                        }
+                    }, 1000);
+                } else {
+                    loginStatus.textContent = "Invalid email or password.";
+                    loginStatus.classList.add('error');
+                    loginStatus.classList.remove('success');
+                }
+            } catch (err) {
+                console.error('Unexpected error during login:', err);
+                loginStatus.textContent = "An unexpected error occurred.";
+                loginStatus.classList.add('error');
+                loginStatus.classList.remove('success');
+            }
+        }
+
+        // Signup function
+        async function signup() {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+            if (password !== confirmPassword) {
+                signupStatus.textContent = "Passwords do not match.";
+                signupStatus.classList.add('error');
+                signupStatus.classList.remove('success');
+                return;
+            }
+
+            try {
+                // Check if user already exists
+                const { data: existingUsers, error: checkError } = await supabaseClient
+                    .from('users_login')
+                    .select('email')
+                    .eq('email', email);
+
+                if (checkError) {
+                    throw checkError;
+                }
+
+                if (existingUsers && existingUsers.length > 0) {
+                    signupStatus.textContent = "Account with this email already exists.";
+                    signupStatus.classList.add('error');
+                    signupStatus.classList.remove('success');
+                    return;
+                }
+
+                // Insert new user
+                const { data, error } = await supabaseClient
+                    .from('users_login') // Assuming your table is named 'users_login'
+                    .insert([
+                        { full_name: name, email: email, password: password, turtle_points: 0 } // Add turtle_points with default 0
+                    ]);
+
+                if (error) {
+                    console.error('Signup error:', error);
+                    signupStatus.textContent = "Signup failed: " + error.message;
+                    signupStatus.classList.add('error');
+                    signupStatus.classList.remove('success');
+                } else {
+                    console.log('User signed up:', data);
+                    signupStatus.textContent = "Signup successful! Please login.";
+                    signupStatus.classList.add('success');
+                    signupStatus.classList.remove('error');
+                    document.getElementById('signupName').value = '';
+                    document.getElementById('signupEmail').value = '';
+                    document.getElementById('signupPassword').value = '';
+                    document.getElementById('signupConfirmPassword').value = '';
+                    setTimeout(() => {
+                        switchToLogin(); // Automatically switch to login after successful signup
+                    }, 1500);
+                }
+            } catch (err) {
+                console.error('Unexpected error during signup:', err);
+                signupStatus.textContent = "An unexpected error occurred.";
+                signupStatus.classList.add('error');
+                signupStatus.classList.remove('success');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            checkAuthState(); // Update UI
+            profileMenu.classList.remove('active'); // Close dropdown
+            window.location.href = '/'; // Redirect to home page or login page
+        }
+
+        // Function to toggle profile dropdown menu
+        function toggleProfileMenu() {
+            profileMenu.classList.toggle('active');
+        }
+
+        // Check authentication state on page load
+        function checkAuthState() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const user = JSON.parse(loggedInUser);
+                profileNameSpan.textContent = user.full_name.split(' ')[0]; // Display first name
+                profileFullNameDiv.textContent = user.full_name;
+                turtlePointsSpan.textContent = user.turtle_points || 0; // Display turtle points
+
+                profileDropdown.style.display = 'block';
+                authButtons.style.display = 'none';
+            } else {
+                profileDropdown.style.display = 'none';
+                authButtons.style.display = 'flex';
+            }
+        }
+
+        // Protect routes
+        function checkAuth(path) {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (!loggedInUser) {
+                redirectAfterAuth = path;
+                openAuthModal('login');
+            } else {
+                window.location.href = path;
+            }
+        }
+
+        // Close profile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileBtn = document.querySelector('.profile-btn');
+            if (profileBtn && !profileBtn.contains(event.target) && !profileMenu.contains(event.target)) {
+                profileMenu.classList.remove('active');
+            }
+        });
+
+        // Initialize auth state on page load
+        document.addEventListener('DOMContentLoaded', checkAuthState);
     </script>
 </body>
 </html>

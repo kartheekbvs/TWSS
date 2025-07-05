@@ -1238,10 +1238,7 @@ async function login() {
             });
         });
     </script>
-    <script>console.log('Trying login with:', email, password);
-console.log('Supabase response:', data, error);
 
-    </script>
  
   
         <script>
@@ -1254,6 +1251,17 @@ function checkAuth(targetUrl) {
     window.location.href = targetUrl;   // Already logged in → go directly
   }
 }
+
+            setTimeout(() => {
+    closeAuthModal();
+    checkAuthState();
+    if (redirectAfterAuth) {
+        window.location.href = redirectAfterAuth;
+        redirectAfterAuth = null;
+    } else {
+        window.location.href = "https://twss.netlify.app";
+    }
+}, 1000);
 
 </script>
 

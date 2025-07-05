@@ -10,17 +10,8 @@
 
     </script>
 
-        <script>
-  const loggedInUser = localStorage.getItem('loggedInUser');
-  if (!loggedInUser) {
-    // Save what the user tried to open
-    localStorage.setItem('redirectAfterLogin', window.location.pathname);
-    // Go to home page (which has login modal)
-    window.location.href = '/index.html';
-  }
 
 
-    </script>
     <link rel="stylesheet" href="index.css"> 
     <style>
         /* New and Modified CSS for Profile Section and Notifications */
@@ -1266,16 +1257,7 @@ setTimeout(() => {
     }
 }, 1000);
 
-            setTimeout(() => {
-    closeAuthModal();
-    checkAuthState();
-    if (redirectAfterAuth) {
-        window.location.href = redirectAfterAuth;
-        redirectAfterAuth = null;
-    } else {
-        window.location.href = "https://twss.netlify.app";
-    }
-}, 1000);
+        
 
             document.addEventListener('DOMContentLoaded', () => {
   checkAuthState();

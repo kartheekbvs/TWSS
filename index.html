@@ -4,18 +4,537 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TWSS INTERNSHIP</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="index.css"> 
+    <style>
+        /* New and Modified CSS for Profile Section and Notifications */
+
+        /* Profile Section Enhancements */
+        .profile-section {
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 1001; /* Ensure it's above other content */
+        }
+
+        .profile-dropdown {
+            position: relative;
+            display: none; /* Managed by JS */
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            background-color: #f0f0f0; /* Light background for the button */
+            border-radius: 25px; /* Pill shape */
+            padding: 8px 15px 8px 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .profile-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .profile-icon {
+            width: 32px;
+            height: 32px;
+            background-color: #4CAF50; /* Green background for user icon */
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px; /* Font size for the icon */
+            margin-right: 8px;
+        }
+
+        .profile-btn span {
+            font-weight: 600;
+            color: #333;
+            white-space: nowrap; /* Prevent name from wrapping */
+            max-width: 100px; /* Limit width to prevent overflow */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Add ellipsis if name is too long */
+        }
+
+        .profile-dropdown-menu {
+            position: absolute;
+            top: 50px; /* Adjust based on profile-btn height */
+            right: 0;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            min-width: 250px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .profile-dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .profile-info {
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+
+        .profile-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .profile-email {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .turtle-points {
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+            color: #888;
+            cursor: pointer; /* Indicate it's clickable */
+            padding: 5px 0;
+            border-radius: 50px; /* Rounded corners for the clickable area */
+            transition: background-color 0.2s ease;
+        }
+
+        .turtle-points:hover {
+            background-color: #f5f5f5;
+        }
+
+        .turtle-icon {
+            width: 20px;
+            height: 20px;
+            background-image: url('https://placehold.co/20x20/008000/ffffff?text=%F0%9F%90%A2'); /* Placeholder for turtle emoji/icon */
+            background-size: cover;
+            margin-right: 5px;
+            border-radius: 50%;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 10px 15px;
+            background-color: #f44336; /* Red for logout */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Auth Buttons (when not logged in) */
+        .auth-buttons {
+            display: flex; /* Managed by JS */
+            gap: 10px;
+        }
+
+        .auth-btn {
+            padding: 8px 15px;
+            border: 1px solid #007bff;
+            border-radius: 20px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .auth-btn:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        /* Auth Modal Styling (existing, but ensure consistency) */
+        .auth-modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 2000; /* High z-index to cover everything */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .auth-modal.active {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .auth-modal-content {
+            background-color: #fefefe;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .auth-modal.active .auth-modal-content {
+            transform: translateY(0);
+        }
+
+        .auth-modal-close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .auth-modal-close:hover,
+        .auth-modal-close:focus {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .auth-form input[type="email"],
+        .auth-form input[type="password"],
+        .auth-form input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 12px 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .auth-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .auth-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .auth-switch a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-status {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .auth-status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .auth-status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Points Notification */
+        .points-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            color: #b8860b;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(253, 203, 110, 0.4);
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .points-notification .turtle-icon {
+            width: 24px;
+            height: 24px;
+            font-size: 20px; /* Adjust if using emoji directly */
+            background-image: url('https://placehold.co/24x24/008000/ffffff?text=%F0%9F%90%A2'); /* Placeholder for turtle emoji/icon */
+            background-size: cover;
+            border-radius: 50%;
+        }
+
+        .points-notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-points {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .notification-reason {
+            font-size: 0.9em;
+            color: #a07d0a;
+        }
+
+        /* Turtle Frame (Modal for Points Details) */
+        .turtle-frame-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 2500;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .turtle-frame-overlay.active {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .turtle-frame {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            z-index: 2600;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .turtle-frame.active {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .turtle-frame-header {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            color: white;
+            padding: 20px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        .turtle-frame-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .turtle-frame-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .turtle-frame-title .turtle-icon {
+            width: 30px;
+            height: 30px;
+            background-image: url('https://placehold.co/30x30/008000/ffffff?text=%F0%9F%90%A2'); /* Placeholder for turtle emoji/icon */
+            background-size: cover;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .turtle-frame-subtitle {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .turtle-frame-content {
+            padding: 25px;
+            color: #333;
+        }
+
+        .points-display {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .points-circle {
+            width: 120px;
+            height: 120px;
+            background-color: #e8f5e9;
+            border: 5px solid #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .points-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .points-display .points-label {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .points-section {
+            margin-bottom: 25px;
+        }
+
+        .points-section h3 {
+            font-size: 1.3em;
+            color: #4CAF50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+
+        .points-activity {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .points-activity:last-child {
+            border-bottom: none;
+        }
+
+        .activity-name {
+            font-weight: 500;
+            color: #444;
+        }
+
+        .activity-points {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .activity-points.positive {
+            color: #28a745; /* Green for positive points */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .profile-btn {
+                padding: 6px 12px 6px 6px;
+            }
+            .profile-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+            .profile-btn span {
+                max-width: 80px;
+            }
+            .auth-btn {
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
+            .profile-dropdown-menu {
+                min-width: 200px;
+            }
+            .turtle-frame {
+                width: 95%;
+            }
+            .turtle-frame-title {
+                font-size: 1.5em;
+            }
+            .points-circle {
+                width: 100px;
+                height: 100px;
+            }
+            .points-number {
+                font-size: 2em;
+            }
+        }
+    </style>
 </head>
 <body>
-  
-     <script>
-        localStorage.removeItem("loggedIn");
-        localStorage.removeItem("loggedInUser");
-        localStorage.removeItem("redirectAfterLogin");
-    </script> 
-
+    <!-- Diagonal design elements -->
     <div class="diagonal-divider diagonal-top"></div>
     <div class="diagonal-divider diagonal-bottom"></div>
     
@@ -25,43 +544,50 @@
             <div class="header-content">
                 <a href="#" class="logo">TWSS <span>INTERNSHIP</span></a>
                 
+                <!-- Desktop Navigation -->
                 <nav class="desktop-nav">
                     <ul>
-                        <li><a href="#" onclick="checkAuth('registration.html')">Registration</a></li>
-                        <li><a href="#" onclick="checkAuth('intern.html')">Internship</a></li>
-                        <li><a href="#" onclick="checkAuth('mysqltutorial.html')">Training</a></li>
-                        <li><a href="#" onclick="checkAuth('exam.html')">Attend Exam</a></li>
-                        <li><a href="#" onclick="checkAuth('certification.html')">Certification</a></li>
-                        <li><a href="#" onclick="checkAuth('about.html')">About</a></li>
-                        <li><a href="#" onclick="checkAuth('contactus.html')">Contact Us</a></li>
+                        <li><a href="#" onclick="checkAuth('/registration.php/')">Registration</a></li>
+                        <li><a href="#" onclick="checkAuth('/intern.php')">Internship</a></li>
+                        <li><a href="#" onclick="checkAuth('/login/signup.html')">Training</a></li>
+                        <li><a href="#" onclick="checkAuth('/login/signup.html')">Attend Exam</a></li>
+                        <li><a href="#" onclick="checkAuth('/certification.php')">Certification</a></li>
+                        <li><a href="#" onclick="checkAuth('/about.php')">About</a></li>
+                        <li><a href="#" onclick="checkAuth('/contactus.php')">Contact Us</a></li>
                     </ul>
                 </nav>
 
+                <!-- Profile Section -->
                 <div class="profile-section">
+                    <!-- Profile Dropdown (when logged in) -->
                     <div class="profile-dropdown" id="profileDropdown">
                         <div class="profile-btn" onclick="toggleProfileMenu()">
                             <div class="profile-icon">
-                                <i class="fas fa-user"></i>
+                                <i class="fas fa-user"></i> 
                             </div>
                             <span id="profileName">User</span>
                         </div>
                         <div class="profile-dropdown-menu" id="profileMenu">
                             <div class="profile-info">
                                 <div class="profile-name" id="profileFullName">John Doe</div>
-                                <div class="turtle-points" onclick="openTurtleFrame()">
+                                <div class="profile-email" id="profileEmail">user@twss.jyot</div> 
+                                <div class="turtle-points" onclick="openTurtleFrame()"> 
                                     <div class="turtle-icon"></div>
                                     <span id="turtlePoints">250</span> Turtle Points
                                 </div>
                             </div>
-                            <button class="logout-btn" onclick="logout()">Logout</button>
+                            <button class="logout-btn" onclick="logout()">Sign Out</button> 
                         </div>
                     </div>
 
+                    <!-- Auth Buttons (when not logged in) -->
                     <div class="auth-buttons" id="authButtons">
+                        <button class="auth-btn" onclick="openAuthModal('login')">Login</button>
                         <button class="auth-btn" onclick="openAuthModal('signup')">Sign Up</button>
                     </div>
                 </div>
                 
+                <!-- Mobile Navigation -->
                 <div class="mobile-menu">
                     <button class="menu-btn" id="menuBtn">
                         <span></span>
@@ -69,26 +595,28 @@
                         <span></span>
                     </button>
                     <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="#" onclick="checkAuth('registration.html')">Registration</a>
-                        <a href="#" onclick="checkAuth('intern.html')">Internship</a>
-                        <a href="#" onclick="checkAuth('mysqltutorial.html')">Training</a>
-                        <a href="#" onclick="checkAuth('exam.html')">Attend Exam</a>
-                        <a href="#" onclick="checkAuth('certification.html')">Certification</a>
-                        <a href="#" onclick="checkAuth('about.html')">About</a>
-                        <a href="#" onclick="checkAuth('contactus.html')">Contact Us</a>
+                        <a href="#" onclick="checkAuth('/registration.php/')">Registration</a>
+                        <a href="#" onclick="checkAuth('/intern.php')">Internship</a>
+                        <a href="#" onclick="checkAuth('/login/signup.html')">Training</a>
+                        <a href="#" onclick="checkAuth('/login/signup.html')">Attend Exam</a>
+                        <a href="#" onclick="checkAuth('/certification.php')">Certification</a>
+                        <a href="#" onclick="checkAuth('/about.php')">About</a>
+                        <a href="#" onclick="checkAuth('/contactus.php')">Contact Us</a>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- Auth Modal -->
     <div class="auth-modal" id="authModal">
         <div class="auth-modal-content">
             <span class="auth-modal-close" onclick="closeAuthModal()">&times;</span>
             
+            <!-- Login Form -->
             <div class="auth-form" id="loginForm">
                 <h2>Login to TWSS</h2>
-                <input type="email" id="loginEmail" placeholder="Email Address" required>
+                <input type="email" id="loginEmail" placeholder="Email Address (e.g., yourname@twss.jyot)" required>
                 <input type="password" id="loginPassword" placeholder="Password" required>
                 <button onclick="login()">Login</button>
                 <div class="auth-switch">
@@ -97,12 +625,13 @@
                 <div class="auth-status" id="loginStatus"></div>
             </div>
 
+            <!-- Signup Form -->
             <div class="auth-form" id="signupForm">
                 <h2>Join TWSS</h2>
-                <input type="text" id="signupEmail" placeholder="Email Address (or username)" required>
+                <input type="text" id="signupName" placeholder="Full Name" required>
+                <input type="email" id="signupEmail" placeholder="Email Address (e.g., yourname@twss.jyot)" required>
                 <input type="password" id="signupPassword" placeholder="Password" required>
                 <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
-                <input type="text" id="signupFullName" placeholder="Full Name" required>
                 <button onclick="signup()">Sign Up</button>
                 <div class="auth-switch">
                     Already have an account? <a href="#" onclick="switchToLogin()">Login here</a>
@@ -120,7 +649,7 @@
         <section class="hero">
             <div class="hero-accent"></div>
             <div class="hero-accent-2"></div>
-            <h1>Give the Best Start to Your Career with TWSS Internships!</h1>
+           <h1>Give the Best Start to Your Career with TWSS Internships!</h1>
             <h3>Your Gateway to Real-World Experience and Skill Development</h3>
             <p>
                 Welcome to TWSS Internships, where aspiring professionals like you can gain invaluable hands-on experience,
@@ -155,9 +684,7 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon"><i class="fas fa-certificate"></i></div>
-                    <h3>Valuable Certification</h3>
                     <p>Receive a recognized certificate upon successful completion, boosting your resume.</p>
-                </div>
                 <div class="feature-card">
                     <div class="feature-icon"><i class="fas fa-network-wired"></i></div>
                     <h3>Networking Opportunities</h3>
@@ -172,7 +699,7 @@
         </section>
     </div>
 
-    <a href="contactus.html" class="assistance-btn">
+    <a href="/contactus.php" class="assistance-btn">
         <i class="fas fa-life-ring"></i> Need Assistance?
     </a>
 
@@ -181,52 +708,27 @@
             <div class="footer-content">
                 <div class="footer-logo">TWSS <span>INTERNSHIP</span></div>
                 <div class="footer-links">
-                    <a href="privacypolicy.html">Privacy Policy</a>
-                    <a href="terms.html">Terms of Service</a>
-                    <a href="faq.html">FAQs</a>
-                    <a href="contactus.html">Support</a>
+                    <a href="/privacypolicy.php">Privacy Policy</a>
+                    <a href="/terms.php">Terms of Service</a>
+                    <a href="/faq.php">FAQs</a>
+                    <a href="/contactus.php">Support</a>
                 </div>
             </div>
 
             <div class="footer-social">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://x.com/kartheekbvs"><i class="fab fa-twitter"></i></a>
+                <a href=""><i class="fab fa-facebook-f"></i></a>
+                <a href="x.com/kartheekbvs"><i class="fab fa-twitter"></i></a>
                 <a href="https://www.linkedin.com/in/kartheek-bvs-2a82562b9/"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://www.instagram.com/kartheek3693/"><i class="fab fa-instagram"></i></a>
             </div>
 
             <div class="copyright">
-                <p>&copy; 2024 TWSS. All rights reserved. DEVELOPED BY <a href="portfolio.html">KARTHEEK</a></p>
+                <p>&copy; 2024 TWSS. All rights reserved. DEVELOPED BY <a href="/portfolio.html">KARTHEEK</a></p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Global variables
-        let redirectAfterAuth = null;
-        let turtleFrame = null;
-        let turtleFrameOverlay = null;
-
-        // Supabase client initialization
-        const SUPABASE_URL = 'https://fzwvxesrtdilljgrntpw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JuZXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // Auth Modal Elements
-        const authModal = document.getElementById('authModal');
-        const loginForm = document.getElementById('loginForm');
-        const signupForm = document.getElementById('signupForm');
-        const loginStatus = document.getElementById('loginStatus');
-        const signupStatus = document.getElementById('signupStatus');
-
-        // Profile Elements
-        const profileDropdown = document.getElementById('profileDropdown');
-        const profileMenu = document.getElementById('profileMenu');
-        const profileNameSpan = document.getElementById('profileName');
-        const profileFullNameDiv = document.getElementById('profileFullName');
-        const turtlePointsSpan = document.getElementById('turtlePoints');
-        const authButtons = document.getElementById('authButtons');
-
         // Mobile menu toggle
         const menuBtn = document.getElementById('menuBtn');
         const dropdownMenu = document.getElementById('dropdownMenu');
@@ -242,18 +744,44 @@
             }
         });
 
-        // Close profile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!profileDropdown.contains(event.target)) {
-                profileMenu.classList.remove('active');
-            }
-        });
+        // Supabase client initialization (replace with your actual Supabase details)
+        const SUPABASE_URL = 'https://fzwvxesrtdilljgrntpw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Modal Functions
+        // Auth Modal Elements
+        const authModal = document.getElementById('authModal');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const loginStatus = document.getElementById('loginStatus');
+        const signupStatus = document.getElementById('signupStatus');
+
+        // Profile Elements
+        const profileDropdown = document.getElementById('profileDropdown');
+        const profileMenu = document.getElementById('profileMenu');
+        const profileNameSpan = document.getElementById('profileName');
+        const profileFullNameDiv = document.getElementById('profileFullName');
+        const profileEmailDiv = document.getElementById('profileEmail'); // New element for full email
+        const turtlePointsSpan = document.getElementById('turtlePoints');
+        const authButtons = document.getElementById('authButtons');
+
+        let redirectAfterAuth = null;
+        const REQUIRED_EMAIL_DOMAIN = '@twss.jyot';
+
+        // Helper function to normalize email
+        function normalizeEmail(email, isSignup = false) {
+            email = email.toLowerCase().trim();
+            if (!email.includes('@')) {
+                return email + REQUIRED_EMAIL_DOMAIN;
+            } else if (!email.endsWith(REQUIRED_EMAIL_DOMAIN)) {
+                return email + REQUIRED_EMAIL_DOMAIN;
+            }
+            return email;
+        }
+
+        // Function to open auth modal
         function openAuthModal(formType) {
             authModal.classList.add('active');
-            clearAuthMessages();
-            
             if (formType === 'login') {
                 loginForm.classList.add('active');
                 signupForm.classList.remove('active');
@@ -261,68 +789,117 @@
                 signupForm.classList.add('active');
                 loginForm.classList.remove('active');
             }
-        }
-
-        function closeAuthModal() {
-            authModal.classList.remove('active');
-            clearAuthMessages();
-        }
-
-        function switchToSignup() {
-            loginForm.classList.remove('active');
-            signupForm.classList.add('active');
-            clearAuthMessages();
-        }
-
-        function switchToLogin() {
-            signupForm.classList.remove('active');
-            loginForm.classList.add('active');
-            clearAuthMessages();
-        }
-
-        function clearAuthMessages() {
+            // Clear previous messages
             loginStatus.textContent = '';
             loginStatus.className = 'auth-status';
             signupStatus.textContent = '';
             signupStatus.className = 'auth-status';
         }
 
-        // Enhanced Signup Function
+        // Function to close auth modal
+        function closeAuthModal() {
+            authModal.classList.remove('active');
+        }
+
+        // Function to switch between login and signup forms
+        function switchToSignup() {
+            loginForm.classList.remove('active');
+            signupForm.classList.add('active');
+            loginStatus.textContent = ''; // Clear login status
+        }
+
+        function switchToLogin() {
+            signupForm.classList.remove('active');
+            loginForm.classList.add('active');
+            signupStatus.textContent = ''; // Clear signup status
+        }
+
+        // Enhanced login function with daily login points and email domain enforcement
+        async function login() {
+            let email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Ensure email ends with the required domain for login lookup
+            email = normalizeEmail(email, false); // Not for signup
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('users_login')
+                    .select('*')
+                    .eq('email', email)
+                    .eq('password', password);
+
+                if (error) {
+                    console.error('Login error:', error);
+                    loginStatus.textContent = "Login failed: " + error.message;
+                    loginStatus.classList.add('error');
+                    loginStatus.classList.remove('success');
+                } else if (data.length > 0) {
+                    const user = data[0];
+                    
+                    // Check if user logged in today for daily bonus
+                    const lastLogin = localStorage.getItem('lastLogin_' + user.email);
+                    const today = new Date().toDateString();
+                    
+                    if (lastLogin !== today) {
+                        // Award daily login points
+                        const newPoints = (user.turtle_points || 0) + 2;
+                        await supabaseClient
+                            .from('users_login')
+                            .update({ turtle_points: newPoints })
+                            .eq('email', user.email);
+                        
+                        user.turtle_points = newPoints;
+                        localStorage.setItem('lastLogin_' + user.email, today);
+                        
+                        // Show login bonus notification
+                        setTimeout(() => {
+                            showPointsNotification(2, 'Daily Login Bonus');
+                        }, 1500);
+                    }
+                    
+                    localStorage.setItem('loggedInUser', JSON.stringify(user));
+                    loginStatus.textContent = "Login successful! Redirecting...";
+                    loginStatus.classList.add('success');
+                    loginStatus.classList.remove('error');
+                    
+                    setTimeout(() => {
+                        closeAuthModal();
+                        checkAuthState();
+                        if (redirectAfterAuth) {
+                            window.location.href = redirectAfterAuth;
+                            redirectAfterAuth = null;
+                        }
+                    }, 1000);
+                } else {
+                    loginStatus.textContent = "Invalid email or password.";
+                    loginStatus.classList.add('error');
+                    loginStatus.classList.remove('success');
+                }
+            } catch (err) {
+                console.error('Unexpected error during login:', err);
+                loginStatus.textContent = "An unexpected error occurred.";
+                loginStatus.classList.add('error');
+                loginStatus.classList.remove('success');
+            }
+        }
+
+        // Enhanced signup function with turtle points and email domain enforcement
         async function signup() {
-            const emailInput = document.getElementById('signupEmail').value.trim();
+            const name = document.getElementById('signupName').value;
+            let email = document.getElementById('signupEmail').value; // Get raw email
             const password = document.getElementById('signupPassword').value;
             const confirmPassword = document.getElementById('signupConfirmPassword').value;
-            const fullName = document.getElementById('signupFullName').value.trim();
-            const status = document.getElementById('signupStatus');
-
-            // Clear previous messages
-            status.textContent = "";
-            status.className = "auth-status";
-
-            // Validation
-            if (!emailInput || !password || !confirmPassword || !fullName) {
-                status.textContent = "❌ All fields are required.";
-                status.classList.add('error');
-                return;
-            }
 
             if (password !== confirmPassword) {
-                status.textContent = "❌ Passwords do not match.";
-                status.classList.add('error');
+                signupStatus.textContent = "Passwords do not match.";
+                signupStatus.classList.add('error');
+                signupStatus.classList.remove('success');
                 return;
             }
 
-            if (password.length < 6) {
-                status.textContent = "❌ Password must be at least 6 characters long.";
-                status.classList.add('error');
-                return;
-            }
-
-            // Process email - add domain if not present
-            let email = emailInput;
-            if (!email.includes('@')) {
-                email = `${email}@twss.jyot`;
-            }
+            // Enforce @twss.jyot domain for signup
+            email = normalizeEmail(email, true); // Pass true for signup to handle domain enforcement
 
             try {
                 // Check if user already exists
@@ -336,266 +913,196 @@
                 }
 
                 if (existingUsers && existingUsers.length > 0) {
-                    status.textContent = "❌ User already exists with this email.";
-                    status.classList.add('error');
+                    signupStatus.textContent = "Account with this email already exists.";
+                    signupStatus.classList.add('error');
+                    signupStatus.classList.remove('success');
                     return;
                 }
 
-                // Create new user
-                const { error: insertError } = await supabaseClient
-                    .from('users_login')
-                    .insert([{ 
-                        email: email, 
-                        password: password, 
-                        full_name: fullName,
-                        turtle_points: 10, // Initial points for new registration
-                        created_at: new Date().toISOString()
-                    }]);
-
-                if (insertError) {
-                    throw insertError;
-                }
-
-                // Success
-                status.textContent = "✅ Account created successfully! You earned 10 turtle points! Please login.";
-                status.classList.add('success');
-                
-                // Clear form
-                document.getElementById('signupEmail').value = '';
-                document.getElementById('signupPassword').value = '';
-                document.getElementById('signupConfirmPassword').value = '';
-                document.getElementById('signupFullName').value = '';
-                
-                // Auto-switch to login after 2 seconds
-                setTimeout(() => {
-                    switchToLogin();
-                    // Pre-fill email for convenience
-                    document.getElementById('loginEmail').value = email;
-                }, 2000);
-
-            } catch (err) {
-                console.error('Signup error:', err);
-                status.textContent = "❌ Signup failed: " + (err.message || "Unexpected error occurred");
-                status.classList.add('error');
-            }
-        }
-
-        // Enhanced Login Function
-        async function login() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            const status = document.getElementById('loginStatus');
-
-            // Clear previous messages
-            status.textContent = "";
-            status.className = "auth-status";
-
-            if (!email || !password) {
-                status.textContent = "❌ Please enter both email and password.";
-                status.classList.add('error');
-                return;
-            }
-
-            try {
+                // Insert new user with initial turtle points
                 const { data, error } = await supabaseClient
                     .from('users_login')
-                    .select('*')
-                    .eq('email', email)
-                    .eq('password', password);
+                    .insert([
+                        { full_name: name, email: email, password: password, turtle_points: 10 } // Start with 10 points for registration
+                    ]);
 
                 if (error) {
-                    throw error;
-                }
-
-                if (data && data.length > 0) {
-                    const user = data[0];
-                    
-                    // Check for daily login bonus
-                    const lastLogin = localStorage.getItem('lastLogin_' + user.email);
-                    const today = new Date().toDateString();
-                    
-                    if (lastLogin !== today) {
-                        // Award daily login points
-                        const newPoints = (user.turtle_points || 0) + 2;
-                        await supabaseClient
-                            .from('users_login')
-                            .update({ turtle_points: newPoints })
-                            .eq('email', email);
-                        
-                        user.turtle_points = newPoints;
-                        localStorage.setItem('lastLogin_' + user.email, today);
-                        
-                        // Show login bonus notification
-                        setTimeout(() => {
-                            showPointsNotification(2, 'Daily Login Bonus');
-                        }, 1500);
-                    }
-                    
-                    // Store user data
-                    localStorage.setItem('loggedInUser', JSON.stringify(user));
-                    
-                    status.textContent = "✅ Login successful! Redirecting...";
-                    status.classList.add('success');
-                    
-                    // Close modal and redirect
-                    setTimeout(() => {
-                        closeAuthModal();
-                        checkAuthState(); // Update UI with logged-in user info
-                        
-                        if (redirectAfterAuth) {
-                            window.location.href = redirectAfterAuth;
-                            redirectAfterAuth = null; // Clear redirect target
-                        }
-                    }, 1000);
+                    console.error('Signup error:', error);
+                    signupStatus.textContent = "Signup failed: " + error.message;
+                    signupStatus.classList.add('error');
+                    signupStatus.classList.remove('success');
                 } else {
-                    status.textContent = "❌ Invalid email or password.";
-                    status.classList.add('error');
+                    console.log('User signed up:', data);
+                    signupStatus.textContent = "Signup successful! You earned 10 turtle points! Please login.";
+                    signupStatus.classList.add('success');
+                    signupStatus.classList.remove('error');
+                    document.getElementById('signupName').value = '';
+                    document.getElementById('signupEmail').value = '';
+                    document.getElementById('signupPassword').value = '';
+                    document.getElementById('signupConfirmPassword').value = '';
+                    setTimeout(() => {
+                        switchToLogin();
+                    }, 2000);
                 }
             } catch (err) {
-                console.error('Login error:', err);
-                status.textContent = "❌ Login failed: " + (err.message || "Unexpected error occurred");
-                status.classList.add('error');
+                console.error('Unexpected error during signup:', err);
+                signupStatus.textContent = "An unexpected error occurred.";
+                signupStatus.classList.add('error');
+                signupStatus.classList.remove('success');
             }
         }
 
-        // Profile Functions
-        function toggleProfileMenu() {
-            profileMenu.classList.toggle('active');
-        }
-
+        // Logout function
         function logout() {
             localStorage.removeItem('loggedInUser');
-            // Also clear the last login date for the specific user
-            const currentUserEmail = JSON.parse(localStorage.getItem('loggedInUser') || '{}').email;
-            if (currentUserEmail) {
-                localStorage.removeItem('lastLogin_' + currentUserEmail);
+            // Ensure profileEmailDiv exists before trying to clear its last login
+            if (profileEmailDiv) {
+                localStorage.removeItem('lastLogin_' + profileEmailDiv.textContent); 
             }
-            checkAuthState(); // Update UI to logged-out state
-            profileMenu.classList.remove('active');
-            window.location.href = 'index.html'; // Redirect to home page
+            checkAuthState(); // Update UI
+            profileMenu.classList.remove('active'); // Close dropdown
+            window.location.href = '/'; // Redirect to home page or login page
         }
 
-        // Auth Check Functions
+        // Function to toggle profile dropdown menu
+        function toggleProfileMenu() {
+            console.log('toggleProfileMenu called');
+            console.log('profileMenu before toggle:', profileMenu.classList);
+            profileMenu.classList.toggle('active');
+            console.log('profileMenu after toggle:', profileMenu.classList);
+        }
+
+        // Check authentication state on page load
         function checkAuthState() {
             const loggedInUser = localStorage.getItem('loggedInUser');
-            
             if (loggedInUser) {
-                try {
-                    const user = JSON.parse(loggedInUser);
-                    const displayName = user.full_name ? user.full_name.split(' ')[0] : user.email.split('@')[0];
-                    
-                    profileNameSpan.textContent = displayName;
-                    profileFullNameDiv.textContent = user.full_name || user.email;
-                    turtlePointsSpan.textContent = user.turtle_points || 0;
+                const user = JSON.parse(loggedInUser);
+                profileNameSpan.textContent = user.full_name.split(' ')[0]; // Display first name
+                profileFullNameDiv.textContent = user.full_name;
+                profileEmailDiv.textContent = user.email; // Display full email with domain
+                turtlePointsSpan.textContent = user.turtle_points || 0; // Display turtle points
 
-                    profileDropdown.style.display = 'block';
-                    authButtons.style.display = 'none';
-                } catch (e) {
-                    console.error('Error parsing user data from localStorage:', e);
-                    localStorage.removeItem('loggedInUser'); // Clear corrupted data
-                    checkAuthState(); // Re-run to show logged-out state
-                }
+                profileDropdown.style.display = 'block';
+                authButtons.style.display = 'none';
             } else {
                 profileDropdown.style.display = 'none';
                 authButtons.style.display = 'flex';
             }
         }
 
-        // Function to protect routes and redirect if not logged in
+        // Protect routes
         function checkAuth(path) {
             const loggedInUser = localStorage.getItem('loggedInUser');
             if (!loggedInUser) {
-                redirectAfterAuth = path; // Store the intended destination
-                openAuthModal('login'); // Open login modal
-                return false; // Prevent immediate navigation
+                redirectAfterAuth = path;
+                openAuthModal('login');
             } else {
-                window.location.href = path; // Allow navigation
-                return true;
+                window.location.href = path;
             }
         }
 
-        // Turtle Points Functions
+        // Close profile menu and turtle frame when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileBtn = document.querySelector('.profile-btn');
+            if (profileBtn && !profileBtn.contains(event.target) && !profileMenu.contains(event.target)) {
+                profileMenu.classList.remove('active');
+            }
+            // Close turtle frame if open and clicked outside
+            if (turtleFrame && turtleFrame.classList.contains('active') && !turtleFrame.contains(event.target) && !event.target.closest('.turtle-points')) {
+                closeTurtleFrame();
+            }
+        });
+
+        // Initialize auth state on page load
+        document.addEventListener('DOMContentLoaded', checkAuthState);
+
+
+        // Turtle Frame Elements
+        let turtleFrame = null;
+        let turtleFrameOverlay = null;
+
+        // Function to create turtle points frame
         function createTurtleFrame() {
             // Create overlay
             turtleFrameOverlay = document.createElement('div');
-            turtleFrameOverlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 2000;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            `;
+            turtleFrameOverlay.className = 'turtle-frame-overlay';
             turtleFrameOverlay.onclick = closeTurtleFrame;
             document.body.appendChild(turtleFrameOverlay);
 
             // Create frame
             turtleFrame = document.createElement('div');
-            turtleFrame.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%) scale(0.8);
-                background: white;
-                border-radius: 12px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-                z-index: 2001;
-                max-width: 500px;
-                width: 90%;
-                max-height: 80vh;
-                overflow-y: auto;
-                transition: transform 0.3s ease;
-            `;
-            
-            const loggedInUser = localStorage.getItem('loggedInUser');
-            const userPoints = loggedInUser ? JSON.parse(loggedInUser).turtle_points || 0 : 0;
-            
+            turtleFrame.className = 'turtle-frame';
             turtleFrame.innerHTML = `
-                <div style="padding: 1.5rem; border-bottom: 1px solid #eee; position: sticky; top: 0; background: white; border-radius: 12px 12px 0 0;">
-                    <button onclick="closeTurtleFrame()" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
-                        <div style="width: 30px; height: 30px; background: #ffeaa7; border-radius: 50%; display: flex; align-items: center; justify-content: center;">🐢</div>
-                        <h2 style="margin: 0; color: #333;">Turtle Points</h2>
+                <div class="turtle-frame-header">
+                    <button class="turtle-frame-close" onclick="closeTurtleFrame()">&times;</button>
+                    <div class="turtle-frame-title">
+                        <div class="turtle-icon"></div>
+                        Turtle Points
                     </div>
-                    <div style="color: #666; font-size: 14px;">Your Learning Journey</div>
+                    <div class="turtle-frame-subtitle">Your Learning Journey</div>
                 </div>
-                <div style="padding: 1.5rem;">
-                    <div style="text-align: center; margin-bottom: 2rem;">
-                        <div style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); width: 120px; height: 120px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 1rem;">
-                            <div id="framePointsNumber" style="font-size: 2rem; font-weight: bold; color: #b8860b;">${userPoints}</div>
-                            <div style="font-size: 0.9rem; color: #b8860b;">Points</div>
+                <div class="turtle-frame-content">
+                    <div class="points-display">
+                        <div class="points-circle">
+                            <div class="points-number" id="framePointsNumber">250</div>
+                            <div class="points-label">Points</div>
                         </div>
-                        <div style="color: #666;">Keep learning to earn more!</div>
+                        <div class="points-label">Keep learning to earn more!</div>
                     </div>
                     
-                    <div style="margin-bottom: 1.5rem;">
-                        <h3 style="color: #333; margin-bottom: 1rem;">How to Earn Points</h3>
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
-                            <span>Complete Registration</span>
-                            <span style="color: #27ae60; font-weight: bold;">+10</span>
+                    <div class="points-section">
+                        <h3>How to Earn Points</h3>
+                        <div class="points-activity">
+                            <span class="activity-name">Complete Registration</span>
+                            <span class="activity-points positive">+10</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
-                            <span>Daily Login</span>
-                            <span style="color: #27ae60; font-weight: bold;">+2</span>
+                        <div class="points-activity">
+                            <span class="activity-name">Complete Internship</span>
+                            <span class="activity-points positive">+50</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
-                            <span>Complete Internship</span>
-                            <span style="color: #27ae60; font-weight: bold;">+50</span>
+                        <div class="points-activity">
+                            <span class="activity-name">Pass Training Module</span>
+                            <span class="activity-points positive">+25</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
-                            <span>Pass Training Module</span>
-                            <span style="color: #27ae60; font-weight: bold;">+25</span>
+                        <div class="points-activity">
+                            <span class="activity-name">Pass Exam</span>
+                            <span class="activity-points positive">+100</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
-                            <span>Pass Exam</span>
-                            <span style="color: #27ae60; font-weight: bold;">+100</span>
+                        <div class="points-activity">
+                            <span class="activity-name">Get Certification</span>
+                            <span class="activity-points positive">+75</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-                            <span>Get Certification</span>
-                            <span style="color: #27ae60; font-weight: bold;">+75</span>
+                    </div>
+                    
+                    <div class="points-section">
+                        <h3>Recent Activity</h3>
+                        <div class="points-activity">
+                            <span class="activity-name">Account Created</span>
+                            <span class="activity-points positive">+10</span>
+                        </div>
+                        <div class="points-activity">
+                            <span class="activity-name">Daily Login Bonus</span>
+                            <span class="activity-points positive">+2</span>
+                        </div>
+                        <div class="points-activity">
+                            <span class="activity-name">Profile Updated</span>
+                            <span class="activity-points positive">+5</span>
+                        </div>
+                    </div>
+                    
+                    <div class="points-section">
+                        <h3>Achievements</h3>
+                        <div class="points-activity">
+                            <span class="activity-name">&#x1F308; First Steps</span>
+                            <span class="activity-points">Unlocked</span>
+                        </div>
+                        <div class="points-activity">
+                            <span class="activity-name">&#x1F4DA; Learning Enthusiast</span>
+                            <span class="activity-points">250+ Points</span>
+                        </div>
+                        <div class="points-activity">
+                            <span class="activity-name">&#x1F31F; Rising Star</span>
+                            <span class="activity-points">500+ Points</span>
                         </div>
                     </div>
                 </div>
@@ -603,12 +1110,13 @@
             document.body.appendChild(turtleFrame);
         }
 
+        // Function to open turtle frame
         function openTurtleFrame() {
             if (!turtleFrame) {
                 createTurtleFrame();
             }
             
-            // Update points display in the modal
+            // Update points display
             const loggedInUser = localStorage.getItem('loggedInUser');
             if (loggedInUser) {
                 const user = JSON.parse(loggedInUser);
@@ -617,117 +1125,129 @@
                     framePointsNumber.textContent = user.turtle_points || 0;
                 }
             }
-
-            turtleFrame.style.transform = 'translate(-50%, -50%) scale(1)';
-            turtleFrameOverlay.style.opacity = '1';
-            document.body.style.overflow = 'hidden';
+            
+            // Show frame
+            turtleFrame.classList.add('active');
+            turtleFrameOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
         }
 
+        // Function to close turtle frame
         function closeTurtleFrame() {
             if (turtleFrame) {
-                turtleFrame.style.transform = 'translate(-50%, -50%) scale(0.8)';
-                turtleFrameOverlay.style.opacity = '0';
-                document.body.style.overflow = 'auto';
-                setTimeout(() => {
-                    if (turtleFrame) {
-                        document.body.removeChild(turtleFrame);
-                        document.body.removeChild(turtleFrameOverlay);
-                        turtleFrame = null;
-                        turtleFrameOverlay = null;
-                    }
-                }, 300);
+                turtleFrame.classList.remove('active');
+                turtleFrameOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto'; // Restore scroll
             }
         }
 
+        // Function to update turtle points
+        async function updateTurtlePoints(pointsToAdd, reason) {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (!loggedInUser) return;
+            
+            const user = JSON.parse(loggedInUser);
+            const newPoints = (user.turtle_points || 0) + pointsToAdd;
+            
+            try {
+                // Update in database
+                const { data, error } = await supabaseClient
+                    .from('users_login')
+                    .update({ turtle_points: newPoints })
+                    .eq('email', user.email);
+                    
+                if (error) {
+                    console.error('Error updating turtle points:', error);
+                    return;
+                }
+                
+                // Update local storage
+                user.turtle_points = newPoints;
+                localStorage.setItem('loggedInUser', JSON.stringify(user));
+                
+                // Update UI
+                const turtlePointsSpan = document.getElementById('turtlePoints');
+                if (turtlePointsSpan) {
+                    turtlePointsSpan.textContent = newPoints;
+                }
+                
+                // Show notification
+                showPointsNotification(pointsToAdd, reason);
+                
+            } catch (err) {
+                console.error('Error updating turtle points:', err);
+            }
+        }
+
+        // Function to show points notification
         function showPointsNotification(points, reason) {
             const notification = document.createElement('div');
+            notification.className = 'points-notification';
             notification.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 30px; height: 30px; background: #ffeaa7; border-radius: 50%; display: flex; align-items: center; justify-content: center;">🐢</div>
-                    <div>
-                        <div style="font-weight: bold; color: #b8860b;">+${points} Turtle Points</div>
-                        <div style="font-size: 0.8rem; color: #666;">${reason}</div>
+                <div class="points-notification-content">
+                    <div class="turtle-icon"></div>
+                    <div class="notification-text">
+                        <div class="notification-points">+${points} Turtle Points</div>
+                        <div class="notification-reason">${reason}</div>
                     </div>
                 </div>
             `;
             
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-                color: #b8860b;
-                padding: 1rem 1.5rem;
-                border-radius: 12px;
-                box-shadow: 0 4px 20px rgba(253, 203, 110, 0.4);
-                z-index: 3000;
-                transform: translateX(400px);
-                transition: transform 0.3s ease;
-                font-weight: 600;
-                min-width: 200px;
-            `;
-            
             document.body.appendChild(notification);
             
+            // Animate in
             setTimeout(() => {
                 notification.style.transform = 'translateX(0)';
             }, 100);
-
+            
+            // Remove after 3 seconds
             setTimeout(() => {
                 notification.style.transform = 'translateX(400px)';
                 setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
+                    document.body.removeChild(notification);
                 }, 300);
-            }, 4000);
+            }, 3000);
         }
 
-        // Utility Functions for awarding points (can be called from other pages/events)
-        async function awardPoints(activity, points, reason) {
-            const loggedInUser = localStorage.getItem('loggedInUser');
-            if (!loggedInUser) {
-                console.warn('Cannot award points: User not logged in.');
-                return;
-            }
-
-            let user;
-            try {
-                user = JSON.parse(loggedInUser);
-            } catch (e) {
-                console.error('Error parsing loggedInUser from localStorage:', e);
-                localStorage.removeItem('loggedInUser');
-                checkAuthState();
-                return;
-            }
-
-            const newPoints = (user.turtle_points || 0) + points;
+        // Function to award points for various activities
+        function awardPoints(activity) {
+            const pointsMap = {
+                'registration': { points: 10, reason: 'Registration Completed' },
+                'internship': { points: 50, reason: 'Internship Completed' },
+                'training': { points: 25, reason: 'Training Module Completed' },
+                'exam': { points: 100, reason: 'Exam Passed' },
+                'certification': { points: 75, reason: 'Certification Earned' },
+                'login': { points: 2, reason: 'Daily Login' },
+                'profile_update': { points: 5, reason: 'Profile Updated' }
+            };
             
-            try {
-                // Update in database
-                const { error } = await supabaseClient
-                    .from('users_login')
-                    .update({ turtle_points: newPoints })
-                    .eq('email', user.email);
-
-                if (!error) {
-                    user.turtle_points = newPoints;
-                    localStorage.setItem('loggedInUser', JSON.stringify(user));
-                    checkAuthState(); // Update UI with new points
-                    showPointsNotification(points, reason);
-                } else {
-                    console.error('Error updating points in Supabase:', error);
-                }
-            } catch (err) {
-                console.error('Unexpected error during point update:', err);
+            const reward = pointsMap[activity];
+            if (reward) {
+                updateTurtlePoints(reward.points, reward.reason);
             }
         }
 
-        // Initialize on page load
+        // Add event listeners when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            checkAuthState(); // Check and update UI based on login status
+            // Add click event to turtle points section
+            // We need to ensure the element exists before adding the listener
+            const turtlePointsDiv = document.querySelector('.profile-dropdown .turtle-points');
+            if (turtlePointsDiv) {
+                turtlePointsDiv.addEventListener('click', openTurtleFrame);
+            }
+            
+            // Add escape key listener for auth modal and turtle frame
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (authModal && authModal.classList.contains('active')) {
+                        closeAuthModal();
+                    }
+                    if (turtleFrame && turtleFrame.classList.contains('active')) {
+                        closeTurtleFrame();
+                    }
+                }
+            });
         });
     </script>
-
 </body>
 </html>

@@ -871,45 +871,6 @@ document.addEventListener('contextmenu', event => {
 });
 </script>
 
-        <script>
-            function formatEmailInput() {
-  const input = document.getElementById('signupEmail');
-  let value = input.value.trim();
-
-  // Remove the domain if already present
-  if (value.includes('@')) {
-    value = value.split('@')[0];
-  }
-
-  // Set formatted email back into input
-  input.value = value + '@twss.jyot';
-}
-
-// Listen while typing
-document.addEventListener('DOMContentLoaded', () => {
-  const emailInput = document.getElementById('signupEmail');
-
-  // Auto-format on every input
-  emailInput.addEventListener('input', () => {
-    formatEmailInput();
-  });
-
-  // Prevent deleting the domain accidentally
-  emailInput.addEventListener('keydown', function(e) {
-    const domain = '@twss.jyot';
-    const value = emailInput.value;
-    const cursorPosition = emailInput.selectionStart;
-
-    if (
-      value.endsWith(domain) &&
-      cursorPosition > value.length - domain.length - 1 &&
-      ['Backspace', 'Delete'].includes(e.key)
-    ) {
-      e.preventDefault(); // stop user from deleting domain
-    }
-  });
-});
-
-        </script>
+     
 </body>
 </html>

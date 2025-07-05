@@ -153,26 +153,18 @@
             </div>
 
             <!-- Signup Form -->
-         
+         <div class="auth-form" id="signupForm">
+    <h2>Join TWSS</h2>
+    <input type="text" id="signupUsername" placeholder="Enter username (e.g., kartheek)" required>
+    <input type="password" id="signupPassword" placeholder="Password" required>
+    <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+    <button onclick="signup()">Sign Up</button>
+    <div class="status" id="signupStatus"></div>
+  </div>
   
   
 
 
-
-            <div class="auth-form" id="signupForm">
-                <h2>Join TWSS</h2>
-          <input type="text" id="signupUsername" placeholder="Enter username (e.g., kartheek)" required>
-
-            <input type="password" id="signupPassword" placeholder="Password" required>
-  <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
-                <button onclick="signup()">Sign Up</button>
-  <div class="status" id="signupStatus"></div>
-                <div class="auth-switch">
-                    Already have an account? <a href="#" onclick="switchToLogin()">Login here</a>
-                </div>
-            </div>
-        </div>
-    </div>
     
     <div class="announcement">
         <marquee direction="left">Note: Registration is only for details of a candidate. For conductance of exam please kindly login</marquee>
@@ -920,6 +912,74 @@ document.addEventListener('contextmenu', event => {
 });
 </script>
 
-     
+
+
+
+          <script>
+    const { createClient } = supabase;
+    const supabaseClient = createClient(
+      'https://fzwvxesrtdilljgrntpw.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'
+    );
+
+    async function signup() {
+      const username = document.getElementById('signupUsername').value.trim();
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('signupConfirmPassword').value;
+      const status = document.getElementById('signupStatus');
+
+      status.textContent = "";
+      status.style.color = "black";
+
+      if (!username || !password || !confirmPassword) {
+        status.textContent = "❌ All fields are required.";
+        status.style.color = "red";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        status.textContent = "❌ Passwords do not match.";
+        status.style.color = "red";
+        return;
+      }
+
+      const email = username.includes('@') ? username : `${username}@twss.jyot`;
+
+      try {
+        const { data: existingUsers, error: checkError } = await supabaseClient
+          .from('users_login')
+          .select('email')
+          .eq('email', email);
+
+        if (checkError) throw checkError;
+
+        if (existingUsers && existingUsers.length > 0) {
+          status.textContent = "❌ User already exists.";
+          status.style.color = "red";
+          return;
+        }
+
+        const { error } = await supabaseClient
+          .from('users_login')
+          .insert([{ email, password, turtle_points: 0 }]);
+
+        if (error) {
+          status.textContent = "❌ Signup failed: " + error.message;
+          status.style.color = "red";
+        } else {
+          status.textContent = "✅ Signup successful!";
+          status.style.color = "green";
+          document.getElementById('signupUsername').value = '';
+          document.getElementById('signupPassword').value = '';
+          document.getElementById('signupConfirmPassword').value = '';
+        }
+
+      } catch (err) {
+        console.error(err);
+        status.textContent = "❌ Unexpected error: " + err.message;
+        status.style.color = "red";
+      }
+    }
+  </script>
 </body>
 </html>

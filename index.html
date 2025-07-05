@@ -9,6 +9,18 @@
         let redirectAfterAuth = null;
 
     </script>
+
+        <script>
+  const loggedInUser = localStorage.getItem('loggedInUser');
+  if (!loggedInUser) {
+    // Save what the user tried to open
+    localStorage.setItem('redirectAfterLogin', window.location.pathname);
+    // Go to home page (which has login modal)
+    window.location.href = '/index.html';
+  }
+
+
+    </script>
     <link rel="stylesheet" href="index.css"> 
     <style>
         /* New and Modified CSS for Profile Section and Notifications */
@@ -1242,15 +1254,17 @@ async function login() {
  
   
         <script>
-function checkAuth(targetUrl) {
-  const loggedInUser = localStorage.getItem('loggedInUser');
-  if (!loggedInUser) {
-    redirectAfterAuth = targetUrl;      // Save target
-    openAuthModal('login');             // Open login modal
-  } else {
-    window.location.href = targetUrl;   // Already logged in → go directly
-  }
-}
+
+setTimeout(() => {
+    closeAuthModal();
+    checkAuthState();
+    if (redirectAfterAuth) {
+        window.location.href = redirectAfterAuth;
+        redirectAfterAuth = null;
+    } else {
+        window.location.href = "https://twss.netlify.app"; // fallback
+    }
+}, 1000);
 
             setTimeout(() => {
     closeAuthModal();
@@ -1262,6 +1276,18 @@ function checkAuth(targetUrl) {
         window.location.href = "https://twss.netlify.app";
     }
 }, 1000);
+
+            document.addEventListener('DOMContentLoaded', () => {
+  checkAuthState();
+  
+  const redirectPage = localStorage.getItem('redirectAfterLogin');
+  if (redirectPage) {
+    redirectAfterAuth = redirectPage;
+    openAuthModal('login');
+    localStorage.removeItem('redirectAfterLogin');
+  }
+});
+
 
 </script>
 

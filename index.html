@@ -844,48 +844,10 @@ openAuthModal('login');
     </script>
     <script>
         <script>
-  const { createClient } = supabase;
-  const supabaseClient = createClient(
-    'https://fzwvxesrtdilljgrntpw.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'
-  );
+  
 
 async function insertLogin() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const status = document.getElementById('status');
-
-  try {
-    const { data, error } = await supabaseClient
-      .from('users_login')
-      .insert([{ email: email, password: password, created_at: new Date() }]);
-
-    if (error) {
-      console.error('Insert error:', error);
-      status.textContent = "❌ " + error.message;
-      status.style.color = "red";
-    } else {
-      console.log('Inserted data:', data);
-      status.textContent = "✅ Login data saved to database!";
-      status.style.color = "green";
-
-      // Mark user as logged in
-      localStorage.setItem("loggedIn", "true");
-
-      // Redirect to saved page or default
-      const redirectPage = localStorage.getItem("redirectAfterLogin");
-      if (redirectPage) {
-        localStorage.removeItem("redirectAfterLogin"); // clean up
-        window.location.href = redirectPage;
-      } else {
-        window.location.href = "home.html"; // fallback page
-      }
-    }
-  } catch (err) {
-    console.error('Unexpected error:', err);
-    status.textContent = "❌ Unexpected error: " + err.message;
-    status.style.color = "red";
-  }
+  window.location.href = "twss.netlify.app/login/signup.html";
 }
     </script>
 </body>

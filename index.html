@@ -1249,5 +1249,32 @@
             });
         });
     </script>
+    <script>
+        <script>
+  function goToPage(page) {
+    // Check if user is logged in (example: check if "loggedIn" flag is set)
+    if (localStorage.getItem("loggedIn") === "true") {
+      window.location.href = page;
+    } else {
+      localStorage.setItem("redirectAfterLogin", page);
+      window.location.href = "login.html";
+    }
+  }
+</script>
+    <script>
+        <script>
+function checkAuth(targetUrl) {
+  if (localStorage.getItem("loggedIn") === "true") {
+    window.location.href = targetUrl;
+  } else {
+    localStorage.setItem("redirectAfterLogin", targetUrl);
+    window.location.href = "/login/signup.html"; // send them to login/signup
+  }
+}
+</script>
+
+    </script>
+
+    </script>
 </body>
 </html>

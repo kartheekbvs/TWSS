@@ -6,17 +6,21 @@
     <title>TWSS INTERNSHIP</title>
     <link rel="stylesheet" href="index.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-      <script src="/scripts/resetSession.js"></script>
-
-
-   <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-    <script>
-    localStorage.removeItem("loggedIn");
-    localStorage.removeItem("loggedInUser");
-    localStorage.removeItem("redirectAfterLogin");
-  </script>
-  <body>
+<body>
+    <!-- 
+        IMPORTANT: The localStorage.removeItem calls below have been removed.
+        These lines were causing issues with signup and redirection by clearing
+        the user's session every time the page loaded.
+        Session clearing should only happen on explicit logout.
+    -->
+    <!-- <script>
+        localStorage.removeItem("loggedIn");
+        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("redirectAfterLogin");
+    </script> -->
+
     <div class="diagonal-divider diagonal-top"></div>
     <div class="diagonal-divider diagonal-bottom"></div>
     
@@ -28,13 +32,13 @@
                 
                 <nav class="desktop-nav">
                     <ul>
-                        <li><a href="#" onclick="checkAuth('/registration.php/')">Registration</a></li>
-                        <li><a href="#" onclick="checkAuth('/intern.php')">Internship</a></li>
-                        <li><a href="#" onclick="checkAuth('/mysqltutorial.html')">Training</a></li>
-                        <li><a href="#" onclick="checkAuth('/exam.html')">Attend Exam</a></li>
-                        <li><a href="#" onclick="checkAuth('/certification.php')">Certification</a></li>
-                        <li><a href="#" onclick="checkAuth('/about.php')">About</a></li>
-                        <li><a href="#" onclick="checkAuth('/contactus.php')">Contact Us</a></li>
+                        <li><a href="#" onclick="checkAuth('registration.html')">Registration</a></li>
+                        <li><a href="#" onclick="checkAuth('intern.html')">Internship</a></li>
+                        <li><a href="#" onclick="checkAuth('mysqltutorial.html')">Training</a></li>
+                        <li><a href="#" onclick="checkAuth('exam.html')">Attend Exam</a></li>
+                        <li><a href="#" onclick="checkAuth('certification.html')">Certification</a></li>
+                        <li><a href="#" onclick="checkAuth('about.html')">About</a></li>
+                        <li><a href="#" onclick="checkAuth('contactus.html')">Contact Us</a></li>
                     </ul>
                 </nav>
 
@@ -70,13 +74,13 @@
                         <span></span>
                     </button>
                     <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="#" onclick="checkAuth('/registration.php/')">Registration</a>
-                        <a href="#" onclick="checkAuth('/intern.php')">Internship</a>
-                        <a href="#" onclick="checkAuth('/mysqltutorial.html')">Training</a>
-                        <a href="#" onclick="checkAuth('/exam.html')">Attend Exam</a>
-                        <a href="#" onclick="checkAuth('/certification.php')">Certification</a>
-                        <a href="#" onclick="checkAuth('/about.php')">About</a>
-                        <a href="#" onclick="checkAuth('/contactus.php')">Contact Us</a>
+                        <a href="#" onclick="checkAuth('registration.html')">Registration</a>
+                        <a href="#" onclick="checkAuth('intern.html')">Internship</a>
+                        <a href="#" onclick="checkAuth('mysqltutorial.html')">Training</a>
+                        <a href="#" onclick="checkAuth('exam.html')">Attend Exam</a>
+                        <a href="#" onclick="checkAuth('certification.html')">Certification</a>
+                        <a href="#" onclick="checkAuth('about.html')">About</a>
+                        <a href="#" onclick="checkAuth('contactus.html')">Contact Us</a>
                     </div>
                 </div>
             </div>
@@ -100,14 +104,15 @@
 
             <div class="auth-form" id="signupForm">
                 <h2>Join TWSS</h2>
-                <input type="text" id="signupUsername" placeholder="Enter username (e.g., kartheek)" required>
+                <input type="text" id="signupEmail" placeholder="Email Address (or username)" required>
                 <input type="password" id="signupPassword" placeholder="Password" required>
                 <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+                <input type="text" id="signupFullName" placeholder="Full Name" required>
                 <button onclick="signup()">Sign Up</button>
                 <div class="auth-switch">
                     Already have an account? <a href="#" onclick="switchToLogin()">Login here</a>
                 </div>
-                <div class="status" id="signupStatus"></div>
+                <div class="auth-status" id="signupStatus"></div>
             </div>
         </div>
     </div>
@@ -172,7 +177,7 @@
         </section>
     </div>
 
-    <a href="/contactus.php" class="assistance-btn">
+    <a href="contactus.html" class="assistance-btn">
         <i class="fas fa-life-ring"></i> Need Assistance?
     </a>
 
@@ -181,45 +186,35 @@
             <div class="footer-content">
                 <div class="footer-logo">TWSS <span>INTERNSHIP</span></div>
                 <div class="footer-links">
-                    <a href="/privacypolicy.php">Privacy Policy</a>
-                    <a href="/terms.php">Terms of Service</a>
-                    <a href="/faq.php">FAQs</a>
-                    <a href="/contactus.php">Support</a>
+                    <a href="privacypolicy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="faq.html">FAQs</a>
+                    <a href="contactus.html">Support</a>
                 </div>
             </div>
 
             <div class="footer-social">
-                <a href=""><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
                 <a href="https://x.com/kartheekbvs"><i class="fab fa-twitter"></i></a>
                 <a href="https://www.linkedin.com/in/kartheek-bvs-2a82562b9/"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://www.instagram.com/kartheek3693/"><i class="fab fa-instagram"></i></a>
             </div>
 
             <div class="copyright">
-                <p>&copy; 2024 TWSS. All rights reserved. DEVELOPED BY <a href="/portfolio.html">KARTHEEK</a></p>
+                <p>&copy; 2024 TWSS. All rights reserved. DEVELOPED BY <a href="portfolio.html">KARTHEEK</a></p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Mobile menu toggle
-        const menuBtn = document.getElementById('menuBtn');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-
-        menuBtn.addEventListener('click', function() {
-            dropdownMenu.classList.toggle('active');
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!menuBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                dropdownMenu.classList.remove('active');
-            }
-        });
+        // Global variables
+        let redirectAfterAuth = null;
+        let turtleFrame = null;
+        let turtleFrameOverlay = null;
 
         // Supabase client initialization
         const SUPABASE_URL = 'https://fzwvxesrtdilljgrntpw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImexA6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JuZXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // Auth Modal Elements
@@ -237,15 +232,33 @@
         const turtlePointsSpan = document.getElementById('turtlePoints');
         const authButtons = document.getElementById('authButtons');
 
-        let redirectAfterAuth = null;
+        // Mobile menu toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
 
-        // Turtle Frame Elements
-        let turtleFrame = null;
-        let turtleFrameOverlay = null;
+        menuBtn.addEventListener('click', function() {
+            dropdownMenu.classList.toggle('active');
+        });
 
-        // Function to open auth modal
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!menuBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+
+        // Close profile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!profileDropdown.contains(event.target)) {
+                profileMenu.classList.remove('active');
+            }
+        });
+
+        // Modal Functions
         function openAuthModal(formType) {
             authModal.classList.add('active');
+            clearAuthMessages();
+            
             if (formType === 'login') {
                 loginForm.classList.add('active');
                 signupForm.classList.remove('active');
@@ -253,35 +266,140 @@
                 signupForm.classList.add('active');
                 loginForm.classList.remove('active');
             }
-            // Clear previous messages
-            loginStatus.textContent = '';
-            loginStatus.className = 'auth-status';
-            signupStatus.textContent = '';
-            signupStatus.className = 'status';
         }
 
-        // Function to close auth modal
         function closeAuthModal() {
             authModal.classList.remove('active');
+            clearAuthMessages();
         }
 
-        // Function to switch between login and signup forms
         function switchToSignup() {
             loginForm.classList.remove('active');
             signupForm.classList.add('active');
-            loginStatus.textContent = '';
+            clearAuthMessages();
         }
 
         function switchToLogin() {
             signupForm.classList.remove('active');
             loginForm.classList.add('active');
-            signupStatus.textContent = '';
+            clearAuthMessages();
         }
 
-        // Enhanced login function
+        function clearAuthMessages() {
+            loginStatus.textContent = '';
+            loginStatus.className = 'auth-status';
+            signupStatus.textContent = '';
+            signupStatus.className = 'auth-status';
+        }
+
+        // Enhanced Signup Function
+        async function signup() {
+            const emailInput = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const fullName = document.getElementById('signupFullName').value.trim();
+            const status = document.getElementById('signupStatus');
+
+            // Clear previous messages
+            status.textContent = "";
+            status.className = "auth-status";
+
+            // Validation
+            if (!emailInput || !password || !confirmPassword || !fullName) {
+                status.textContent = "❌ All fields are required.";
+                status.classList.add('error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                status.textContent = "❌ Passwords do not match.";
+                status.classList.add('error');
+                return;
+            }
+
+            if (password.length < 6) {
+                status.textContent = "❌ Password must be at least 6 characters long.";
+                status.classList.add('error');
+                return;
+            }
+
+            // Process email - add domain if not present
+            let email = emailInput;
+            if (!email.includes('@')) {
+                email = `${email}@twss.jyot`;
+            }
+
+            try {
+                // Check if user already exists
+                const { data: existingUsers, error: checkError } = await supabaseClient
+                    .from('users_login')
+                    .select('email')
+                    .eq('email', email);
+
+                if (checkError) {
+                    throw checkError;
+                }
+
+                if (existingUsers && existingUsers.length > 0) {
+                    status.textContent = "❌ User already exists with this email.";
+                    status.classList.add('error');
+                    return;
+                }
+
+                // Create new user
+                const { error: insertError } = await supabaseClient
+                    .from('users_login')
+                    .insert([{ 
+                        email: email, 
+                        password: password, 
+                        full_name: fullName,
+                        turtle_points: 10, // Initial points for new registration
+                        created_at: new Date().toISOString()
+                    }]);
+
+                if (insertError) {
+                    throw insertError;
+                }
+
+                // Success
+                status.textContent = "✅ Account created successfully! You earned 10 turtle points! Please login.";
+                status.classList.add('success');
+                
+                // Clear form
+                document.getElementById('signupEmail').value = '';
+                document.getElementById('signupPassword').value = '';
+                document.getElementById('signupConfirmPassword').value = '';
+                document.getElementById('signupFullName').value = '';
+                
+                // Auto-switch to login after 2 seconds
+                setTimeout(() => {
+                    switchToLogin();
+                    // Pre-fill email for convenience
+                    document.getElementById('loginEmail').value = email;
+                }, 2000);
+
+            } catch (err) {
+                console.error('Signup error:', err);
+                status.textContent = "❌ Signup failed: " + (err.message || "Unexpected error occurred");
+                status.classList.add('error');
+            }
+        }
+
+        // Enhanced Login Function
         async function login() {
-            const email = document.getElementById('loginEmail').value;
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
+            const status = document.getElementById('loginStatus');
+
+            // Clear previous messages
+            status.textContent = "";
+            status.className = "auth-status";
+
+            if (!email || !password) {
+                status.textContent = "❌ Please enter both email and password.";
+                status.classList.add('error');
+                return;
+            }
 
             try {
                 const { data, error } = await supabaseClient
@@ -291,14 +409,13 @@
                     .eq('password', password);
 
                 if (error) {
-                    console.error('Login error:', error);
-                    loginStatus.textContent = "Login failed: " + error.message;
-                    loginStatus.classList.add('error');
-                    loginStatus.classList.remove('success');
-                } else if (data.length > 0) {
+                    throw error;
+                }
+
+                if (data && data.length > 0) {
                     const user = data[0];
                     
-                    // Check if user logged in today for daily bonus
+                    // Check for daily login bonus
                     const lastLogin = localStorage.getItem('lastLogin_' + user.email);
                     const today = new Date().toDateString();
                     
@@ -319,148 +436,93 @@
                         }, 1500);
                     }
                     
+                    // Store user data
                     localStorage.setItem('loggedInUser', JSON.stringify(user));
-                    loginStatus.textContent = "Login successful! Redirecting...";
-                    loginStatus.classList.add('success');
-                    loginStatus.classList.remove('error');
                     
+                    status.textContent = "✅ Login successful! Redirecting...";
+                    status.classList.add('success');
+                    
+                    // Close modal and redirect
                     setTimeout(() => {
                         closeAuthModal();
-                        checkAuthState();
+                        checkAuthState(); // Update UI with logged-in user info
+                        
                         if (redirectAfterAuth) {
                             window.location.href = redirectAfterAuth;
-                            redirectAfterAuth = null;
+                            redirectAfterAuth = null; // Clear redirect target
                         }
                     }, 1000);
                 } else {
-                    loginStatus.textContent = "Invalid email or password.";
-                    loginStatus.classList.add('error');
-                    loginStatus.classList.remove('success');
+                    status.textContent = "❌ Invalid email or password.";
+                    status.classList.add('error');
                 }
             } catch (err) {
-                console.error('Unexpected error during login:', err);
-                loginStatus.textContent = "An unexpected error occurred.";
-                loginStatus.classList.add('error');
-                loginStatus.classList.remove('success');
+                console.error('Login error:', err);
+                status.textContent = "❌ Login failed: " + (err.message || "Unexpected error occurred");
+                status.classList.add('error');
             }
         }
 
-        // Enhanced signup function
-        async function signup() {
-            const username = document.getElementById('signupUsername').value.trim();
-            const password = document.getElementById('signupPassword').value;
-            const confirmPassword = document.getElementById('signupConfirmPassword').value;
-            const status = document.getElementById('signupStatus');
-
-            status.textContent = "";
-            status.style.color = "black";
-
-            if (!username || !password || !confirmPassword) {
-                status.textContent = "❌ All fields are required.";
-                status.style.color = "red";
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                status.textContent = "❌ Passwords do not match.";
-                status.style.color = "red";
-                return;
-            }
-
-            const email = username.includes('@') ? username : `${username}@twss.jyot`;
-
-            try {
-                const { data: existingUsers, error: checkError } = await supabaseClient
-                    .from('users_login')
-                    .select('email')
-                    .eq('email', email);
-
-                if (checkError) throw checkError;
-
-                if (existingUsers && existingUsers.length > 0) {
-                    status.textContent = "❌ User already exists.";
-                    status.style.color = "red";
-                    return;
-                }
-
-                const { error } = await supabaseClient
-                    .from('users_login')
-                    .insert([{ 
-                        email: email, 
-                        password: password, 
-                        turtle_points: 10,
-                        full_name: username 
-                    }]);
-
-                if (error) {
-                    status.textContent = "❌ Signup failed: " + error.message;
-                    status.style.color = "red";
-                } else {
-                    status.textContent = "✅ Signup successful! You earned 10 turtle points! Please login.";
-                    status.style.color = "green";
-                    document.getElementById('signupUsername').value = '';
-                    document.getElementById('signupPassword').value = '';
-                    document.getElementById('signupConfirmPassword').value = '';
-                    
-                    setTimeout(() => {
-                        switchToLogin();
-                    }, 2000);
-                }
-
-            } catch (err) {
-                console.error(err);
-                status.textContent = "❌ Unexpected error: " + err.message;
-                status.style.color = "red";
-            }
-        }
-
-        // Logout function
-        function logout() {
-            localStorage.removeItem('loggedInUser');
-            checkAuthState();
-            profileMenu.classList.remove('active');
-            window.location.href = '/';
-        }
-
-        // Function to toggle profile dropdown menu
+        // Profile Functions
         function toggleProfileMenu() {
             profileMenu.classList.toggle('active');
         }
 
-        // Check authentication state on page load
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            // Also clear the last login date for the specific user
+            const currentUserEmail = JSON.parse(localStorage.getItem('loggedInUser') || '{}').email;
+            if (currentUserEmail) {
+                localStorage.removeItem('lastLogin_' + currentUserEmail);
+            }
+            checkAuthState(); // Update UI to logged-out state
+            profileMenu.classList.remove('active');
+            window.location.href = 'index.html'; // Redirect to home page
+        }
+
+        // Auth Check Functions
         function checkAuthState() {
             const loggedInUser = localStorage.getItem('loggedInUser');
+            
             if (loggedInUser) {
-                const user = JSON.parse(loggedInUser);
-                profileNameSpan.textContent = user.full_name ? user.full_name.split(' ')[0] : user.email.split('@')[0];
-                profileFullNameDiv.textContent = user.full_name || user.email;
-                turtlePointsSpan.textContent = user.turtle_points || 0;
+                try {
+                    const user = JSON.parse(loggedInUser);
+                    const displayName = user.full_name ? user.full_name.split(' ')[0] : user.email.split('@')[0];
+                    
+                    profileNameSpan.textContent = displayName;
+                    profileFullNameDiv.textContent = user.full_name || user.email;
+                    turtlePointsSpan.textContent = user.turtle_points || 0;
 
-                profileDropdown.style.display = 'block';
-                authButtons.style.display = 'none';
+                    profileDropdown.style.display = 'block';
+                    authButtons.style.display = 'none';
+                } catch (e) {
+                    console.error('Error parsing user data from localStorage:', e);
+                    localStorage.removeItem('loggedInUser'); // Clear corrupted data
+                    checkAuthState(); // Re-run to show logged-out state
+                }
             } else {
                 profileDropdown.style.display = 'none';
                 authButtons.style.display = 'flex';
             }
         }
 
-        // Protect routes
+        // Function to protect routes and redirect if not logged in
         function checkAuth(path) {
             const loggedInUser = localStorage.getItem('loggedInUser');
             if (!loggedInUser) {
-                redirectAfterAuth = path;
-                openAuthModal('login');
+                redirectAfterAuth = path; // Store the intended destination
+                openAuthModal('login'); // Open login modal
+                return false; // Prevent immediate navigation
             } else {
-                window.location.href = path;
+                window.location.href = path; // Allow navigation
+                return true;
             }
         }
 
-        // Function to create turtle points frame
+        // Turtle Points Functions
         function createTurtleFrame() {
             // Create overlay
             turtleFrameOverlay = document.createElement('div');
-            turtleFrameOverlay.className = 'turtle-frame-overlay';
-            turtleFrameOverlay.onclick = closeTurtleFrame;
             turtleFrameOverlay.style.cssText = `
                 position: fixed;
                 top: 0;
@@ -472,11 +534,11 @@
                 opacity: 0;
                 transition: opacity 0.3s ease;
             `;
+            turtleFrameOverlay.onclick = closeTurtleFrame;
             document.body.appendChild(turtleFrameOverlay);
 
             // Create frame
             turtleFrame = document.createElement('div');
-            turtleFrame.className = 'turtle-frame';
             turtleFrame.style.cssText = `
                 position: fixed;
                 top: 50%;
@@ -493,61 +555,52 @@
                 transition: transform 0.3s ease;
             `;
             
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            const userPoints = loggedInUser ? JSON.parse(loggedInUser).turtle_points || 0 : 0;
+            
             turtleFrame.innerHTML = `
-                <div class="turtle-frame-header" style="padding: 1.5rem; border-bottom: 1px solid #eee; position: sticky; top: 0; background: white; border-radius: 12px 12px 0 0;">
-                    <button class="turtle-frame-close" onclick="closeTurtleFrame()" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
-                    <div class="turtle-frame-title" style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
-                        <div class="turtle-icon" style="width: 30px; height: 30px; background: #ffeaa7; border-radius: 50%; display: flex; align-items: center; justify-content: center;">🐢</div>
+                <div style="padding: 1.5rem; border-bottom: 1px solid #eee; position: sticky; top: 0; background: white; border-radius: 12px 12px 0 0;">
+                    <button onclick="closeTurtleFrame()" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                        <div style="width: 30px; height: 30px; background: #ffeaa7; border-radius: 50%; display: flex; align-items: center; justify-content: center;">🐢</div>
                         <h2 style="margin: 0; color: #333;">Turtle Points</h2>
                     </div>
-                    <div class="turtle-frame-subtitle" style="color: #666; font-size: 14px;">Your Learning Journey</div>
+                    <div style="color: #666; font-size: 14px;">Your Learning Journey</div>
                 </div>
-                <div class="turtle-frame-content" style="padding: 1.5rem;">
-                    <div class="points-display" style="text-align: center; margin-bottom: 2rem;">
-                        <div class="points-circle" style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); width: 120px; height: 120px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 1rem;">
-                            <div class="points-number" id="framePointsNumber" style="font-size: 2rem; font-weight: bold; color: #b8860b;">250</div>
-                            <div class="points-label" style="font-size: 0.9rem; color: #b8860b;">Points</div>
+                <div style="padding: 1.5rem;">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); width: 120px; height: 120px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                            <div id="framePointsNumber" style="font-size: 2rem; font-weight: bold; color: #b8860b;">${userPoints}</div>
+                            <div style="font-size: 0.9rem; color: #b8860b;">Points</div>
                         </div>
-                        <div class="points-label" style="color: #666;">Keep learning to earn more!</div>
+                        <div style="color: #666;">Keep learning to earn more!</div>
                     </div>
                     
-                    <div class="points-section" style="margin-bottom: 1.5rem;">
+                    <div style="margin-bottom: 1.5rem;">
                         <h3 style="color: #333; margin-bottom: 1rem;">How to Earn Points</h3>
-                        <div class="points-activity" style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
-                            <span class="activity-name">Complete Registration</span>
-                            <span class="activity-points positive" style="color: #27ae60; font-weight: bold;">+10</span>
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
+                            <span>Complete Registration</span>
+                            <span style="color: #27ae60; font-weight: bold;">+10</span>
                         </div>
-                        <div class="points-activity" style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
-                            <span class="activity-name">Complete Internship</span>
-                            <span class="activity-points positive" style="color: #27ae60; font-weight: bold;">+50</span>
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
+                            <span>Daily Login</span>
+                            <span style="color: #27ae60; font-weight: bold;">+2</span>
                         </div>
-                        <div class="points-activity" style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
-                            <span class="activity-name">Pass Training Module</span>
-                            <span class="activity-points positive" style="color: #27ae60; font-weight: bold;">+25</span>
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
+                            <span>Complete Internship</span>
+                            <span style="color: #27ae60; font-weight: bold;">+50</span>
                         </div>
-                        <div class="points-activity" style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
-                            <span class="activity-name">Pass Exam</span>
-                            <span class="activity-points positive" style="color: #27ae60; font-weight: bold;">+100</span>
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
+                            <span>Pass Training Module</span>
+                            <span style="color: #27ae60; font-weight: bold;">+25</span>
                         </div>
-                        <div class="points-activity" style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-                            <span class="activity-name">Get Certification</span>
-                            <span class="activity-points positive" style="color: #27ae60; font-weight: bold;">+75</span>
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
+                            <span>Pass Exam</span>
+                            <span style="color: #27ae60; font-weight: bold;">+100</span>
                         </div>
-                    </div>
-                    
-                    <div class="points-section" style="margin-bottom: 1.5rem;">
-                        <h3 style="color: #333; margin-bottom: 1rem;">Recent Activity</h3>
-                        <div class="points-activity" style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
-                            <span class="activity-name">Account Created</span>
-                            <span class="activity-points positive" style="color: #27ae60; font-weight: bold;">+10</span>
-                        </div>
-                        <div class="points-activity" style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
-                            <span class="activity-name">Daily Login</span>
-                            <span class="activity-points positive" style="color: #27ae60; font-weight: bold;">+2</span>
-                        </div>
-                        <div class="points-activity" style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-                            <span class="activity-name">Welcome Bonus</span>
-                            <span class="activity-points positive" style="color: #27ae60; font-weight: bold;">+25</span>
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+                            <span>Get Certification</span>
+                            <span style="color: #27ae60; font-weight: bold;">+75</span>
                         </div>
                     </div>
                 </div>
@@ -555,13 +608,12 @@
             document.body.appendChild(turtleFrame);
         }
 
-        // Function to open turtle frame
         function openTurtleFrame() {
             if (!turtleFrame) {
                 createTurtleFrame();
             }
             
-            // Update points display
+            // Update points display in the modal
             const loggedInUser = localStorage.getItem('loggedInUser');
             if (loggedInUser) {
                 const user = JSON.parse(loggedInUser);
@@ -570,14 +622,12 @@
                     framePointsNumber.textContent = user.turtle_points || 0;
                 }
             }
-            
-            // Show frame
+
             turtleFrame.style.transform = 'translate(-50%, -50%) scale(1)';
             turtleFrameOverlay.style.opacity = '1';
             document.body.style.overflow = 'hidden';
         }
 
-        // Function to close turtle frame
         function closeTurtleFrame() {
             if (turtleFrame) {
                 turtleFrame.style.transform = 'translate(-50%, -50%) scale(0.8)';
@@ -594,16 +644,14 @@
             }
         }
 
-        // Function to show points notification
         function showPointsNotification(points, reason) {
             const notification = document.createElement('div');
-            notification.className = 'points-notification';
             notification.innerHTML = `
-                <div class="points-notification-content" style="display: flex; align-items: center; gap: 10px;">
-                    <div class="turtle-icon" style="width: 30px; height: 30px; background: #ffeaa7; border-radius: 50%; display: flex; align-items: center; justify-content: center;">🐢</div>
-                    <div class="notification-text">
-                        <div class="notification-points" style="font-weight: bold; color: #b8860b;">+${points} Turtle Points</div>
-                        <div class="notification-reason" style="font-size: 0.8rem; color: #666;">${reason}</div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 30px; height: 30px; background: #ffeaa7; border-radius: 50%; display: flex; align-items: center; justify-content: center;">🐢</div>
+                    <div>
+                        <div style="font-weight: bold; color: #b8860b;">+${points} Turtle Points</div>
+                        <div style="font-size: 0.8rem; color: #666;">${reason}</div>
                     </div>
                 </div>
             `;
@@ -632,112 +680,58 @@
 
             setTimeout(() => {
                 notification.style.transform = 'translateX(400px)';
-                notification.style.opacity = '0';
                 setTimeout(() => {
-                    notification.remove();
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
                 }, 300);
             }, 4000);
         }
 
-        // Initial check on page load
-        checkAuthState();
-    </script>
-<script>
-// Function to award points for various activities
-function awardPoints(activity) {
-    const pointsMap = {
-        'registration': { points: 10, reason: 'Registration Completed' },
-        'internship': { points: 50, reason: 'Internship Completed' },
-        'training': { points: 25, reason: 'Training Module Completed' },
-        'exam': { points: 100, reason: 'Exam Passed' },
-        'certification': { points: 75, reason: 'Certification Earned' },
-        'login': { points: 2, reason: 'Daily Login' },
-        'profile_update': { points: 5, reason: 'Profile Updated' }
-    };
-    
-    const reward = pointsMap[activity];
-    if (reward) {
-        updateTurtlePoints(reward.points, reward.reason);
-    }
-}
+        // Utility Functions for awarding points (can be called from other pages/events)
+        async function awardPoints(activity, points, reason) {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (!loggedInUser) {
+                console.warn('Cannot award points: User not logged in.');
+                return;
+            }
 
-// Enhanced login function with daily login points
-async function loginWithPoints() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
+            let user;
+            try {
+                user = JSON.parse(loggedInUser);
+            } catch (e) {
+                console.error('Error parsing loggedInUser from localStorage:', e);
+                localStorage.removeItem('loggedInUser');
+                checkAuthState();
+                return;
+            }
 
-    try {
-        const { data, error } = await supabaseClient
-            .from('users_login')
-            .select('*')
-            .eq('email', email)
-            .eq('password', password);
-
-        if (error) {
-            console.error('Login error:', error);
-            loginStatus.textContent = "Login failed: " + error.message;
-            loginStatus.classList.add('error');
-            loginStatus.classList.remove('success');
-        } else if (data.length > 0) {
-            const user = data[0];
+            const newPoints = (user.turtle_points || 0) + points;
             
-            // Check if user logged in today
-            const lastLogin = localStorage.getItem('lastLogin_' + user.email);
-            const today = new Date().toDateString();
-            
-            if (lastLogin !== today) {
-                // Award daily login points
-                const newPoints = (user.turtle_points || 0) + 2;
-                await supabaseClient
+            try {
+                // Update in database
+                const { error } = await supabaseClient
                     .from('users_login')
                     .update({ turtle_points: newPoints })
-                    .eq('email', email);
-                
-                user.turtle_points = newPoints;
-                localStorage.setItem('lastLogin_' + user.email, today);
-                
-                // Show login bonus notification
-                setTimeout(() => {
-                    showPointsNotification(2, 'Daily Login Bonus');
-                }, 1500);
-            }
-            
-            localStorage.setItem('loggedInUser', JSON.stringify(user));
-            loginStatus.textContent = "Login successful! Redirecting...";
-            loginStatus.classList.add('success');
-            loginStatus.classList.remove('error');
-            
-            setTimeout(() => {
-                closeAuthModal();
-                checkAuthState();
-                if (redirectAfterAuth) {
-                    window.location.href = redirectAfterAuth;
-                    redirectAfterAuth = null;
+                    .eq('email', user.email);
+
+                if (!error) {
+                    user.turtle_points = newPoints;
+                    localStorage.setItem('loggedInUser', JSON.stringify(user));
+                    checkAuthState(); // Update UI with new points
+                    showPointsNotification(points, reason);
+                } else {
+                    console.error('Error updating points in Supabase:', error);
                 }
-            }, 1000);
-        } else {
-            loginStatus.textContent = "Invalid email or password.";
-            loginStatus.classList.add('error');
-            loginStatus.classList.remove('success');
+            } catch (err) {
+                console.error('Unexpected error during point update:', err);
+            }
         }
-    } catch (err) {
-        console.error('Unexpected error during login:', err);
-        loginStatus.textContent = "An unexpected error occurred.";
-        loginStatus.classList.add('error');
-        loginStatus.classList.remove('success');
-    }
-}
 
-// Override the existing login function
-window.login = loginWithPoints;
-    </script>
-    <script>  if (redirectAfterAuth) {
-  window.location.href = redirectAfterAuth;
-  redirectAfterAuth = null;
-}
-redirectAfterAuth = targetUrl;
-openAuthModal('login');
-
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthState(); // Check and update UI based on login status
+        });
     </script>
 
 </body>

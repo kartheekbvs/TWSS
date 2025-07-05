@@ -95,7 +95,17 @@
             <span class="auth-modal-close" onclick="closeAuthModal()">&times;</span>
             
             <!-- Login Form -->
-            
+            <!-- Login Form -->
+            <div class="auth-form" id="loginForm">
+                <h2>Login to TWSS</h2>
+                <input type="email" id="loginEmail" placeholder="Email Address" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button onclick="login()">Login</button>
+                <div class="auth-switch">
+                    Don't have an account? <a href="#" onclick="switchToSignup()">Sign up here</a>
+                </div>
+                <div class="auth-status" id="loginStatus"></div>
+            </div>
 
             <!-- Signup Form -->
             <div class="auth-form" id="signupForm">

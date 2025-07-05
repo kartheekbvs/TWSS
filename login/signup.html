@@ -10,6 +10,21 @@
     button { width: 100%; padding: 10px; background: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer; }
     .status { margin-top: 10px; font-size: 14px; }
   </style>
+
+
+  <script>
+    
+  function goToPage(page) {
+    // Check if user is logged in (example: check if "loggedIn" flag is set)
+    if (localStorage.getItem("loggedIn") === "true") {
+      window.location.href = page;
+    } else {
+      localStorage.setItem("redirectAfterLogin", page);
+      window.location.href = "login.html";
+    }
+  }
+</script>
+
 </head>
 <body>
   <div class="form-box">
@@ -27,31 +42,44 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'
   );
 
-  async function insertLogin() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const status = document.getElementById('status');
+async function insertLogin() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const status = document.getElementById('status');
 
-    try {
-      const { data, error } = await supabaseClient
-        .from('users_login')
-        .insert([{ email: email, password: password, created_at: new Date() }]);
+  try {
+    const { data, error } = await supabaseClient
+      .from('users_login')
+      .insert([{ email: email, password: password, created_at: new Date() }]);
 
-      if (error) {
-        console.error('Insert error:', error);
-        status.textContent = "❌ " + error.message;
-        status.style.color = "red";
-      } else {
-        console.log('Inserted data:', data);
-        status.textContent = "✅ Login data saved to database!";
-        status.style.color = "green";
-      }
-    } catch (err) {
-      console.error('Unexpected error:', err);
-      status.textContent = "❌ Unexpected error: " + err.message;
+    if (error) {
+      console.error('Insert error:', error);
+      status.textContent = "❌ " + error.message;
       status.style.color = "red";
+    } else {
+      console.log('Inserted data:', data);
+      status.textContent = "✅ Login data saved to database!";
+      status.style.color = "green";
+
+      // Mark user as logged in
+      localStorage.setItem("loggedIn", "true");
+
+      // Redirect to saved page or default
+      const redirectPage = localStorage.getItem("redirectAfterLogin");
+      if (redirectPage) {
+        localStorage.removeItem("redirectAfterLogin"); // clean up
+        window.location.href = redirectPage;
+      } else {
+        window.location.href = "home.html"; // fallback page
+      }
     }
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    status.textContent = "❌ Unexpected error: " + err.message;
+    status.style.color = "red";
   }
+}
+
 </script>
 </body>
 </html>

@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TWSS INTERNSHIP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+        let redirectAfterAuth = null;
+
+    </script>
     <link rel="stylesheet" href="index.css"> 
     <style>
         /* New and Modified CSS for Profile Section and Notifications */
@@ -815,74 +818,60 @@
         }
 
         // Enhanced login function with daily login points and email domain enforcement
-        async function login() {
-            let email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+       // Enhanced login function: checks credentials and redirects properly
+async function login() {
+    let email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
 
-            // Ensure email ends with the required domain for login lookup
-            email = normalizeEmail(email, false); // Not for signup
+    // Normalize email (make sure it ends with @twss.jyot)
+    email = normalizeEmail(email, false);
 
-            try {
-                const { data, error } = await supabaseClient
-                    .from('users_login')
-                    .select('*')
-                    .eq('email', email)
-                    .eq('password', password);
+    try {
+        const { data, error } = await supabaseClient
+            .from('users_login')
+            .select('*')
+            .eq('email', email)
+            .eq('password', password);
 
-                if (error) {
-                    console.error('Login error:', error);
-                    loginStatus.textContent = "Login failed: " + error.message;
-                    loginStatus.classList.add('error');
-                    loginStatus.classList.remove('success');
-                } else if (data.length > 0) {
-                    const user = data[0];
-                    
-                    // Check if user logged in today for daily bonus
-                    const lastLogin = localStorage.getItem('lastLogin_' + user.email);
-                    const today = new Date().toDateString();
-                    
-                    if (lastLogin !== today) {
-                        // Award daily login points
-                        const newPoints = (user.turtle_points || 0) + 2;
-                        await supabaseClient
-                            .from('users_login')
-                            .update({ turtle_points: newPoints })
-                            .eq('email', user.email);
-                        
-                        user.turtle_points = newPoints;
-                        localStorage.setItem('lastLogin_' + user.email, today);
-                        
-                        // Show login bonus notification
-                        setTimeout(() => {
-                            showPointsNotification(2, 'Daily Login Bonus');
-                        }, 1500);
-                    }
-                    
-                    localStorage.setItem('loggedInUser', JSON.stringify(user));
-                    loginStatus.textContent = "Login successful! Redirecting...";
-                    loginStatus.classList.add('success');
-                    loginStatus.classList.remove('error');
-                    
-                    setTimeout(() => {
-                        closeAuthModal();
-                        checkAuthState();
-                        if (redirectAfterAuth) {
-                            window.location.href = redirectAfterAuth;
-                            redirectAfterAuth = null;
-                        }
-                    }, 1000);
+        if (error) {
+            console.error('Login error:', error);
+            loginStatus.textContent = "❌ Login failed: " + error.message;
+            loginStatus.classList.add('error');
+            loginStatus.classList.remove('success');
+        } else if (data.length > 0) {
+            const user = data[0];
+            console.log('User found:', user);
+
+            // Save user info in localStorage
+            localStorage.setItem('loggedInUser', JSON.stringify(user));
+
+            loginStatus.textContent = "✅ Login successful! Redirecting...";
+            loginStatus.classList.add('success');
+            loginStatus.classList.remove('error');
+
+            setTimeout(() => {
+                closeAuthModal();
+                checkAuthState();
+                if (redirectAfterAuth) {
+                    window.location.href = redirectAfterAuth;
+                    redirectAfterAuth = null;
                 } else {
-                    loginStatus.textContent = "Invalid email or password.";
-                    loginStatus.classList.add('error');
-                    loginStatus.classList.remove('success');
+                    window.location.href = "https://twss.netlify.app"; // fallback page
                 }
-            } catch (err) {
-                console.error('Unexpected error during login:', err);
-                loginStatus.textContent = "An unexpected error occurred.";
-                loginStatus.classList.add('error');
-                loginStatus.classList.remove('success');
-            }
+            }, 1000);
+        } else {
+            loginStatus.textContent = "❌ Invalid email or password.";
+            loginStatus.classList.add('error');
+            loginStatus.classList.remove('success');
         }
+    } catch (err) {
+        console.error('Unexpected error during login:', err);
+        loginStatus.textContent = "❌ Unexpected error: " + err.message;
+        loginStatus.classList.add('error');
+        loginStatus.classList.remove('success');
+    }
+}
+
 
         // Enhanced signup function with turtle points and email domain enforcement
         async function signup() {
@@ -1253,27 +1242,19 @@
 console.log('Supabase response:', data, error);
 
     </script>
-        <script>
-  function goToPage(page) {
-    // Check if user is logged in (example: check if "loggedIn" flag is set)
-    if (localStorage.getItem("loggedIn") === "true") {
-      window.location.href = page;
-    } else {
-      localStorage.setItem("redirectAfterLogin", page);
-      window.location.href = "login.html";
-    }
-  }
-</script>
+ 
   
         <script>
 function checkAuth(targetUrl) {
-  if (localStorage.getItem("loggedIn") === "true") {
-    window.location.href = targetUrl;
+  const loggedInUser = localStorage.getItem('loggedInUser');
+  if (!loggedInUser) {
+    redirectAfterAuth = targetUrl;      // Save target
+    openAuthModal('login');             // Open login modal
   } else {
-    localStorage.setItem("redirectAfterLogin", targetUrl);
-    window.location.href = "/login/signup.html"; // send them to login/signup
+    window.location.href = targetUrl;   // Already logged in → go directly
   }
 }
+
 </script>
 
     

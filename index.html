@@ -823,5 +823,16 @@ async function loginWithPoints() {
 // Override the existing login function
 window.login = loginWithPoints;
     </script>
+    <script>
+function checkAuth(targetUrl) {
+  if (localStorage.getItem("loggedIn") === "true") {
+    window.location.href = targetUrl;
+  } else {
+    localStorage.setItem("redirectAfterLogin", targetUrl);
+    window.location.href = "/login/signup.html"; // send them to login/signup
+  }
+}
+</script>
+
 </body>
 </html>

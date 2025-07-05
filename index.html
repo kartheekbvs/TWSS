@@ -6,8 +6,15 @@
     <title>TWSS INTERNSHIP</title>
     <link rel="stylesheet" href="index.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <script src="/scripts/resetSession.js"></script>
    <link rel="stylesheet" href="index.css">
 </head>
+    <script>
+    localStorage.removeItem("loggedIn");
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("redirectAfterLogin");
+  </script>
+  <!-- your existing content -->
 <body>
     <!-- Diagonal design elements -->
     <div class="diagonal-divider diagonal-top"></div>
@@ -841,5 +848,9 @@ if (redirectAfterAuth) {
 openAuthModal('login');
 
 </script>
+  
+    <body>
+  
+
 </body>
 </html>

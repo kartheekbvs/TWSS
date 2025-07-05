@@ -112,20 +112,17 @@
 
             <!-- Signup Form -->
             <div class="auth-form" id="signupForm">
-                <h2>Join TWSS</h2>
-            
-                <input type="email" id="email" placeholder="Email Address" required>
-                <input type="password" id="password" placeholder="Password" required>
-               <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
-                <button onclick="insertLogin()">Sign Up</button>
-                <div class="auth-switch">
-                    Already have an account? <a href="#" onclick="switchToLogin()">Login here</a>
-                </div>
-                <div class="auth-status" id="signupStatus"></div>
-            </div>
-        </div>
-    </div>
+    <h2>Join TWSS</h2>
     
+    <input type="email" id="signupEmail" placeholder="Email Address" required>
+    <input type="password" id="signupPassword" placeholder="Password" required>
+    <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+    <button onclick="signupWithPoints()">Sign Up</button>
+    <div class="auth-switch">
+        Already have an account? <a href="#" onclick="switchToLogin()">Login here</a>
+    </div>
+    <div class="auth-status" id="signupStatus"></div>
+</div>
     <div class="announcement">
         <marquee direction="left">Note: Registration is only for details of a candidate. For conductance of exam please kindly login</marquee>
     </div>
@@ -842,13 +839,6 @@ redirectAfterAuth = targetUrl;
 openAuthModal('login');
 
     </script>
-    <script>
-        <script>
-  
 
-async function insertLogin() {
-  window.location.href = "twss.netlify.app/login/signup.html";
-}
-    </script>
 </body>
 </html>

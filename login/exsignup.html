@@ -19,7 +19,19 @@
     <button onclick="signIn()">Login</button>
     <div class="status" id="status"></div>
   </div>
-
+  <script>
+if (data.length > 0) {
+  // ... login success
+  localStorage.setItem("loggedIn", "true");
+  const redirectPage = localStorage.getItem("redirectAfterLogin");
+  if (redirectPage) {
+    localStorage.removeItem("redirectAfterLogin");
+    window.location.href = redirectPage;
+  } else {
+    window.location.href = "default-page.html"; // fallback
+  }
+}
+  </script>
 <script>
   const { createClient } = supabase;
   const supabaseClient = createClient(

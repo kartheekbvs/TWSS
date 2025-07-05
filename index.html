@@ -7,6 +7,51 @@
     <link rel="stylesheet" href="index.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
       <script src="/scripts/resetSession.js"></script>
+    <script>
+  const { createClient } = supabase;
+  const supabaseClient = createClient(
+    'https://fzwvxesrtdilljgrntpw.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'
+  );
+
+  async function signup() {
+    const username = document.getElementById('signupUsername').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('signupConfirmPassword').value;
+    const status = document.getElementById('signupStatus');
+
+    if (password !== confirmPassword) {
+      status.textContent = "❌ Passwords do not match.";
+      status.style.color = "red";
+      return;
+    }
+
+    const email = username.includes('@') ? username : `${username}@twss.jyot`;
+
+    try {
+      const { data, error } = await supabaseClient
+        .from('users_login')
+        .insert([{ email, password, turtle_points: 0 }]);
+
+      if (error) {
+        console.error('Signup error:', error);
+        status.textContent = "❌ Signup failed: " + error.message;
+        status.style.color = "red";
+      } else {
+        status.textContent = "✅ Signup successful! You can now log in.";
+        status.style.color = "green";
+        document.getElementById('signupUsername').value = '';
+        document.getElementById('signupPassword').value = '';
+        document.getElementById('signupConfirmPassword').value = '';
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      status.textContent = "❌ Unexpected error: " + err.message;
+      status.style.color = "red";
+    }
+  }
+</script>
+
    <link rel="stylesheet" href="index.css">
 </head>
     <script>
@@ -108,17 +153,23 @@
             </div>
 
             <!-- Signup Form -->
+         
+  
+  
+
+
+
             <div class="auth-form" id="signupForm">
                 <h2>Join TWSS</h2>
-         <input type="email" id="signupEmail" placeholder="Email Address" required>
+          <input type="text" id="signupUsername" placeholder="Enter username (e.g., kartheek)" required>
 
-                <input type="password" id="signupPassword" placeholder="Password" required>
-                <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+            <input type="password" id="signupPassword" placeholder="Password" required>
+  <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
                 <button onclick="signup()">Sign Up</button>
+  <div class="status" id="signupStatus"></div>
                 <div class="auth-switch">
                     Already have an account? <a href="#" onclick="switchToLogin()">Login here</a>
                 </div>
-                <div class="auth-status" id="signupStatus"></div>
             </div>
         </div>
     </div>

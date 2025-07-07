@@ -20,6 +20,15 @@
   <button onclick="loginWithGitHub()">Login with GitHub</button>
 
   <script>
+    async function loginWithGitHub() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'github',
+    options: { redirectTo: 'https://twss.netlify.app' }
+  });
+  if (error) alert('GitHub login error: ' + error.message);
+  console.log(data);
+}
+
     // ✅ Correct way: use window.supabase.createClient
     const supabase = window.supabase.createClient(
       'https://fzwvxesrtdilljgrntpw.supabase.co',
@@ -50,14 +59,7 @@
       console.log(data);
     }
 
-    async function loginWithGitHub() {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'github',
-        options: { redirectTo: 'https://twss.netlify.app' }
-      });
-      if (error) alert('GitHub login error: ' + error.message);
-      console.log(data);
-    }
+    
   </script>
 </body>
 </html>

@@ -90,6 +90,7 @@
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .auth-btn:hover {
@@ -559,6 +560,10 @@
             background-color: #f8d7da;
             color: #721c24;
         }
+        .auth-status.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
 
         /* Profile Section */
         .profile-section {
@@ -642,7 +647,6 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-container">
             <a href="#" class="logo">
@@ -660,13 +664,11 @@
                 <a href="#" onclick="checkAuth('/contact.html')">Contact Us</a>
             </nav>
 
-            <!-- Auth Buttons -->
             <div class="auth-buttons" id="authButtons">
-                <a href="#" class="auth-btn" onclick="openAuthModal()">Login</a>
-                <a href="#" class="auth-btn primary" onclick="window.location.href='/exsignup.html'">Sign Up</a>
+                <a href="#" class="auth-btn" onclick="openAuthModal('login')">Login</a>
+                <a href="#" class="auth-btn primary" onclick="openAuthModal('signup')">Sign Up</a>
             </div>
 
-            <!-- Profile Section -->
             <div class="profile-section" id="profileSection">
                 <div class="profile-btn" onclick="toggleProfileMenu()">
                     <div class="profile-icon">
@@ -691,17 +693,16 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero">
         <div class="hero-container">
             <h1>Build on <span class="highlight">TWSS</span></h1>
             <p>Whether you're looking for compute power, database storage, content delivery, or other functionality, TWSS has the services to help you build sophisticated applications with increased flexibility, scalability and reliability.</p>
             <div class="cta-buttons">
-                <a href="/exsignup.html" class="cta-btn primary">
+                <a href="#" class="cta-btn primary" onclick="openAuthModal('signup')">
                     <i class="fas fa-rocket"></i>
                     Get Started for Free
                 </a>
-                <a href="#" class="cta-btn secondary" onclick="openAuthModal()">
+                <a href="#" class="cta-btn secondary" onclick="openAuthModal('login')">
                     <i class="fas fa-sign-in-alt"></i>
                     Sign In to Console
                 </a>
@@ -709,7 +710,6 @@
         </div>
     </section>
 
-    <!-- Features Section -->
     <section class="features">
         <div class="features-container">
             <h2>Why Choose TWSS?</h2>
@@ -760,7 +760,6 @@
         </div>
     </section>
 
-    <!-- Services Section -->
     <section class="services">
         <div class="services-container">
             <h2>Our Services</h2>
@@ -812,7 +811,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-content">
@@ -859,471 +857,594 @@
         </div>
     </footer>
 
-    <!-- Auth Modal -->
     <div class="auth-modal" id="authModal">
         <div class="auth-modal-content">
             <span class="auth-modal-close" onclick="closeAuthModal()">&times;</span>
-            <div class="auth-form">
+            <div class="auth-form" id="authForm">
+                </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Supabase Client Initialization
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://fzwvxesrtdilljgrntpw.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'
+        );
+
+        // Global variables
+        let currentUser = null;
+        let isAuthenticated = false;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            initializeEventListeners();
+            initializeMobileMenu();
+        });
+
+        // Check authentication status on page load
+        function checkAuthStatus() {
+            // Check if user is marked as logged in in localStorage
+            const loggedIn = localStorage.getItem("loggedIn") === "true";
+            if (loggedIn) {
+                isAuthenticated = true;
+                // In a real app, you would fetch user details from Supabase here
+                // For this demo, we'll assume a basic user object for UI display
+                currentUser = {
+                    email: localStorage.getItem("userEmail") || "user@example.com",
+                    name: extractNameFromEmail(localStorage.getItem("userEmail") || "User"),
+                    fullName: extractNameFromEmail(localStorage.getItem("userEmail") || "User"),
+                };
+                updateUIForAuthenticatedUser();
+            }
+        }
+
+        // Authentication Modal Functions
+        function openAuthModal(mode = 'login') {
+            const modal = document.getElementById('authModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            clearAuthStatus(); // Clear status when opening
+            
+            if (mode === 'login') {
+                setupAuthModalForLogin();
+            } else {
+                setupAuthModalForSignup();
+            }
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('authModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            clearAuthStatus();
+        }
+
+        function clearAuthStatus() {
+            const authStatus = document.getElementById('authStatus');
+            if (authStatus) {
+                authStatus.innerHTML = '';
+                authStatus.className = 'auth-status';
+            }
+        }
+
+        function setupAuthModalForLogin() {
+            const authForm = document.getElementById('authForm');
+            authForm.innerHTML = `
                 <h2>Sign In to TWSS</h2>
-                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="text" id="loginEmail" placeholder="Email" required>
                 <input type="password" id="loginPassword" placeholder="Password" required>
                 <button onclick="login()">Sign In</button>
                 <div class="auth-status" id="authStatus"></div>
-            </div>
-        </div>
-    </div>
-    <script>
-
-        // TWSS JavaScript - Complete Implementation
-
-// Global variables
-let currentUser = null;
-let isAuthenticated = false;
-
-// Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
-    checkAuthStatus();
-    initializeEventListeners();
-    initializeMobileMenu();
-});
-
-// Check authentication status on page load
-function checkAuthStatus() {
-    const userData = getUserData();
-    if (userData) {
-        currentUser = userData;
-        isAuthenticated = true;
-        updateUIForAuthenticatedUser();
-    }
-}
-
-// Get user data from memory (simulating a session)
-function getUserData() {
-    // In a real application, this would check with your backend
-    return window.currentUserData || null;
-}
-
-// Save user data to memory
-function saveUserData(userData) {
-    window.currentUserData = userData;
-}
-
-// Clear user data
-function clearUserData() {
-    window.currentUserData = null;
-}
-
-// Authentication Modal Functions
-function openAuthModal() {
-    const modal = document.getElementById('authModal');
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeAuthModal() {
-    const modal = document.getElementById('authModal');
-    modal.classList.remove('active');
-    document.body.style.overflow = 'auto';
-    clearAuthStatus();
-}
-
-function clearAuthStatus() {
-    const authStatus = document.getElementById('authStatus');
-    authStatus.innerHTML = '';
-    authStatus.className = 'auth-status';
-}
-
-// Login function
-function login() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const authStatus = document.getElementById('authStatus');
-
-    // Clear previous status
-    clearAuthStatus();
-
-    // Validate inputs
-    if (!email || !password) {
-        showAuthStatus('Please fill in all fields', 'error');
-        return;
-    }
-
-    if (!isValidEmail(email)) {
-        showAuthStatus('Please enter a valid email address', 'error');
-        return;
-    }
-
-    // Simulate login process
-    showAuthStatus('Signing in...', 'info');
-
-    setTimeout(() => {
-        // Simulate successful login
-        const userData = {
-            email: email,
-            name: extractNameFromEmail(email),
-            fullName: extractNameFromEmail(email),
-            loginTime: new Date().toISOString()
-        };
-
-        currentUser = userData;
-        isAuthenticated = true;
-        saveUserData(userData);
-        
-        showAuthStatus('Login successful!', 'success');
-        
-        setTimeout(() => {
-            closeAuthModal();
-            updateUIForAuthenticatedUser();
-        }, 1000);
-    }, 1500);
-}
-
-// Show authentication status
-function showAuthStatus(message, type) {
-    const authStatus = document.getElementById('authStatus');
-    authStatus.innerHTML = message;
-    authStatus.className = `auth-status ${type}`;
-}
-
-// Extract name from email
-function extractNameFromEmail(email) {
-    const name = email.split('@')[0];
-    return name.charAt(0).toUpperCase() + name.slice(1);
-}
-
-// Validate email format
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-// Update UI for authenticated user
-function updateUIForAuthenticatedUser() {
-    const authButtons = document.getElementById('authButtons');
-    const profileSection = document.getElementById('profileSection');
-    const profileName = document.getElementById('profileName');
-    const profileFullName = document.getElementById('profileFullName');
-    const profileEmail = document.getElementById('profileEmail');
-
-    // Hide auth buttons
-    authButtons.style.display = 'none';
-    
-    // Show profile section
-    profileSection.style.display = 'block';
-    
-    // Update profile info
-    profileName.textContent = currentUser.name;
-    profileFullName.textContent = currentUser.fullName;
-    profileEmail.textContent = currentUser.email;
-}
-
-// Update UI for unauthenticated user
-function updateUIForUnauthenticatedUser() {
-    const authButtons = document.getElementById('authButtons');
-    const profileSection = document.getElementById('profileSection');
-
-    // Show auth buttons
-    authButtons.style.display = 'flex';
-    
-    // Hide profile section
-    profileSection.style.display = 'none';
-}
-
-// Toggle profile menu
-function toggleProfileMenu() {
-    const profileMenu = document.getElementById('profileMenu');
-    profileMenu.classList.toggle('active');
-}
-
-// Close profile menu when clicking outside
-document.addEventListener('click', function(event) {
-    const profileSection = document.getElementById('profileSection');
-    const profileMenu = document.getElementById('profileMenu');
-    
-    if (!profileSection.contains(event.target)) {
-        profileMenu.classList.remove('active');
-    }
-});
-
-// Logout function
-function logout() {
-    currentUser = null;
-    isAuthenticated = false;
-    clearUserData();
-    updateUIForUnauthenticatedUser();
-    
-    // Close profile menu
-    const profileMenu = document.getElementById('profileMenu');
-    profileMenu.classList.remove('active');
-    
-    // Show logout message
-    showNotification('You have been logged out successfully', 'success');
-}
-
-// Check authentication before accessing protected routes
-function checkAuth(route) {
-    if (!isAuthenticated) {
-        showNotification('Please log in to access this feature', 'warning');
-        setTimeout(() => {
-            openAuthModal();
-        }, 1000);
-        return false;
-    }
-    
-    // If authenticated, navigate to route
-    navigateToRoute(route);
-    return true;
-}
-
-// Navigate to route (simulate navigation)
-function navigateToRoute(route) {
-    // In a real application, you would use proper routing
-    showNotification(`Navigating to ${route}...`, 'info');
-    
-    // Simulate navigation delay
-    setTimeout(() => {
-        showNotification(`Welcome to ${route}`, 'success');
-    }, 1000);
-}
-
-// Show notification
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <i class="fas fa-${getNotificationIcon(type)}"></i>
-        <span>${message}</span>
-        <i class="fas fa-times notification-close" onclick="closeNotification(this)"></i>
-    `;
-    
-    // Add styles
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${getNotificationColor(type)};
-        color: white;
-        padding: 15px 20px;
-        border-radius: 5px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        max-width: 400px;
-        animation: slideIn 0.3s ease-out;
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        if (notification.parentNode) {
-            closeNotification(notification.querySelector('.notification-close'));
+                <p style="text-align: center; margin-top: 15px;">New user? <a href="#" onclick="event.preventDefault(); setupAuthModalForSignup()">Sign Up</a></p>
+            `;
+            // Re-attach event listener for enter key
+            document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
         }
-    }, 5000);
-}
 
-// Get notification icon
-function getNotificationIcon(type) {
-    switch (type) {
-        case 'success': return 'check-circle';
-        case 'error': return 'exclamation-circle';
-        case 'warning': return 'exclamation-triangle';
-        case 'info': return 'info-circle';
-        default: return 'info-circle';
-    }
-}
+        function setupAuthModalForSignup() {
+            const authForm = document.getElementById('authForm');
+            authForm.innerHTML = `
+                <h2>Create an Account</h2>
+                <input type="text" id="signupEmail" placeholder="Email" required>
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <button onclick="signupUser()">Sign Up</button>
+                <div class="auth-status" id="authStatus"></div>
+                <p style="text-align: center; margin-top: 15px;">Already have an account? <a href="#" onclick="event.preventDefault(); setupAuthModalForLogin()">Login</a></p>
+            `;
+            // Re-attach event listener for enter key
+            document.getElementById('signupPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    signupUser();
+                }
+            });
+        }
 
-// Get notification color
-function getNotificationColor(type) {
-    switch (type) {
-        case 'success': return '#28a745';
-        case 'error': return '#dc3545';
-        case 'warning': return '#ffc107';
-        case 'info': return '#17a2b8';
-        default: return '#17a2b8';
-    }
-}
+        // Login function
+        async function login() {
+            const emailInput = document.getElementById('loginEmail');
+            const passwordInput = document.getElementById('loginPassword');
+            const authStatus = document.getElementById('authStatus');
 
-// Close notification
-function closeNotification(element) {
-    const notification = element.closest('.notification');
-    if (notification) {
-        notification.style.animation = 'slideOut 0.3s ease-out';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
+            const email = emailInput ? emailInput.value : '';
+            const password = passwordInput ? passwordInput.value : '';
+
+            clearAuthStatus();
+
+            if (!email || !password) {
+                showAuthStatus('Please fill in all fields', 'error');
+                return;
             }
-        }, 300);
-    }
-}
 
-// Initialize mobile menu
-function initializeMobileMenu() {
-    const mobileMenu = document.querySelector('.mobile-menu');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    mobileMenu.addEventListener('click', function() {
-        navMenu.classList.toggle('active');
-        mobileMenu.classList.toggle('active');
-    });
-}
+            if (!isValidEmail(email)) {
+                showAuthStatus('Please enter a valid email address', 'error');
+                return;
+            }
 
-// Initialize event listeners
-function initializeEventListeners() {
-    // Close modal when clicking outside
-    document.getElementById('authModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeAuthModal();
+            showAuthStatus('Signing in...', 'info');
+
+            try {
+                // **SECURITY WARNING**: This directly queries your 'users_login' table with plain text passwords.
+                // For a production application, use Supabase's built-in `auth.signInWithPassword` method
+                // which handles password hashing and secure user management.
+                // Example: const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                
+                const { data, error } = await supabaseClient
+                    .from('users_login')
+                    .select('*')
+                    .eq('email', email)
+                    .eq('password', password); // This is highly insecure. Use auth.signInWithPassword() in production.
+
+                if (error) {
+                    console.error('Login error:', error);
+                    showAuthStatus("❌ " + error.message, 'error');
+                } else if (data.length > 0) {
+                    isAuthenticated = true;
+                    currentUser = {
+                        email: email,
+                        name: extractNameFromEmail(email),
+                        fullName: extractNameFromEmail(email)
+                    };
+                    localStorage.setItem("loggedIn", "true"); // Store login status
+                    localStorage.setItem("userEmail", email); // Store email for display
+                    
+                    showAuthStatus("✅ Login successful! Redirecting...", 'success');
+                    
+                    setTimeout(() => {
+                        closeAuthModal();
+                        updateUIForAuthenticatedUser();
+                        // Redirect to the dashboard or intended page
+                        window.location.href = "https://twss.netlify.app"; // Fallback
+                    }, 1500);
+                } else {
+                    showAuthStatus("❌ Invalid email or password.", 'error');
+                }
+            } catch (err) {
+                console.error('Unexpected login error:', err);
+                showAuthStatus("❌ An unexpected error occurred during login.", 'error');
+            }
         }
-    });
-    
-    // Enter key for login
-    document.getElementById('loginPassword').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            login();
-        }
-    });
-    
-    // Logo click - scroll to top
-    document.querySelector('.logo').addEventListener('click', function(e) {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-}
 
-// Smooth scrolling for internal links
-function smoothScrollTo(elementId) {
-    const element = document.getElementById(elementId);
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-    }
-}
+        // Signup function
+        async function signupUser() {
+            const emailInput = document.getElementById('signupEmail');
+            const passwordInput = document.getElementById('signupPassword');
+            const authStatus = document.getElementById('authStatus');
 
-// Form validation helper
-function validateForm(formData) {
-    const errors = [];
-    
-    for (const [key, value] of Object.entries(formData)) {
-        if (!value || value.trim() === '') {
-            errors.push(`${key} is required`);
-        }
-    }
-    
-    return errors;
-}
+            const email = emailInput ? emailInput.value : '';
+            const password = passwordInput ? passwordInput.value : '';
 
-// Loading state helper
-function showLoading(element, text = 'Loading...') {
-    if (element) {
-        element.disabled = true;
-        element.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text}`;
-    }
-}
+            clearAuthStatus();
 
-function hideLoading(element, originalText) {
-    if (element) {
-        element.disabled = false;
-        element.innerHTML = originalText;
-    }
-}
+            if (!email || !password) {
+                showAuthStatus('Please fill in all fields', 'error');
+                return;
+            }
 
-// Utility function to format date
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-}
+            if (!isValidEmail(email)) {
+                showAuthStatus('Please enter a valid email address', 'error');
+                return;
+            }
 
-// Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-    
-    .notification {
-        font-family: 'Amazon Ember', 'Helvetica Neue', Roboto, Arial, sans-serif;
-        font-size: 14px;
-        line-height: 1.4;
-    }
-    
-    .notification-close {
-        cursor: pointer;
-        margin-left: auto;
-        opacity: 0.7;
-        transition: opacity 0.2s;
-    }
-    
-    .notification-close:hover {
-        opacity: 1;
-    }
-    
-    .mobile-menu.active span:nth-child(1) {
-        transform: rotate(-45deg) translate(-5px, 6px);
-    }
-    
-    .mobile-menu.active span:nth-child(2) {
-        opacity: 0;
-    }
-    
-    .mobile-menu.active span:nth-child(3) {
-        transform: rotate(45deg) translate(-5px, -6px);
-    }
-    
-    @media (max-width: 768px) {
-        .nav-menu.active {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 60px;
-            left: 0;
-            width: 100%;
-            background: #232f3e;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .nav-menu.active a {
-            padding: 10px 0;
-            border-bottom: 1px solid #37475a;
-        }
-    }
-`;
-document.head.appendChild(style);
+            showAuthStatus('Registering...', 'info');
 
-// Initialize demo data (remove in production)
-function initializeDemoData() {
-    // This is just for demonstration - remove in production
-    console.log('TWSS Platform Initialized');
-    console.log('Demo login: Use any email and password');
-}
+            try {
+                // **SECURITY WARNING**: This directly inserts plain text passwords into your 'users_login' table.
+                // For a production application, use Supabase's built-in `auth.signUp` method
+                // which handles password hashing and secure user management.
+                // Example: const { data, error } = await supabaseClient.auth.signUp({ email, password });
 
-// Call demo initialization
-initializeDemoData();
-</script>
+                const { data, error } = await supabaseClient
+                    .from('users_login')
+                    .insert([{ email: email, password: password, created_at: new Date() }]); // Highly insecure. Use auth.signUp() in production.
+
+                if (error) {
+                    console.error('Signup error:', error);
+                    showAuthStatus("❌ " + error.message, 'error');
+                } else {
+                    isAuthenticated = true;
+                    currentUser = {
+                        email: email,
+                        name: extractNameFromEmail(email),
+                        fullName: extractNameFromEmail(email)
+                    };
+                    localStorage.setItem("loggedIn", "true"); // Mark user as logged in
+                    localStorage.setItem("userEmail", email); // Store email for display
+
+                    showAuthStatus("✅ Account created successfully! Redirecting...", 'success');
+                    
+                    setTimeout(() => {
+                        closeAuthModal();
+                        updateUIForAuthenticatedUser();
+                        // Redirect to the dashboard or intended page
+                        window.location.href = "https://twss.netlify.app"; // Fallback
+                    }, 1500);
+                }
+            } catch (err) {
+                console.error('Unexpected signup error:', err);
+                showAuthStatus("❌ An unexpected error occurred during signup.", 'error');
+            }
+        }
+
+        // Show authentication status
+        function showAuthStatus(message, type) {
+            const authStatus = document.getElementById('authStatus');
+            if (authStatus) {
+                authStatus.innerHTML = message;
+                authStatus.className = `auth-status ${type}`;
+            }
+        }
+
+        // Extract name from email
+        function extractNameFromEmail(email) {
+            const name = email.split('@')[0];
+            return name.charAt(0).toUpperCase() + name.slice(1);
+        }
+
+        // Validate email format
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Update UI for authenticated user
+        function updateUIForAuthenticatedUser() {
+            const authButtons = document.getElementById('authButtons');
+            const profileSection = document.getElementById('profileSection');
+            const profileName = document.getElementById('profileName');
+            const profileFullName = document.getElementById('profileFullName');
+            const profileEmail = document.getElementById('profileEmail');
+
+            // Hide auth buttons
+            authButtons.style.display = 'none';
+            
+            // Show profile section
+            profileSection.style.display = 'block';
+            
+            // Update profile info
+            if (currentUser) {
+                profileName.textContent = currentUser.name;
+                profileFullName.textContent = currentUser.fullName;
+                profileEmail.textContent = currentUser.email;
+            }
+        }
+
+        // Update UI for unauthenticated user
+        function updateUIForUnauthenticatedUser() {
+            const authButtons = document.getElementById('authButtons');
+            const profileSection = document.getElementById('profileSection');
+
+            // Show auth buttons
+            authButtons.style.display = 'flex';
+            
+            // Hide profile section
+            profileSection.style.display = 'none';
+        }
+
+        // Toggle profile menu
+        function toggleProfileMenu() {
+            const profileMenu = document.getElementById('profileMenu');
+            profileMenu.classList.toggle('active');
+        }
+
+        // Close profile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileSection = document.getElementById('profileSection');
+            const profileMenu = document.getElementById('profileMenu');
+            
+            if (profileSection && profileMenu && !profileSection.contains(event.target)) {
+                profileMenu.classList.remove('active');
+            }
+        });
+
+        // Logout function
+        function logout() {
+            currentUser = null;
+            isAuthenticated = false;
+            localStorage.removeItem("loggedIn"); // Clear login status
+            localStorage.removeItem("userEmail"); // Clear stored email
+            updateUIForUnauthenticatedUser();
+            
+            // Close profile menu
+            const profileMenu = document.getElementById('profileMenu');
+            if (profileMenu) {
+                profileMenu.classList.remove('active');
+            }
+            
+            // Show logout message
+            showNotification('You have been logged out successfully', 'success');
+        }
+
+        // Check authentication before accessing protected routes
+        function checkAuth(route) {
+            if (!isAuthenticated) {
+                showNotification('Please log in to access this feature', 'warning');
+                setTimeout(() => {
+                    openAuthModal('login'); // Open modal for login
+                }, 1000);
+                return false;
+            }
+            
+            // If authenticated, navigate to route
+            navigateToRoute(route);
+            return true;
+        }
+
+        // Navigate to route (simulate navigation)
+        function navigateToRoute(route) {
+            // In a real application, you would use proper routing or direct page loads
+            showNotification(`Navigating to ${route}...`, 'info');
+            
+            // Simulate navigation delay, then actually navigate
+            setTimeout(() => {
+                window.location.href = route; // Actual navigation
+            }, 1000);
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${getNotificationIcon(type)}"></i>
+                <span>${message}</span>
+                <i class="fas fa-times notification-close" onclick="closeNotification(this)"></i>
+            `;
+            
+            // Add styles
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${getNotificationColor(type)};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                max-width: 400px;
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    closeNotification(notification.querySelector('.notification-close'));
+                }
+            }, 5000);
+        }
+
+        // Get notification icon
+        function getNotificationIcon(type) {
+            switch (type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-circle';
+                case 'warning': return 'exclamation-triangle';
+                case 'info': return 'info-circle';
+                default: return 'info-circle';
+            }
+        }
+
+        // Get notification color
+        function getNotificationColor(type) {
+            switch (type) {
+                case 'success': return '#28a745';
+                case 'error': return '#dc3545';
+                case 'warning': return '#ffc107';
+                case 'info': return '#17a2b8';
+                default: return '#17a2b8';
+            }
+        }
+
+        // Close notification
+        function closeNotification(element) {
+            const notification = element.closest('.notification');
+            if (notification) {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }
+        }
+
+        // Initialize mobile menu
+        function initializeMobileMenu() {
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (mobileMenu && navMenu) {
+                mobileMenu.addEventListener('click', function() {
+                    navMenu.classList.toggle('active');
+                    mobileMenu.classList.toggle('active');
+                });
+            }
+        }
+
+        // Initialize event listeners
+        function initializeEventListeners() {
+            // Close modal when clicking outside
+            const authModal = document.getElementById('authModal');
+            if (authModal) {
+                authModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeAuthModal();
+                    }
+                });
+            }
+            
+            // Logo click - scroll to top
+            document.querySelector('.logo').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // Smooth scrolling for internal links (currently not used in the nav for external routes)
+        function smoothScrollTo(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Form validation helper (general purpose, not specifically for auth in this context)
+        function validateForm(formData) {
+            const errors = [];
+            
+            for (const [key, value] of Object.entries(formData)) {
+                if (!value || value.trim() === '') {
+                    errors.push(`${key} is required`);
+                }
+            }
+            
+            return errors;
+        }
+
+        // Loading state helper (general purpose)
+        function showLoading(element, text = 'Loading...') {
+            if (element) {
+                element.disabled = true;
+                element.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text}`;
+            }
+        }
+
+        function hideLoading(element, originalText) {
+            if (element) {
+                element.disabled = false;
+                element.innerHTML = originalText;
+            }
+        }
+
+        // Utility function to format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+            
+            .notification {
+                font-family: 'Amazon Ember', 'Helvetica Neue', Roboto, Arial, sans-serif;
+                font-size: 14px;
+                line-height: 1.4;
+            }
+            
+            .notification-close {
+                cursor: pointer;
+                margin-left: auto;
+                opacity: 0.7;
+                transition: opacity 0.2s;
+            }
+            
+            .notification-close:hover {
+                opacity: 1;
+            }
+            
+            .mobile-menu.active span:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+            
+            .mobile-menu.active span:nth-child(2) {
+                opacity: 0;
+            }
+            
+            .mobile-menu.active span:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
+            
+            @media (max-width: 768px) {
+                .nav-menu.active {
+                    display: flex;
+                    flex-direction: column;
+                    position: absolute;
+                    top: 60px;
+                    left: 0;
+                    width: 100%;
+                    background: #232f3e;
+                    padding: 20px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+                
+                .nav-menu.active a {
+                    padding: 10px 0;
+                    border-bottom: 1px solid #37475a;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize demo data (remove in production)
+        function initializeDemoData() {
+            console.log('TWSS Platform Initialized');
+            console.log('Using Supabase for authentication (check console for API calls).');
+            console.log('**WARNING: Current login/signup directly inserts/queries plain text passwords in the "users_login" table.**');
+            console.log('**For production, use Supabase\'s built-in `auth.signUp()` and `auth.signInWithPassword()` for secure password handling.**');
+        }
+
+        // Call demo initialization
+        initializeDemoData();
+    </script>
 </body>
 </html>

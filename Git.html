@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Login with Email, Google & GitHub</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    body { font-family: sans-serif; max-width: 400px; margin: auto; padding-top: 50px; }
+    input, button { width: 100%; margin: 8px 0; padding: 10px; }
+    button { cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="loginWithEmail()">Login with Email</button>
+  <hr>
+  <button onclick="loginWithGoogle()">Login with Google</button>
+  <button onclick="loginWithGitHub()">Login with GitHub</button>
+
+  <script>
+    // ✅ Correct way: use window.supabase.createClient
+    const supabase = window.supabase.createClient(
+      'https://fzwvxesrtdilljgrntpw.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'
+    );
+
+    async function loginWithEmail() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        alert('Error: ' + error.message);
+      } else {
+        alert('Logged in successfully!');
+        console.log(data);
+        // Redirect to dashboard if you have
+        // window.location.href = "/dashboard.html";
+      }
+    }
+
+    async function loginWithGoogle() {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: 'https://twss.netlify.app' } // must match Supabase site URL
+      });
+      if (error) alert('Google login error: ' + error.message);
+      console.log(data);
+    }
+
+    async function loginWithGitHub() {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: { redirectTo: 'https://twss.netlify.app' }
+      });
+      if (error) alert('GitHub login error: ' + error.message);
+      console.log(data);
+    }
+  </script>
+</body>
+</html>

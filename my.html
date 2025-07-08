@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TWSS - Technical Web Services & Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/index.css">
+    <script src="javascript/copypaste.js"></script>
+
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-cube"></i>
+                TWSS
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="#" onclick="checkAuth('/registration.html')">Registration</a>
+                <a href="#" onclick="checkAuth('/intern.html')">Internship</a>
+                <a href="#" onclick="checkAuth('/mysqltutorial.html')">Training</a>
+                <a href="#" onclick="checkAuth('/exam.html')">Attend Exam</a>
+                <a href="#" onclick="checkAuth('/certification.html')">Certification</a>
+                <a href="#" onclick="checkAuth('/about.html')">About</a>
+                <a href="#" onclick="checkAuth('/contact.html')">Contact Us</a>
+            </nav>
+
+            <div class="auth-buttons" id="authButtons">
+                <a href="#" class="auth-btn" onclick="openAuthModal('login')">Login</a>
+                <a href="#" class="auth-btn primary" onclick="openAuthModal('signup')">Sign Up</a>
+            </div>
+
+            <div class="profile-section" id="profileSection">
+                <div class="profile-btn" onclick="toggleProfileMenu()">
+                    <div class="profile-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span id="profileName">User</span>
+                </div>
+                <div class="profile-menu" id="profileMenu">
+                    <div class="profile-info">
+                        <div class="profile-name" id="profileFullName">John Doe</div>
+                        <div class="profile-email" id="profileEmail">user@twss.com</div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">Sign Out</button>
+                </div>
+            </div>
+
+            <div class="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-container">
+            <h1>Build on <span class="highlight">TWSS</span></h1>
+            <p>Whether you're looking for compute power, database storage, content delivery, or other functionality, TWSS has the services to help you build sophisticated applications with increased flexibility, scalability and reliability.</p>
+            <div class="cta-buttons">
+                <a href="#" class="cta-btn primary" onclick="openAuthModal('signup')">
+                    <i class="fas fa-rocket"></i>
+                    Get Started for Free
+                </a>
+                <a href="#" class="cta-btn secondary" onclick="openAuthModal('login')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In to Console
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="features-container">
+            <h2>Why Choose TWSS?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure & Reliable</h3>
+                    <p>Built with enterprise-grade security and 99.9% uptime guarantee to keep your applications running smoothly.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Scalable Solutions</h3>
+                    <p>Scale your resources up or down based on demand with our flexible infrastructure solutions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h3>Cost-Effective</h3>
+                    <p>Pay only for what you use with our transparent pricing model and no hidden fees.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Expert Support</h3>
+                    <p>Get 24/7 technical support from our team of certified cloud professionals.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>Global Reach</h3>
+                    <p>Deploy your applications worldwide with our global network of data centers.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Easy Integration</h3>
+                    <p>Seamlessly integrate with your existing tools and workflows using our comprehensive APIs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services">
+        <div class="services-container">
+            <h2>Our Services</h2>
+            <p class="services-subtitle">Comprehensive solutions for all your technical needs</p>
+            <div class="services-grid">
+                <div class="service-card" onclick="checkAuth('/registration.html')">
+                    <div class="service-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3>Registration</h3>
+                    <p>Quick and easy registration process</p>
+                </div>
+                <div class="service-card" onclick="checkAuth('/intern.html')">
+                    <div class="service-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3>Internship</h3>
+                    <p>Gain practical experience</p>
+                </div>
+                <div class="service-card" onclick="checkAuth('/mysqltutorials.html')">
+                    <div class="service-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Training</h3>
+                    <p>Comprehensive learning resources</p>
+                </div>
+                <div class="service-card" onclick="checkAuth('/exam.html')">
+                    <div class="service-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <h3>Attend Exam</h3>
+                    <p>Test your knowledge</p>
+                </div>
+                <div class="service-card" onclick="checkAuth('/certification.html')">
+                    <div class="service-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3>Certification</h3>
+                    <p>Get certified credentials</p>
+                </div>
+                <div class="service-card" onclick="checkAuth('/about.html')">
+                    <div class="service-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3>About</h3>
+                    <p>Learn more about us</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#" onclick="checkAuth('/registration.html')">Registration</a></li>
+                        <li><a href="#" onclick="checkAuth('/intern.html')">Internship</a></li>
+                        <li><a href="#" onclick="checkAuth('/mysqltutorials.html')">Training</a></li>
+                        <li><a href="#" onclick="checkAuth('/exam.html')">Attend Exam</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#" onclick="checkAuth('/about.html')">About Us</a></li>
+                        <li><a href="#" onclick="checkAuth('/contact.html')">Contact</a></li>
+                        <li><a href="#" onclick="checkAuth('/certification.html')">Certification</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TWSS. All rights reserved. | Developed by <a href="/portfolio">KARTHEEK</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <span class="auth-modal-close" onclick="closeAuthModal()">&times;</span>
+            <div class="auth-form" id="authForm">
+                </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Supabase Client Initialization
+        const { createClient } = supabase;
+        // ✅ IMPORTANT: Replace 'YOUR_CTMMHXKUCK_SUPABASE_ANON_KEY' with your actual Anon Key for the ctmmhxkuckvseqzzonzm project.
+        // You can find this in your Supabase Dashboard under Project Settings -> API.
+        const supabaseClient = createClient(
+            'https://ctmmhxkuckvseqzzonzm.supabase.co', // This is your correct project URL based on recent screenshots
+            'YOUR_CTMMHXKUCK_SUPABASE_ANON_KEY' // <<< REPLACE THIS WITH YOUR ACTUAL ANON KEY
+        );
+
+        // Global variables
+        let currentUser = null;
+        let isAuthenticated = false;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            initializeEventListeners();
+            initializeMobileMenu();
+        });
+
+        // Check authentication status on page load
+        function checkAuthStatus() {
+            // Check if user is marked as logged in in localStorage
+            const loggedIn = localStorage.getItem("loggedIn") === "true";
+            if (loggedIn) {
+                isAuthenticated = true;
+                // In a real app, you would fetch user details from Supabase here
+                // For this demo, we'll assume a basic user object for UI display
+                currentUser = {
+                    email: localStorage.getItem("userEmail") || "user@example.com",
+                    name: extractNameFromEmail(localStorage.getItem("userEmail") || "User"),
+                    fullName: extractNameFromEmail(localStorage.getItem("userEmail") || "User"),
+                };
+                updateUIForAuthenticatedUser();
+            }
+        }
+
+        // Authentication Modal Functions
+        function openAuthModal(mode = 'login') {
+            const modal = document.getElementById('authModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            clearAuthStatus(); // Clear status when opening
+            
+            if (mode === 'login') {
+                setupAuthModalForLogin();
+            } else {
+                setupAuthModalForSignup();
+            }
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('authModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            clearAuthStatus();
+        }
+
+        function clearAuthStatus() {
+            const authStatus = document.getElementById('authStatus');
+            if (authStatus) {
+                authStatus.innerHTML = '';
+                authStatus.className = 'auth-status';
+            }
+        }
+
+        function setupAuthModalForLogin() {
+            const authForm = document.getElementById('authForm');
+            authForm.innerHTML = `
+                <h2>Sign In to TWSS</h2>
+                <input type="text" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button onclick="login()">Sign In</button>
+                <div class="auth-status" id="authStatus"></div>
+                <p style="text-align: center; margin-top: 15px;">New user? <a href="#" onclick="event.preventDefault(); setupAuthModalForSignup()">Sign Up</a></p>
+                <hr style="margin: 20px 0;">
+                <button onclick="loginWithGoogle()">Login with Google</button>
+                <button onclick="loginWithGitHub()">Login with GitHub</button>
+            `;
+            // Re-attach event listener for enter key
+            document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+        }
+
+        function setupAuthModalForSignup() {
+            const authForm = document.getElementById('authForm');
+            authForm.innerHTML = `
+                <h2>Create an Account</h2>
+                <input type="text" id="signupEmail" placeholder="Email" required>
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <button onclick="signupUser()">Sign Up</button>
+                <div class="auth-status" id="authStatus"></div>
+                <p style="text-align: center; margin-top: 15px;">Already have an account? <a href="#" onclick="event.preventDefault(); setupAuthModalForLogin()">Login</a></p>
+                <hr style="margin: 20px 0;">
+                <button onclick="loginWithGoogle()">Login with Google</button>
+                <button onclick="loginWithGitHub()">Login with GitHub</button>
+            `;
+            // Re-attach event listener for enter key
+            document.getElementById('signupPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    signupUser();
+                }
+            });
+        }
+
+        // Login function
+        async function login() {
+            const emailInput = document.getElementById('loginEmail');
+            const passwordInput = document.getElementById('loginPassword');
+            const authStatus = document.getElementById('authStatus');
+
+            const email = emailInput ? emailInput.value : '';
+            const password = passwordInput ? passwordInput.value : '';
+
+            clearAuthStatus();
+
+            if (!email || !password) {
+                showAuthStatus('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showAuthStatus('Please enter a valid email address', 'error');
+                return;
+            }
+
+            showAuthStatus('Signing in...', 'info');
+
+            try {
+                // **SECURITY WARNING**: This directly queries your 'users_login' table with plain text passwords.
+                // For a production application, use Supabase's built-in `auth.signInWithPassword` method
+                // which handles password hashing and secure user management.
+                // Example: const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                
+                const { data, error } = await supabaseClient
+                    .from('users_login')
+                    .select('*')
+                    .eq('email', email)
+                    .eq('password', password); // This is highly insecure. Use auth.signInWithPassword() in production.
+
+                if (error) {
+                    console.error('Login error:', error);
+                    showAuthStatus("❌ " + error.message, 'error');
+                } else if (data.length > 0) {
+                    isAuthenticated = true;
+                    currentUser = {
+                        email: email,
+                        name: extractNameFromEmail(email),
+                        fullName: extractNameFromEmail(email)
+                    };
+                    localStorage.setItem("loggedIn", "true"); // Store login status
+                    localStorage.setItem("userEmail", email); // Store email for display
+                    
+                    showAuthStatus("✅ Login successful! Redirecting...", 'success');
+                    
+                    setTimeout(() => {
+                        closeAuthModal();
+                        updateUIForAuthenticatedUser();
+                        // Redirect to the dashboard or intended page
+                        window.location.href = "https://twss.netlify.app"; // Fallback
+                    }, 1500);
+                } else {
+                    showAuthStatus("❌ Invalid email or password.", 'error');
+                }
+            } catch (err) {
+                console.error('Unexpected login error:', err);
+                showAuthStatus("❌ An unexpected error occurred during login.", 'error');
+            }
+        }
+
+        // Signup function
+        async function signupUser() {
+            const emailInput = document.getElementById('signupEmail');
+            const passwordInput = document.getElementById('signupPassword');
+            const authStatus = document.getElementById('authStatus');
+
+            const email = emailInput ? emailInput.value : '';
+            const password = passwordInput ? passwordInput.value : '';
+
+            clearAuthStatus();
+
+            if (!email || !password) {
+                showAuthStatus('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showAuthStatus('Please enter a valid email address', 'error');
+                return;
+            }
+
+            showAuthStatus('Registering...', 'info');
+
+            try {
+                // **SECURITY WARNING**: This directly inserts plain text passwords into your 'users_login' table.
+                // For a production application, use Supabase's built-in `auth.signUp` method
+                // which handles password hashing and secure user management.
+                // Example: const { data, error } = await supabaseClient.auth.signUp({ email, password });
+
+                const { data, error } = await supabaseClient
+                    .from('users_login')
+                    .insert([{ email: email, password: password, created_at: new Date() }]); // Highly insecure. Use auth.signUp() in production.
+
+                if (error) {
+                    console.error('Signup error:', error);
+                    showAuthStatus("❌ " + error.message, 'error');
+                } else {
+                    isAuthenticated = true;
+                    currentUser = {
+                        email: email,
+                        name: extractNameFromEmail(email),
+                        fullName: extractNameFromEmail(email)
+                    };
+                    localStorage.setItem("loggedIn", "true"); // Mark user as logged in
+                    localStorage.setItem("userEmail", email); // Store email for display
+
+                    showAuthStatus("✅ Account created successfully! Redirecting...", 'success');
+                    
+                    setTimeout(() => {
+                        closeAuthModal();
+                        updateUIForAuthenticatedUser();
+                        // Redirect to the dashboard or intended page
+                        window.location.href = "https://twss.netlify.app"; // Fallback
+                    }, 1500);
+                }
+            } catch (err) {
+                console.error('Unexpected signup error:', err);
+                showAuthStatus("❌ An unexpected error occurred during signup.", 'error');
+            }
+        }
+
+        // New function for Google login
+        async function loginWithGoogle() {
+            const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                provider: 'google',
+                options: { redirectTo: 'https://twss.netlify.app' } // Must match Supabase site URL and redirect URLs
+            });
+            if (error) {
+                alert('Google login error: ' + error.message);
+                console.error('Google login error:', error);
+            } else {
+                console.log('Google login initiated:', data);
+                // Supabase will handle the redirect to Google, then back to your app
+            }
+        }
+
+        // New function for GitHub login
+        async function loginWithGitHub() {
+            const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                provider: 'github',
+                options: { redirectTo: 'https://twss.netlify.app' } // Must match Supabase site URL and redirect URLs
+            });
+            if (error) {
+                alert('GitHub login error: ' + error.message);
+                console.error('GitHub login error:', error);
+            } else {
+                console.log('GitHub login initiated:', data);
+                // Supabase will handle the redirect to GitHub, then back to your app
+            }
+        }
+
+        // Show authentication status
+        function showAuthStatus(message, type) {
+            const authStatus = document.getElementById('authStatus');
+            if (authStatus) {
+                authStatus.innerHTML = message;
+                authStatus.className = `auth-status ${type}`;
+            }
+        }
+
+        // Extract name from email
+        function extractNameFromEmail(email) {
+            const name = email.split('@')[0];
+            return name.charAt(0).toUpperCase() + name.slice(1);
+        }
+
+        // Validate email format
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Update UI for authenticated user
+        function updateUIForAuthenticatedUser() {
+            const authButtons = document.getElementById('authButtons');
+            const profileSection = document.getElementById('profileSection');
+            const profileName = document.getElementById('profileName');
+            const profileFullName = document.getElementById('profileFullName');
+            const profileEmail = document.getElementById('profileEmail');
+
+            // Hide auth buttons
+            authButtons.style.display = 'none';
+            
+            // Show profile section
+            profileSection.style.display = 'block';
+            
+            // Update profile info
+            if (currentUser) {
+                profileName.textContent = currentUser.name;
+                profileFullName.textContent = currentUser.fullName;
+                profileEmail.textContent = currentUser.email;
+            }
+        }
+
+        // Update UI for unauthenticated user
+        function updateUIForUnauthenticatedUser() {
+            const authButtons = document.getElementById('authButtons');
+            const profileSection = document.getElementById('profileSection');
+
+            // Show auth buttons
+            authButtons.style.display = 'flex';
+            
+            // Hide profile section
+            profileSection.style.display = 'none';
+        }
+
+        // Toggle profile menu
+        function toggleProfileMenu() {
+            const profileMenu = document.getElementById('profileMenu');
+            profileMenu.classList.toggle('active');
+        }
+
+        // Close profile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileSection = document.getElementById('profileSection');
+            const profileMenu = document.getElementById('profileMenu');
+            
+            if (profileSection && profileMenu && !profileSection.contains(event.target)) {
+                profileMenu.classList.remove('active');
+            }
+        });
+
+        // Logout function
+        function logout() {
+            currentUser = null;
+            isAuthenticated = false;
+            localStorage.removeItem("loggedIn"); // Clear login status
+            localStorage.removeItem("userEmail"); // Clear stored email
+            updateUIForUnauthenticatedUser();
+            
+            // Close profile menu
+            const profileMenu = document.getElementById('profileMenu');
+            if (profileMenu) {
+                profileMenu.classList.remove('active');
+            }
+            
+            // Show logout message
+            showNotification('You have been logged out successfully', 'success');
+        }
+
+        // Check authentication before accessing protected routes
+        function checkAuth(route) {
+            if (!isAuthenticated) {
+                showNotification('Please log in to access this feature', 'warning');
+                setTimeout(() => {
+                    openAuthModal('login'); // Open modal for login
+                }, 1000);
+                return false;
+            }
+            
+            // If authenticated, navigate to route
+            navigateToRoute(route);
+            return true;
+        }
+
+        // Navigate to route (simulate navigation)
+        function navigateToRoute(route) {
+            // In a real application, you would use proper routing or direct page loads
+            showNotification(`Navigating to ${route}...`, 'info');
+            
+            // Simulate navigation delay, then actually navigate
+            setTimeout(() => {
+                window.location.href = route; // Actual navigation
+            }, 1000);
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${getNotificationIcon(type)}"></i>
+                <span>${message}</span>
+                <i class="fas fa-times notification-close" onclick="closeNotification(this)"></i>
+            `;
+            
+            // Add styles
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${getNotificationColor(type)};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                max-width: 400px;
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    closeNotification(notification.querySelector('.notification-close'));
+                }
+            }, 5000);
+        }
+
+        // Get notification icon
+        function getNotificationIcon(type) {
+            switch (type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-circle';
+                case 'warning': return 'exclamation-triangle';
+                case 'info': return 'info-circle';
+                default: return 'info-circle';
+            }
+        }
+
+        // Get notification color
+        function getNotificationColor(type) {
+            switch (type) {
+                case 'success': return '#28a745';
+                case 'error': return '#dc3545';
+                case 'warning': return '#ffc107';
+                case 'info': return '#17a2b8';
+                default: return '#17a2b8';
+            }
+        }
+
+        // Close notification
+        function closeNotification(element) {
+            const notification = element.closest('.notification');
+            if (notification) {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }
+        }
+
+        // Initialize mobile menu
+        function initializeMobileMenu() {
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (mobileMenu && navMenu) {
+                mobileMenu.addEventListener('click', function() {
+                    navMenu.classList.toggle('active');
+                    mobileMenu.classList.toggle('active');
+                });
+            }
+        }
+
+        // Initialize event listeners
+        function initializeEventListeners() {
+            // Close modal when clicking outside
+            const authModal = document.getElementById('authModal');
+            if (authModal) {
+                authModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeAuthModal();
+                    }
+                });
+            }
+            
+            // Logo click - scroll to top
+            document.querySelector('.logo').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // Smooth scrolling for internal links (currently not used in the nav for external routes)
+        function smoothScrollTo(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Form validation helper (general purpose, not specifically for auth in this context)
+        function validateForm(formData) {
+            const errors = [];
+            
+            for (const [key, value] of Object.entries(formData)) {
+                if (!value || value.trim() === '') {
+                    errors.push(`${key} is required`);
+                }
+            }
+            
+            return errors;
+        }
+
+        // Loading state helper (general purpose)
+        function showLoading(element, text = 'Loading...') {
+            if (element) {
+                element.disabled = true;
+                element.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text}`;
+            }
+        }
+
+        function hideLoading(element, originalText) {
+            if (element) {
+                element.disabled = false;
+                element.innerHTML = originalText;
+            }
+        }
+
+        // Utility function to format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+            
+            .notification {
+                font-family: 'Amazon Ember', 'Helvetica Neue', Roboto, Arial, sans-serif;
+                font-size: 14px;
+                line-height: 1.4;
+            }
+            
+            .notification-close {
+                cursor: pointer;
+                margin-left: auto;
+                opacity: 0.7;
+                transition: opacity 0.2s;
+            }
+            
+            .notification-close:hover {
+                opacity: 1;
+            }
+            
+            .mobile-menu.active span:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+            
+            .mobile-menu.active span:nth-child(2) {
+                opacity: 0;
+            }
+            
+            .mobile-menu.active span:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
+            
+            @media (max-width: 768px) {
+                .nav-menu.active {
+                    display: flex;
+                    flex-direction: column;
+                    position: absolute;
+                    top: 60px;
+                    left: 0;
+                    width: 100%;
+                    background: #232f3e;
+                    padding: 20px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+                
+                .nav-menu.active a {
+                    padding: 10px 0;
+                    border-bottom: 1px solid #37475a;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize demo data (remove in production)
+        function initializeDemoData() {
+            console.log('TWSS Platform Initialized');
+            console.log('Using Supabase for authentication (check console for API calls).');
+            console.log('**WARNING: Current login/signup directly inserts/queries plain text passwords in the "users_login" table.**');
+            console.log('**For production, use Supabase\'s built-in `auth.signUp()` and `auth.signInWithPassword()` for secure password handling.**');
+        }
+
+        // Call demo initialization
+        initializeDemoData();
+    </script>
+<script>
+// Remove alert calls for better user experience
+document.onkeydown = function(e) {
+    if (
+        e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S') ||
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i'))
+    ) {
+        // console.log("Developer tools or source view attempt detected.");
+        return false; // Prevent default action for these keys
+    }
+};
+
+document.addEventListener('contextmenu', event => {
+    event.preventDefault(); // Prevent right-click context menu
+});
+</script>
+
+    
+</body>
+</html>

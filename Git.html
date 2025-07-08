@@ -20,19 +20,11 @@
   <button onclick="loginWithGitHub()">Login with GitHub</button>
 
   <script>
-    async function loginWithGitHub() {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'github',
-    options: { redirectTo: 'https://twss.netlify.app' }
-  });
-  if (error) alert('GitHub login error: ' + error.message);
-  console.log(data);
-}
-
-    // ✅ Correct way: use window.supabase.createClient
+    // ✅ IMPORTANT: Replace 'YOUR_CTMMHXKUCK_SUPABASE_ANON_KEY' with your actual Anon Key for the ctmmhxkuckvseqzzonzm project.
+    // You can find this in your Supabase Dashboard under Project Settings -> API.
     const supabase = window.supabase.createClient(
-      'https://fzwvxesrtdilljgrntpw.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'
+      'https://ctmmhxkuckvseqzzonzm.supabase.co', // This is your correct project URL
+      'YOUR_CTMMHXKUCK_SUPABASE_ANON_KEY' // <<< REPLACE THIS WITH YOUR ACTUAL ANON KEY
     );
 
     async function loginWithEmail() {
@@ -59,7 +51,14 @@
       console.log(data);
     }
 
-    
+    async function loginWithGitHub() {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: { redirectTo: 'https://twss.netlify.app' }
+      });
+      if (error) alert('GitHub login error: ' + error.message);
+      console.log(data);
+    }
   </script>
 </body>
 </html>

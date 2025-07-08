@@ -243,29 +243,51 @@
         let currentUser = null;
         let isAuthenticated = false;
 
+        // --- NEW: Supabase Auth State Change Listener ---
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            console.log('Auth event:', event, 'Session:', session);
+            if (session) {
+                // User is logged in
+                isAuthenticated = true;
+                currentUser = {
+                    email: session.user.email,
+                    name: session.user.user_metadata?.full_name || session.user.email.split('@')[0], // Use metadata if available
+                    fullName: session.user.user_metadata?.full_name || session.user.email // Use metadata if available
+                };
+                localStorage.setItem("loggedIn", "true");
+                localStorage.setItem("userEmail", session.user.email);
+                
+                // Update UI and close modal immediately
+                updateUIForAuthenticatedUser();
+                closeAuthModal();
+
+                // If coming back from OAuth, and the URL has hash/query parameters,
+                // you might want to clean the URL without a full page reload if supported,
+                // or redirect to a clean URL like your homepage if necessary.
+                // For now, we assume onAuthStateChange handles the UI without forcing navigation.
+                if (event === 'SIGNED_IN' && (window.location.hash || window.location.search)) {
+                    // Option to clean the URL without full reload (requires HTML5 history API)
+                    // history.replaceState(null, '', window.location.origin + window.location.pathname);
+                    // Or, if a full clean redirect is desired (will cause a reload):
+                    // window.location.href = window.location.origin; 
+                }
+
+            } else {
+                // User is logged out
+                isAuthenticated = false;
+                currentUser = null;
+                localStorage.removeItem("loggedIn");
+                localStorage.removeItem("userEmail");
+                updateUIForUnauthenticatedUser();
+            }
+        });
+
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
-            checkAuthStatus();
+            // No longer calling checkAuthStatus directly, onAuthStateChange handles it
             initializeEventListeners();
             initializeMobileMenu();
         });
-
-        // Check authentication status on page load
-        function checkAuthStatus() {
-            // Check if user is marked as logged in in localStorage
-            const loggedIn = localStorage.getItem("loggedIn") === "true";
-            if (loggedIn) {
-                isAuthenticated = true;
-                // In a real app, you would fetch user details from Supabase here
-                // For this demo, we'll assume a basic user object for UI display
-                currentUser = {
-                    email: localStorage.getItem("userEmail") || "user@example.com",
-                    name: extractNameFromEmail(localStorage.getItem("userEmail") || "User"),
-                    fullName: extractNameFromEmail(localStorage.getItem("userEmail") || "User"),
-                };
-                updateUIForAuthenticatedUser();
-            }
-        }
 
         // Authentication Modal Functions
         function openAuthModal(mode = 'login') {
@@ -365,36 +387,17 @@
                 // **SECURITY WARNING**: This directly queries your 'users_login' table with plain text passwords.
                 // For a production application, use Supabase's built-in `auth.signInWithPassword` method
                 // which handles password hashing and secure user management.
-                // Example: const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
                 
-                const { data, error } = await supabaseClient
-                    .from('users_login')
-                    .select('*')
-                    .eq('email', email)
-                    .eq('password', password); // This is highly insecure. Use auth.signInWithPassword() in production.
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password }); // Correct Supabase method
 
                 if (error) {
                     console.error('Login error:', error);
                     showAuthStatus("❌ " + error.message, 'error');
-                } else if (data.length > 0) {
-                    isAuthenticated = true;
-                    currentUser = {
-                        email: email,
-                        name: extractNameFromEmail(email),
-                        fullName: extractNameFromEmail(email)
-                    };
-                    localStorage.setItem("loggedIn", "true"); // Store login status
-                    localStorage.setItem("userEmail", email); // Store email for display
-                    
-                    showAuthStatus("✅ Login successful! Redirecting...", 'success');
-                    
-                    setTimeout(() => {
-                        closeAuthModal();
-                        updateUIForAuthenticatedUser();
-                        // Redirect to the dashboard or intended page
-                        window.location.href = "https://twss.netlify.app"; // Fallback
-                    }, 1500);
-                } else {
+                } else if (data.user) { // Check if user object is returned, indicating success
+                    // The onAuthStateChange listener will handle updating UI and local storage
+                    showAuthStatus("✅ Login successful!", 'success');
+                    // No explicit redirect here. onAuthStateChange will trigger UI update.
+                } else { // Handle cases where error is null but no user (e.g., if you were using select previously)
                     showAuthStatus("❌ Invalid email or password.", 'error');
                 }
             } catch (err) {
@@ -430,33 +433,18 @@
                 // **SECURITY WARNING**: This directly inserts plain text passwords into your 'users_login' table.
                 // For a production application, use Supabase's built-in `auth.signUp` method
                 // which handles password hashing and secure user management.
-                // Example: const { data, error } = await supabaseClient.auth.signUp({ email, password });
 
-                const { data, error } = await supabaseClient
-                    .from('users_login')
-                    .insert([{ email: email, password: password, created_at: new Date() }]); // Highly insecure. Use auth.signUp() in production.
+                const { data, error } = await supabaseClient.auth.signUp({ email, password }); // Correct Supabase method
 
                 if (error) {
                     console.error('Signup error:', error);
                     showAuthStatus("❌ " + error.message, 'error');
+                } else if (data.user) { // Check if user object is returned, indicating success
+                    // The onAuthStateChange listener will handle updating UI and local storage
+                    showAuthStatus("✅ Account created successfully! Please check your email for verification if email confirmation is enabled.", 'success');
+                    // No explicit redirect here. onAuthStateChange will trigger UI update.
                 } else {
-                    isAuthenticated = true;
-                    currentUser = {
-                        email: email,
-                        name: extractNameFromEmail(email),
-                        fullName: extractNameFromEmail(email)
-                    };
-                    localStorage.setItem("loggedIn", "true"); // Mark user as logged in
-                    localStorage.setItem("userEmail", email); // Store email for display
-
-                    showAuthStatus("✅ Account created successfully! Redirecting...", 'success');
-                    
-                    setTimeout(() => {
-                        closeAuthModal();
-                        updateUIForAuthenticatedUser();
-                        // Redirect to the dashboard or intended page
-                        window.location.href = "https://twss.netlify.app"; // Fallback
-                    }, 1500);
+                     showAuthStatus("❌ An unexpected issue occurred during signup.", 'error');
                 }
             } catch (err) {
                 console.error('Unexpected signup error:', err);
@@ -466,6 +454,7 @@
 
         // New function for Google login
         async function loginWithGoogle() {
+            showAuthStatus('Redirecting to Google...', 'info');
             const { data, error } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'google',
                 options: { redirectTo: 'https://twss.netlify.app' } // Must match Supabase site URL and redirect URLs
@@ -473,6 +462,7 @@
             if (error) {
                 alert('Google login error: ' + error.message);
                 console.error('Google login error:', error);
+                showAuthStatus("❌ Google login failed: " + error.message, 'error');
             } else {
                 console.log('Google login initiated:', data);
                 // Supabase will handle the redirect to Google, then back to your app
@@ -481,6 +471,7 @@
 
         // New function for GitHub login
         async function loginWithGitHub() {
+            showAuthStatus('Redirecting to GitHub...', 'info');
             const { data, error } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'github',
                 options: { redirectTo: 'https://twss.netlify.app' } // Must match Supabase site URL and redirect URLs
@@ -488,6 +479,7 @@
             if (error) {
                 alert('GitHub login error: ' + error.message);
                 console.error('GitHub login error:', error);
+                showAuthStatus("❌ GitHub login failed: " + error.message, 'error');
             } else {
                 console.log('GitHub login initiated:', data);
                 // Supabase will handle the redirect to GitHub, then back to your app
@@ -524,16 +516,16 @@
             const profileEmail = document.getElementById('profileEmail');
 
             // Hide auth buttons
-            authButtons.style.display = 'none';
+            if (authButtons) authButtons.style.display = 'none';
             
             // Show profile section
-            profileSection.style.display = 'block';
+            if (profileSection) profileSection.style.display = 'block';
             
             // Update profile info
             if (currentUser) {
-                profileName.textContent = currentUser.name;
-                profileFullName.textContent = currentUser.fullName;
-                profileEmail.textContent = currentUser.email;
+                if (profileName) profileName.textContent = currentUser.name;
+                if (profileFullName) profileFullName.textContent = currentUser.fullName;
+                if (profileEmail) profileEmail.textContent = currentUser.email;
             }
         }
 
@@ -543,16 +535,16 @@
             const profileSection = document.getElementById('profileSection');
 
             // Show auth buttons
-            authButtons.style.display = 'flex';
+            if (authButtons) authButtons.style.display = 'flex';
             
             // Hide profile section
-            profileSection.style.display = 'none';
+            if (profileSection) profileSection.style.display = 'none';
         }
 
         // Toggle profile menu
         function toggleProfileMenu() {
             const profileMenu = document.getElementById('profileMenu');
-            profileMenu.classList.toggle('active');
+            if (profileMenu) profileMenu.classList.toggle('active');
         }
 
         // Close profile menu when clicking outside
@@ -566,21 +558,21 @@
         });
 
         // Logout function
-        function logout() {
-            currentUser = null;
-            isAuthenticated = false;
-            localStorage.removeItem("loggedIn"); // Clear login status
-            localStorage.removeItem("userEmail"); // Clear stored email
-            updateUIForUnauthenticatedUser();
-            
+        async function logout() {
+            showNotification('Signing out...', 'info');
+            const { error } = await supabaseClient.auth.signOut();
+            if (error) {
+                console.error('Logout error:', error);
+                showNotification('Error signing out: ' + error.message, 'error');
+            } else {
+                // onAuthStateChange listener will handle updating UI and local storage
+                showNotification('You have been logged out successfully', 'success');
+            }
             // Close profile menu
             const profileMenu = document.getElementById('profileMenu');
             if (profileMenu) {
                 profileMenu.classList.remove('active');
             }
-            
-            // Show logout message
-            showNotification('You have been logged out successfully', 'success');
         }
 
         // Check authentication before accessing protected routes

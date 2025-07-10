@@ -94,105 +94,10 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://login-c7e9.restdb.io/rest/_jsapi.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
+
   <script>
-    // Initialize RestDB
-    // IMPORTANT: Replace "YOUR_RESTDB_API_KEY" with your actual CORS API key
-    var db = new restdb("f00021602db841fc5a3cd70002d19f4be20d3"); // Your provided API key
-
-    // Register user
-    function register() {
-      var email = document.getElementById("regEmail").value.trim();
-      var password = document.getElementById("regPassword").value.trim();
-
-      if (!email || !password) {
-        showMessage("Please enter both email and password", "error");
-        return;
-      }
-
-      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        showMessage("Please enter a valid email address", "error");
-        return;
-      }
-
-      // Hash the password before sending (client-side for demonstration)
-      // For production, use a more robust hashing algorithm and preferably hash server-side
-      const hashedPassword = sha256(password);
-
-      document.getElementById("regBtn").disabled = true;
-      showMessage("Registering user...", "loading");
-
-      // Check if user already exists
-      db.userlogin.query({ email: email }, function(err, users) {
-        if (err) {
-          document.getElementById("regBtn").disabled = false;
-          showMessage("Error checking existing user: " + err.message, "error");
-          return;
-        }
-
-        if (users.length > 0) {
-          document.getElementById("regBtn").disabled = false;
-          showMessage("User with this email already exists", "error");
-          return;
-        }
-
-        // Register new user with hashed password
-        db.userlogin.insert({ email: email, password: hashedPassword }, function(err, result) {
-          document.getElementById("regBtn").disabled = false;
-
-          if (err) {
-            showMessage("Registration failed: " + err.message, "error");
-          } else {
-            showMessage("User registered successfully!", "success");
-            document.getElementById("regEmail").value = "";
-            document.getElementById("regPassword").value = "";
-          }
-        });
-      });
-    }
-
-    // Login user
-    function login() {
-      var email = document.getElementById("loginEmail").value.trim();
-      var password = document.getElementById("loginPassword").value.trim();
-
-      if (!email || !password) {
-        showMessage("Please enter both email and password", "error");
-        return;
-      }
-
-      // Hash the entered password for comparison
-      const enteredHashedPassword = sha256(password);
-
-      document.getElementById("loginBtn").disabled = true;
-      showMessage("Logging in...", "loading");
-
-      // Query for the user by email first
-      db.userlogin.query({ email: email }, function(err, users) {
-        document.getElementById("loginBtn").disabled = false;
-
-        if (err) {
-          showMessage("Login failed: " + err.message, "error");
-          return;
-        }
-
-        if (users.length > 0) {
-          const storedUser = users[0];
-          // Compare the hashed entered password with the stored hashed password
-          if (storedUser.password === enteredHashedPassword) {
-            showMessage("Login successful! Welcome back!", "success");
-            document.getElementById("loginEmail").value = "";
-            document.getElementById("loginPassword").value = "";
-            // You can redirect or perform other actions here, e.g.:
-            // window.location.href = '/dashboard';
-          } else {
-            showMessage("Invalid email or password", "error"); // Generic message for security
-          }
-        } else {
-          showMessage("Invalid email or password", "error"); // Generic message for security
-        }
-      });
-    }
+    // Declare db globally but initialize inside $(document).ready()
+    var db; 
 
     // Helper function to show messages
     function showMessage(message, type) {
@@ -207,6 +112,99 @@
         }, 3000);
       }
     }
+
+    // Wrap your main logic in $(document).ready() to ensure all scripts are loaded
+    $(document).ready(function() {
+      // Initialize RestDB here, after jQuery and _jsapi.js are definitely loaded
+      db = new restdb("f00021602db841fc5a3cd70002d19f4be20d3"); // Your provided API key
+
+      // --- Registration Function ---
+      window.register = function() { // Make it global for onclick
+        var email = document.getElementById("regEmail").value.trim();
+        var password = document.getElementById("regPassword").value.trim();
+
+        if (!email || !password) {
+          showMessage("Please enter both email and password", "error");
+          return;
+        }
+
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          showMessage("Please enter a valid email address", "error");
+          return;
+        }
+
+        const hashedPassword = sha256(password);
+
+        document.getElementById("regBtn").disabled = true;
+        showMessage("Registering user...", "loading");
+
+        db.userlogin.query({ email: email }, function(err, users) {
+          if (err) {
+            document.getElementById("regBtn").disabled = false;
+            showMessage("Error checking existing user: " + err.message, "error");
+            return;
+          }
+
+          if (users.length > 0) {
+            document.getElementById("regBtn").disabled = false;
+            showMessage("User with this email already exists", "error");
+            return;
+          }
+
+          db.userlogin.insert({ email: email, password: hashedPassword }, function(err, result) {
+            document.getElementById("regBtn").disabled = false;
+
+            if (err) {
+              showMessage("Registration failed: " + err.message, "error");
+            } else {
+              showMessage("User registered successfully!", "success");
+              document.getElementById("regEmail").value = "";
+              document.getElementById("regPassword").value = "";
+            }
+          });
+        });
+      }; // End register function
+
+      // --- Login Function ---
+      window.login = function() { // Make it global for onclick
+        var email = document.getElementById("loginEmail").value.trim();
+        var password = document.getElementById("loginPassword").value.trim();
+
+        if (!email || !password) {
+          showMessage("Please enter both email and password", "error");
+          return;
+        }
+
+        const enteredHashedPassword = sha256(password);
+
+        document.getElementById("loginBtn").disabled = true;
+        showMessage("Logging in...", "loading");
+
+        db.userlogin.query({ email: email }, function(err, users) {
+          document.getElementById("loginBtn").disabled = false;
+
+          if (err) {
+            showMessage("Login failed: " + err.message, "error");
+            return;
+          }
+
+          if (users.length > 0) {
+            const storedUser = users[0];
+            if (storedUser.password === enteredHashedPassword) {
+              showMessage("Login successful! Welcome back!", "success");
+              document.getElementById("loginEmail").value = "";
+              document.getElementById("loginPassword").value = "";
+            } else {
+              showMessage("Invalid email or password", "error");
+            }
+          } else {
+            showMessage("Invalid email or password", "error");
+          }
+        });
+      }; // End login function
+
+    }); // End $(document).ready()
   </script>
 </body>
 </html>

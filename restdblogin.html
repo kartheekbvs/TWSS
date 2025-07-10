@@ -92,14 +92,12 @@
   </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://login-c7e9.restdb.io/rest/_jsapi.js"></script>
+  <script src="https://restdb.io/rest/_jsapi.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
 
   <script>
-    // Declare db globally but initialize inside $(document).ready()
-    var db; 
+    var db; // Declare db globally
 
-    // Helper function to show messages
     function showMessage(message, type) {
       var messageElement = document.getElementById("message");
       messageElement.textContent = message;
@@ -113,13 +111,11 @@
       }
     }
 
-    // Wrap your main logic in $(document).ready() to ensure all scripts are loaded
     $(document).ready(function() {
       // Initialize RestDB here, after jQuery and _jsapi.js are definitely loaded
       db = new restdb("f00021602db841fc5a3cd70002d19f4be20d3"); // Your provided API key
 
-      // --- Registration Function ---
-      window.register = function() { // Make it global for onclick
+      window.register = function() {
         var email = document.getElementById("regEmail").value.trim();
         var password = document.getElementById("regPassword").value.trim();
 
@@ -166,8 +162,7 @@
         });
       }; // End register function
 
-      // --- Login Function ---
-      window.login = function() { // Make it global for onclick
+      window.login = function() {
         var email = document.getElementById("loginEmail").value.trim();
         var password = document.getElementById("loginPassword").value.trim();
 

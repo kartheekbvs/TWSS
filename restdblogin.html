@@ -5,87 +5,208 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login & Register</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; }
-    .container { max-width: 400px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px #aaa; }
-    input[type="text"], input[type="password"] { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
-    button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; cursor: pointer; margin: 10px 0; }
-    button:hover { background-color: #218838; }
-    h2 { text-align: center; }
-    #message { text-align: center; padding: 10px; margin: 10px 0; }
-    .success { color: #28a745; background-color: #d4edda; border: 1px solid #c3e6cb; }
-    .error { color: #dc3545; background-color: #f8d7da; border: 1px solid #f5c6cb; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px #aaa;
+    }
+    input[type="text"], input[type="password"], input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    button:disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    #message {
+      text-align: center;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .success {
+      color: #28a745;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      color: #dc3545;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+    }
+    .divider {
+      margin: 30px 0;
+      border-top: 1px solid #eee;
+    }
+    .loading {
+      color: #007bff;
+      background-color: #d1ecf1;
+      border: 1px solid #bee5eb;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Register</h2>
-    <input type="text" id="regGmail" placeholder="Gmail" />
+    <input type="email" id="regEmail" placeholder="Email" />
     <input type="password" id="regPassword" placeholder="Password" />
-    <button onclick="register()">Register</button>
-    
+    <button id="regBtn" onclick="register()">Register</button>
+
+    <div class="divider"></div>
+
     <h2>Login</h2>
-    <input type="text" id="loginGmail" placeholder="Gmail" />
+    <input type="email" id="loginEmail" placeholder="Email" />
     <input type="password" id="loginPassword" placeholder="Password" />
-    <button onclick="login()">Login</button>
-    
+    <button id="loginBtn" onclick="login()">Login</button>
+
     <p id="message"></p>
   </div>
 
-  <!-- Include RestDB JS API -->
   <script src="https://login-c7e9.restdb.io/rest/_jsapi.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
   <script>
-    // Initialize RestDB API with your API key
-    var db = new restdb("686f84f91d806733d4a19284");
+    // Initialize RestDB
+    var db = new restdb("f00021602db841fc5a3cd70002d19f4be20d3");
 
     // Register user
     function register() {
-      var gmail = document.getElementById("regGmail").value.trim();
+      var email = document.getElementById("regEmail").value.trim();
       var password = document.getElementById("regPassword").value.trim();
 
-      if (!gmail || !password) {
-        showMessage("Please enter both Gmail and password", "error");
+      if (!email || !password) {
+        showMessage("Please enter both email and password", "error");
         return;
       }
 
-      db.users.insert({ gmail: gmail, password: password }, function(err, res) {
+      // Basic email validation
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showMessage("Please enter a valid email address", "error");
+        return;
+      }
+
+      // Hash the password before sending (client-side for demonstration)
+      const hashedPassword = sha256(password);
+
+      // Disable button and show loading
+      document.getElementById("regBtn").disabled = true;
+      showMessage("Registering user...", "loading");
+
+      // Check if user already exists
+      db.userlogin.query({ email: email }, function(err, users) {
         if (err) {
-          showMessage("Registration failed: " + err.message, "error");
-        } else {
-          showMessage("User registered successfully!", "success");
-          document.getElementById("regGmail").value = "";
-          document.getElementById("regPassword").value = "";
+          document.getElementById("regBtn").disabled = false;
+          showMessage("Error checking existing user: " + err.message, "error");
+          return;
         }
+
+        if (users.length > 0) {
+          document.getElementById("regBtn").disabled = false;
+          showMessage("User with this email already exists", "error");
+          return;
+        }
+
+        // Register new user with hashed password
+        db.userlogin.insert({ email: email, password: hashedPassword }, function(err, result) {
+          document.getElementById("regBtn").disabled = false;
+
+          if (err) {
+            showMessage("Registration failed: " + err.message, "error");
+          } else {
+            showMessage("User registered successfully!", "success");
+            document.getElementById("regEmail").value = "";
+            document.getElementById("regPassword").value = "";
+          }
+        });
       });
     }
 
     // Login user
     function login() {
-      var gmail = document.getElementById("loginGmail").value.trim();
+      var email = document.getElementById("loginEmail").value.trim();
       var password = document.getElementById("loginPassword").value.trim();
 
-      if (!gmail || !password) {
-        showMessage("Please enter both Gmail and password", "error");
+      if (!email || !password) {
+        showMessage("Please enter both email and password", "error");
         return;
       }
 
-      db.users.query({ gmail: gmail, password: password }, function(err, users) {
+      // Hash the entered password for comparison
+      const enteredHashedPassword = sha256(password);
+
+      // Disable button and show loading
+      document.getElementById("loginBtn").disabled = true;
+      showMessage("Logging in...", "loading");
+
+      // Query for the user by email first
+      db.userlogin.query({ email: email }, function(err, users) {
+        document.getElementById("loginBtn").disabled = false;
+
         if (err) {
           showMessage("Login failed: " + err.message, "error");
-        } else if (users.length > 0) {
-          showMessage("Login successful!", "success");
-          document.getElementById("loginGmail").value = "";
-          document.getElementById("loginPassword").value = "";
+          return;
+        }
+
+        if (users.length > 0) {
+          const storedUser = users[0];
+          // Compare the hashed entered password with the stored hashed password
+          if (storedUser.password === enteredHashedPassword) {
+            showMessage("Login successful! Welcome back!", "success");
+            document.getElementById("loginEmail").value = "";
+            document.getElementById("loginPassword").value = "";
+            // You can redirect or perform other actions here
+            // window.location.href = '/dashboard';
+          } else {
+            showMessage("Invalid email or password", "error"); // Generic message for security
+          }
         } else {
-          showMessage("Invalid Gmail or password", "error");
+          showMessage("Invalid email or password", "error"); // Generic message for security
         }
       });
     }
 
-    // Show message helper
+    // Helper function to show messages
     function showMessage(message, type) {
-      var el = document.getElementById("message");
-      el.textContent = message;
-      el.className = type;
+      var messageElement = document.getElementById("message");
+      messageElement.textContent = message;
+      messageElement.className = type;
+
+      // Auto-hide success messages after 3 seconds
+      if (type === "success") {
+        setTimeout(function() {
+          messageElement.textContent = "";
+          messageElement.className = "";
+        }, 3000);
+      }
     }
   </script>
 </body>

@@ -31,81 +31,61 @@
     <p id="message"></p>
   </div>
 
+  <!-- Include RestDB JS API -->
+  <script src="https://login-c7e9.restdb.io/rest/_jsapi.js"></script>
   <script>
-    const API_KEY = "686f84f91d806733d4a19284";  // use your correct API key
-    const BASE_URL = "https://login-c7e9.restdb.io/rest/users";
+    // Initialize RestDB API with your API key
+    var db = new restdb("686f84f91d806733d4a19284");
 
     // Register user
-    async function register() {
-      const gmail = document.getElementById("regGmail").value;
-      const password = document.getElementById("regPassword").value;
+    function register() {
+      var gmail = document.getElementById("regGmail").value.trim();
+      var password = document.getElementById("regPassword").value.trim();
 
       if (!gmail || !password) {
         showMessage("Please enter both Gmail and password", "error");
         return;
       }
 
-      try {
-        const res = await fetch(BASE_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-apikey": API_KEY,
-          },
-          body: JSON.stringify({ gmail, password })
-        });
-
-        if (res.ok) {
+      db.users.insert({ gmail: gmail, password: password }, function(err, res) {
+        if (err) {
+          showMessage("Registration failed: " + err.message, "error");
+        } else {
           showMessage("User registered successfully!", "success");
           document.getElementById("regGmail").value = "";
           document.getElementById("regPassword").value = "";
-        } else {
-          const error = await res.json();
-          showMessage("Registration failed: " + (error.message || "Unknown error"), "error");
         }
-      } catch (error) {
-        showMessage("Network error: " + error.message, "error");
-      }
+      });
     }
 
     // Login user
-    async function login() {
-      const gmail = document.getElementById("loginGmail").value;
-      const password = document.getElementById("loginPassword").value;
+    function login() {
+      var gmail = document.getElementById("loginGmail").value.trim();
+      var password = document.getElementById("loginPassword").value.trim();
 
       if (!gmail || !password) {
         showMessage("Please enter both Gmail and password", "error");
         return;
       }
 
-      try {
-        // Search for user matching gmail and password
-        const res = await fetch(`${BASE_URL}?q={"gmail":"${gmail}","password":"${password}"}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-apikey": API_KEY,
-          }
-        });
-        const users = await res.json();
-
-        if (users.length > 0) {
+      db.users.query({ gmail: gmail, password: password }, function(err, users) {
+        if (err) {
+          showMessage("Login failed: " + err.message, "error");
+        } else if (users.length > 0) {
           showMessage("Login successful!", "success");
           document.getElementById("loginGmail").value = "";
           document.getElementById("loginPassword").value = "";
         } else {
           showMessage("Invalid Gmail or password", "error");
         }
-      } catch (error) {
-        showMessage("Network error: " + error.message, "error");
-      }
+      });
     }
 
-    // Show message
+    // Show message helper
     function showMessage(message, type) {
-      const messageElement = document.getElementById("message");
-      messageElement.textContent = message;
-      messageElement.className = type;
+      var el = document.getElementById("message");
+      el.textContent = message;
+      el.className = type;
     }
   </script>
 </body>

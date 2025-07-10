@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Auth (SkySQL)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      max-width: 400px;
+      width: 100%;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+    input[type="text"], input[type="password"], input[type="email"] {
+      width: calc(100% - 20px); /* Account for padding */
+      padding: 10px;
+      margin: 10px 0;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-size: 18px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    button:disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+    }
+    #message {
+      text-align: center;
+      padding: 12px;
+      margin: 15px 0;
+      border-radius: 4px;
+      font-weight: bold;
+      opacity: 1;
+      transition: opacity 0.5s ease-out;
+    }
+    .success {
+      color: #155724;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      color: #721c24;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+    }
+    .loading {
+      color: #0c5460;
+      background-color: #d1ecf1;
+      border: 1px solid #bee5eb;
+    }
+    .hidden {
+      opacity: 0;
+      height: 0;
+      padding: 0;
+      margin: 0;
+    }
+    .divider {
+      margin: 30px 0;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Register</h2>
+    <input type="email" id="regEmail" placeholder="Email" />
+    <input type="password" id="regPassword" placeholder="Password" />
+    <button id="regBtn" onclick="register()">Register</button>
+
+    <div class="divider"></div>
+
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email" />
+    <input type="password" id="loginPassword" placeholder="Password" />
+    <button id="loginBtn" onclick="login()">Login</button>
+
+    <p id="message"></p>
+  </div>
+
+  <script>
+    // IMPORTANT: Replace this with the ACTUAL URL of your deployed Node.js backend
+    // Example: const BACKEND_URL = 'https://your-backend-app-name.onrender.com';
+    const BACKEND_URL = 'YOUR_RENDER_BACKEND_URL_HERE'; // <<< YOU MUST UPDATE THIS LINE!
+
+    // Helper function to show messages
+    function showMessage(message, type) {
+      var messageElement = document.getElementById("message");
+      messageElement.textContent = message;
+      messageElement.className = type; // Set class for styling
+      messageElement.classList.remove('hidden'); // Ensure it's visible
+
+      // Clear message after some time for success messages
+      if (type === "success") {
+        setTimeout(function() {
+          messageElement.classList.add('hidden'); // Hide the message
+          messageElement.textContent = "";
+        }, 3000);
+      }
+    }
+
+    // Register user
+    async function register() {
+      const email = document.getElementById("regEmail").value.trim();
+      const password = document.getElementById("regPassword").value.trim();
+
+      if (!email || !password) {
+        showMessage("Please enter both email and password.", "error");
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showMessage("Please enter a valid email address.", "error");
+        return;
+      }
+
+      document.getElementById("regBtn").disabled = true;
+      showMessage("Registering user...", "loading");
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json(); // Parse JSON response from backend
+
+        if (response.ok) { // Status 2xx (e.g., 201 Created)
+          showMessage(data.message, "success");
+          document.getElementById("regEmail").value = "";
+          document.getElementById("regPassword").value = "";
+        } else { // Status 4xx or 5xx
+          showMessage(data.message || "Registration failed. Please try again.", "error");
+          console.error("Backend error during registration:", data);
+        }
+      } catch (error) {
+        // Network errors (e.g., backend server not running, CORS issues if not configured)
+        console.error('Network error during registration:', error);
+        showMessage("Could not connect to the server. Please ensure the backend is running and CORS is configured.", "error");
+      } finally {
+        document.getElementById("regBtn").disabled = false; // Re-enable button
+      }
+    }
+
+    // Login user
+    async function login() {
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+
+      if (!email || !password) {
+        showMessage("Please enter both email and password.", "error");
+        return;
+      }
+
+      document.getElementById("loginBtn").disabled = true;
+      showMessage("Logging in...", "loading");
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) { // Status 2xx (e.g., 200 OK)
+          showMessage(data.message, "success");
+          document.getElementById("loginEmail").value = "";
+          document.getElementById("loginPassword").value = "";
+          // Here, you would typically store a token (JWT) or manage a session
+          // For this example, we just show a success message.
+        } else { // Status 4xx or 5xx
+          showMessage(data.message || "Login failed. Invalid credentials.", "error");
+          console.error("Backend error during login:", data);
+        }
+      } catch (error) {
+        console.error('Network error during login:', error);
+        showMessage("Could not connect to the server. Please ensure the backend is running and CORS is configured.", "error");
+      } finally {
+        document.getElementById("loginBtn").disabled = false; // Re-enable button
+      }
+    }
+  </script>
+</body>
+</html>

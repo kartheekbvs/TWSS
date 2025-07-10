@@ -95,7 +95,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
   <script>
     // Initialize RestDB
-    var db = new restdb("f00021602db841fc5a3cd70002d19f4be20d3");
+    // IMPORTANT: Replace "YOUR_RESTDB_API_KEY" with your actual CORS API key
+    var db = new restdb("f00021602db841fc5a3cd70002d19f4be20d3"); // Your provided API key
 
     // Register user
     function register() {
@@ -107,7 +108,6 @@
         return;
       }
 
-      // Basic email validation
       var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         showMessage("Please enter a valid email address", "error");
@@ -115,9 +115,9 @@
       }
 
       // Hash the password before sending (client-side for demonstration)
+      // For production, use a more robust hashing algorithm and preferably hash server-side
       const hashedPassword = sha256(password);
 
-      // Disable button and show loading
       document.getElementById("regBtn").disabled = true;
       showMessage("Registering user...", "loading");
 
@@ -163,7 +163,6 @@
       // Hash the entered password for comparison
       const enteredHashedPassword = sha256(password);
 
-      // Disable button and show loading
       document.getElementById("loginBtn").disabled = true;
       showMessage("Logging in...", "loading");
 
@@ -183,7 +182,7 @@
             showMessage("Login successful! Welcome back!", "success");
             document.getElementById("loginEmail").value = "";
             document.getElementById("loginPassword").value = "";
-            // You can redirect or perform other actions here
+            // You can redirect or perform other actions here, e.g.:
             // window.location.href = '/dashboard';
           } else {
             showMessage("Invalid email or password", "error"); // Generic message for security
@@ -200,7 +199,6 @@
       messageElement.textContent = message;
       messageElement.className = type;
 
-      // Auto-hide success messages after 3 seconds
       if (type === "success") {
         setTimeout(function() {
           messageElement.textContent = "";

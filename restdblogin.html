@@ -92,12 +92,12 @@
   </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://restdb.io/rest/_jsapi.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
 
   <script>
     var db; // Declare db globally
 
+    // Helper function to show messages
     function showMessage(message, type) {
       var messageElement = document.getElementById("message");
       messageElement.textContent = message;
@@ -111,11 +111,57 @@
       }
     }
 
-    $(document).ready(function() {
-      // Initialize RestDB here, after jQuery and _jsapi.js are definitely loaded
-      db = new restdb("f00021602db841fc5a3cd70002d19f4be20d3"); // Your provided API key
+    // Function to dynamically load a script and return a Promise
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => resolve(script);
+        script.onerror = () => reject(new Error(`Script load error for ${src}`));
+        document.head.appendChild(script);
+      });
+    }
 
+    $(document).ready(function() {
+      // Step 1: Load the RestDB JS API
+      showMessage("Loading necessary scripts...", "loading");
+
+      loadScript("https://restdb.io/rest/_jsapi.js")
+        .then(() => {
+          // Step 2: Verify if restdb is defined after loading
+          if (typeof restdb === 'function') {
+            db = new restdb("f00021602db841fc5a3cd70002d19f4be20d3"); // Your API key
+            showMessage("Scripts loaded and RestDB initialized.", "success");
+            // Enable buttons after successful initialization
+            document.getElementById("regBtn").disabled = false;
+            document.getElementById("loginBtn").disabled = false;
+          } else {
+            showMessage("Error: restdb object not found after loading script. Please check your network or try again.", "error");
+            console.error("RestDB object not defined after script load.");
+            // Keep buttons disabled if not initialized
+            document.getElementById("regBtn").disabled = true;
+            document.getElementById("loginBtn").disabled = true;
+          }
+        })
+        .catch(error => {
+          showMessage("Failed to load RestDB script. Please check your internet connection or browser console for more details.", "error");
+          console.error("Error loading RestDB script:", error);
+          // Keep buttons disabled on load failure
+          document.getElementById("regBtn").disabled = true;
+          document.getElementById("loginBtn").disabled = true;
+        });
+
+      // Initially disable buttons until db is confirmed initialized
+      document.getElementById("regBtn").disabled = true;
+      document.getElementById("loginBtn").disabled = true;
+
+      // --- Registration Function ---
       window.register = function() {
+        if (!db) {
+          showMessage("RestDB not initialized. Please wait or refresh.", "error");
+          return;
+        }
+
         var email = document.getElementById("regEmail").value.trim();
         var password = document.getElementById("regPassword").value.trim();
 
@@ -162,7 +208,13 @@
         });
       }; // End register function
 
+      // --- Login Function ---
       window.login = function() {
+        if (!db) {
+          showMessage("RestDB not initialized. Please wait or refresh.", "error");
+          return;
+        }
+
         var email = document.getElementById("loginEmail").value.trim();
         var password = document.getElementById("loginPassword").value.trim();
 

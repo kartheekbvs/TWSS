@@ -43,173 +43,164 @@
       background-color: #6c757d;
       cursor: not-allowed;
     }
-    h2 {
-      text-align: center;
-      color: #333;
-    }
-    #message {
-      text-align: center;
+    .message {
       padding: 10px;
-      margin: 10px 0;
+      margin-bottom: 10px;
       border-radius: 4px;
+      font-weight: bold;
+      display: none; /* Hidden by default */
     }
-    .success {
-      color: #28a745;
-      background-color: #d4edda;
-      border: 1px solid #c3e6cb;
-    }
-    .error {
-      color: #dc3545;
+    .message.error {
       background-color: #f8d7da;
+      color: #721c24;
       border: 1px solid #f5c6cb;
+      display: block;
     }
-    .divider {
-      margin: 30px 0;
-      border-top: 1px solid #eee;
+    .message.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      display: block;
     }
-    .loading {
-      color: #007bff;
+    .message.loading {
       background-color: #d1ecf1;
+      color: #0c5460;
       border: 1px solid #bee5eb;
+      display: block;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Register</h2>
-    <input type="email" id="regEmail" placeholder="Email" />
-    <input type="password" id="regPassword" placeholder="Password" />
-    <button id="regBtn" onclick="register()">Register</button>
+    <h2>Login or Register</h2>
 
-    <div class="divider"></div>
+    <div id="message" class="message"></div>
 
-    <h2>Login</h2>
-    <input type="email" id="loginEmail" placeholder="Email" />
-    <input type="password" id="loginPassword" placeholder="Password" />
-    <button id="loginBtn" onclick="login()">Login</button>
+    <h3>Login</h3>
+    <input type="email" id="loginEmail" placeholder="Email" required />
+    <input type="password" id="loginPassword" placeholder="Password" required />
+    <button id="loginBtn">Login</button>
 
-    <p id="message"></p>
+    <h3>Register</h3>
+    <input type="text" id="registerName" placeholder="Name" required />
+    <input type="email" id="registerEmail" placeholder="Email" required />
+    <input type="password" id="registerPassword" placeholder="Password" required />
+    <button id="registerBtn">Register</button>
   </div>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
-
   <script>
-    var db; // Declare db globally
+    let db;
+    let restdbScriptRetryCount = 0;
+    const MAX_RESTDB_SCRIPT_RETRIES = 3;
+    const RETRY_DELAY_MS = 2000; // 2 seconds
 
-    // Helper function to show messages
     function showMessage(message, type) {
-      var messageElement = document.getElementById("message");
-      messageElement.textContent = message;
-      messageElement.className = type;
-
-      if (type === "success") {
-        setTimeout(function() {
-          messageElement.textContent = "";
-          messageElement.className = "";
-        }, 3000);
-      }
+      const messageDiv = document.getElementById("message");
+      messageDiv.textContent = message;
+      messageDiv.className = "message " + type;
     }
 
-    // Function to dynamically load a script and return a Promise
-    function loadScript(src) {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onload = () => resolve(script);
-        script.onerror = () => reject(new Error(`Script load error for ${src}`));
-        document.head.appendChild(script);
-      });
+    function loadRestDBScript() {
+      const scriptId = 'restdb-jsapi-script';
+      let existingScript = document.getElementById(scriptId);
+
+      // Remove existing script if it's there to ensure a fresh load attempt
+      if (existingScript) {
+        existingScript.remove();
+      }
+
+      var script = document.createElement('script');
+      script.id = scriptId;
+      script.src = "https://restdb.io/rest/_jsapi.js";
+      script.onload = function() {
+        console.log("RestDB script loaded successfully.");
+        showMessage("RestDB script loaded successfully.", "success");
+        // Initialize RestDB here after successful load
+        try {
+          db = new restdb({
+            dataurl: "https://restdb-b7b5.restdb.io/rest",
+            apikey: "YOUR_API_KEY_HERE" // Replace with your actual API key
+          });
+          showMessage("Ready to use RestDB.", "success");
+        } catch (e) {
+          showMessage("Error initializing RestDB: " + e.message, "error");
+          console.error("Error initializing RestDB:", e);
+        }
+      };
+      script.onerror = function() {
+        restdbScriptRetryCount++;
+        console.warn(`Failed to load RestDB script. Attempt ${restdbScriptRetryCount} of ${MAX_RESTDB_SCRIPT_RETRIES}`);
+        if (restdbScriptRetryCount < MAX_RESTDB_SCRIPT_RETRIES) {
+          showMessage(`Retrying to load RestDB script (${restdbScriptRetryCount}/${MAX_RESTDB_SCRIPT_RETRIES})...`, "loading");
+          setTimeout(loadRestDBScript, RETRY_DELAY_MS);
+        } else {
+          showMessage("Critical Error: RestDB script could not be loaded after multiple attempts. Please check your internet connection, browser settings (ad blockers/CSP), or try again later.", "error");
+          console.error("Final attempt to load RestDB script failed.");
+        }
+      };
+      document.head.appendChild(script);
     }
 
     $(document).ready(function() {
-      // Step 1: Load the RestDB JS API
-      showMessage("Loading necessary scripts...", "loading");
+      loadRestDBScript(); // Initiate loading of RestDB script
 
-      loadScript("https://restdb.io/rest/_jsapi.js")
-        .then(() => {
-          // Step 2: Verify if restdb is defined after loading
-          if (typeof restdb === 'function') {
-            db = new restdb("f00021602db841fc5a3cd70002d19f4be20d3"); // Your API key
-            showMessage("Scripts loaded and RestDB initialized.", "success");
-            // Enable buttons after successful initialization
-            document.getElementById("regBtn").disabled = false;
-            document.getElementById("loginBtn").disabled = false;
-          } else {
-            showMessage("Error: restdb object not found after loading script. Please check your network or try again.", "error");
-            console.error("RestDB object not defined after script load.");
-            // Keep buttons disabled if not initialized
-            document.getElementById("regBtn").disabled = true;
-            document.getElementById("loginBtn").disabled = true;
-          }
-        })
-        .catch(error => {
-          showMessage("Failed to load RestDB script. Please check your internet connection or browser console for more details.", "error");
-          console.error("Error loading RestDB script:", error);
-          // Keep buttons disabled on load failure
-          document.getElementById("regBtn").disabled = true;
-          document.getElementById("loginBtn").disabled = true;
-        });
-
-      // Initially disable buttons until db is confirmed initialized
-      document.getElementById("regBtn").disabled = true;
-      document.getElementById("loginBtn").disabled = true;
-
-      // --- Registration Function ---
-      window.register = function() {
+      // Event listener for Register button
+      document.getElementById("registerBtn").onclick = function() {
         if (!db) {
           showMessage("RestDB not initialized. Please wait or refresh.", "error");
           return;
         }
 
-        var email = document.getElementById("regEmail").value.trim();
-        var password = document.getElementById("regPassword").value.trim();
+        var name = document.getElementById("registerName").value.trim();
+        var email = document.getElementById("registerEmail").value.trim();
+        var password = document.getElementById("registerPassword").value.trim();
 
-        if (!email || !password) {
-          showMessage("Please enter both email and password", "error");
-          return;
-        }
-
-        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-          showMessage("Please enter a valid email address", "error");
+        if (!name || !email || !password) {
+          showMessage("Please fill in all registration fields", "error");
           return;
         }
 
         const hashedPassword = sha256(password);
 
-        document.getElementById("regBtn").disabled = true;
-        showMessage("Registering user...", "loading");
+        document.getElementById("registerBtn").disabled = true;
+        showMessage("Registering...", "loading");
 
         db.userlogin.query({ email: email }, function(err, users) {
           if (err) {
-            document.getElementById("regBtn").disabled = false;
-            showMessage("Error checking existing user: " + err.message, "error");
+            document.getElementById("registerBtn").disabled = false;
+            showMessage("Registration failed: " + err.message, "error");
             return;
           }
 
           if (users.length > 0) {
-            document.getElementById("regBtn").disabled = false;
-            showMessage("User with this email already exists", "error");
-            return;
+            document.getElementById("registerBtn").disabled = false;
+            showMessage("Email already registered. Please login or use a different email.", "error");
+          } else {
+            // No existing user with this email, proceed with registration
+            var userData = {
+              name: name,
+              email: email,
+              password: hashedPassword
+            };
+
+            db.userlogin.insert(userData, function(err, res) {
+              document.getElementById("registerBtn").disabled = false;
+              if (err) {
+                showMessage("Registration failed: " + err.message, "error");
+                return;
+              }
+              showMessage("Registration successful! You can now log in.", "success");
+              document.getElementById("registerName").value = "";
+              document.getElementById("registerEmail").value = "";
+              document.getElementById("registerPassword").value = "";
+            });
           }
-
-          db.userlogin.insert({ email: email, password: hashedPassword }, function(err, result) {
-            document.getElementById("regBtn").disabled = false;
-
-            if (err) {
-              showMessage("Registration failed: " + err.message, "error");
-            } else {
-              showMessage("User registered successfully!", "success");
-              document.getElementById("regEmail").value = "";
-              document.getElementById("regPassword").value = "";
-            }
-          });
         });
-      }; // End register function
+      };
 
-      // --- Login Function ---
-      window.login = function() {
+      // Event listener for Login button
+      document.getElementById("loginBtn").onclick = function() {
         if (!db) {
           showMessage("RestDB not initialized. Please wait or refresh.", "error");
           return;

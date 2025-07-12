@@ -144,7 +144,7 @@
             right: 0;
             bottom: 0;
             background: radial-gradient(circle at 20% 80%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(78, 205, 196, 0.1) 0%, transparent 50%);
+                                radial-gradient(circle at 80% 20%, rgba(78, 205, 196, 0.1) 0%, transparent 50%);
             animation: backgroundShift 10s ease-in-out infinite;
         }
 
@@ -414,6 +414,17 @@
             gap: 1rem;
         }
 
+        .form-group { /* Added for consistent styling */
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+        }
+
+        .feedback input[type="email"], /* Added email input type */
         .feedback textarea {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -421,16 +432,22 @@
             padding: 1rem;
             color: #fff;
             font-size: 1rem;
-            resize: vertical;
-            min-height: 120px;
+            width: 100%; /* Make inputs and textareas full width */
             transition: border-color 0.3s ease;
         }
 
+        .feedback textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .feedback input[type="email"]:focus, /* Added email input type for focus styling */
         .feedback textarea:focus {
             outline: none;
             border-color: #4ecdc4;
         }
 
+        .feedback input::placeholder,
         .feedback textarea::placeholder {
             color: #888;
         }
@@ -445,11 +462,31 @@
             font-weight: bold;
             transition: all 0.3s ease;
             align-self: center;
+            cursor: pointer; /* Ensure cursor is pointer */
         }
 
         .submit-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Success and Error Messages */
+        .message {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-weight: bold;
+            display: none; /* Hidden by default */
+        }
+
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .error-message {
+            background-color: #f44336;
+            color: white;
         }
 
         /* Footer */
@@ -569,10 +606,19 @@
 
         <section class="feedback" id="feedback">
             <h3>Feedback</h3>
-            <form class="feedback-form">
-                <textarea placeholder="Share your thoughts, suggestions, or feedback about my certificates and achievements..."></textarea>
-                <button type="submit" class="submit-btn">Submit Feedback</button>
+            <form class="feedback-form" id="contact-form">
+                <div class="form-group">
+                    <label for="from_email">Your Email</label>
+                    <input type="email" id="from_email" name="from_email" placeholder="Your email address" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Share your thoughts, suggestions, or feedback about my certificates and achievements..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn" id="submit-btn">Submit Feedback</button>
             </form>
+            <div id="success-message" class="message success-message">Feedback sent successfully!</div>
+            <div id="error-message" class="message error-message"></div>
         </section>
     </main>
 
@@ -582,7 +628,6 @@
         </div>
     </footer>
 
-    <!-- Certificate Modal -->
     <div class="modal" id="certificateModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal()">&times;</button>
@@ -590,6 +635,13 @@
             <iframe class="modal-iframe" id="certificateIframe" src=""></iframe>
         </div>
     </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // Initialize EmailJS with your public key
+        // Ensure "3BMbctG8PLkgdT2XV" is your correct EmailJS Public Key.
+        emailjs.init("3BMbctG8PLkgdT2XV"); 
+    </script>
 
     <script>
         // Custom cursor functionality
@@ -686,19 +738,7 @@
             }
         });
         
-        // Feedback form submission
-        document.querySelector('.feedback-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const textarea = e.target.querySelector('textarea');
-            if (textarea.value.trim()) {
-                alert('Thank you for your feedback! Your message has been received.');
-                textarea.value = '';
-            } else {
-                alert('Please enter your feedback before submitting.');
-            }
-        });
-        
-        // Certificate card hover effects
+        // Certificate card hover effects (renamed from project-card)
         document.querySelectorAll('.certificate-card').forEach(card => {
             card.addEventListener('mouseenter', () => {
                 card.style.transform = 'translateY(-10px) scale(1.02)';
@@ -706,6 +746,65 @@
             
             card.addEventListener('mouseleave', () => {
                 card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // EmailJS form submission logic
+        window.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('contact-form');
+            const submitBtn = document.getElementById('submit-btn');
+            const successMsg = document.getElementById('success-message');
+            const errorMsg = document.getElementById('error-message');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+                
+                const emailInput = form.querySelector('input[name="from_email"]');
+                const messageTextarea = form.querySelector('textarea[name="message"]');
+
+                // Client-side validation: Check if email and message are filled
+                if (!emailInput.value.trim()) {
+                    errorMsg.textContent = "Please enter your email address.";
+                    errorMsg.style.display = 'block';
+                    setTimeout(() => errorMsg.style.display = 'none', 5000);
+                    return; // Stop the function if email is empty
+                }
+
+                if (!messageTextarea.value.trim()) {
+                    errorMsg.textContent = "Please enter your feedback message.";
+                    errorMsg.style.display = 'block';
+                    setTimeout(() => errorMsg.style.display = 'none', 5000);
+                    return; // Stop the function if message is empty
+                }
+
+                const originalBtnText = submitBtn.textContent;
+                submitBtn.textContent = "Sending...";
+                submitBtn.disabled = true; // Disable button to prevent multiple submissions
+
+                successMsg.style.display = 'none'; // Hide previous messages
+                errorMsg.style.display = 'none';   // Hide previous messages
+
+                // Send form using EmailJS
+                // 'service_ood6pkb' and 'template_ri7qwvd' are your EmailJS IDs.
+                // The 'form' element itself is passed, and EmailJS will automatically
+                // collect the values of inputs/textareas with 'name' attributes ('from_email' and 'message').
+                emailjs.sendForm('service_ood6pkb', 'template_ri7qwvd', form)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    form.reset(); // Clear the form fields on success
+                    successMsg.style.display = 'block';
+                    setTimeout(() => successMsg.style.display = 'none', 5000); // Hide success message after 5 seconds
+                })
+                .catch(function(error) {
+                    console.error('FAILED...', error);
+                    errorMsg.textContent = "Something went wrong. Please try again. Error: " + (error.text || "Unknown error"); 
+                    errorMsg.style.display = 'block';
+                    setTimeout(() => errorMsg.style.display = 'none', 5000); // Hide error message after 5 seconds
+                })
+                .finally(function() {
+                    submitBtn.textContent = originalBtnText; // Restore button text
+                    submitBtn.disabled = false; // Re-enable button
+                });
             });
         });
     </script>

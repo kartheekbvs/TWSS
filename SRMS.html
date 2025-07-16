@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRMS+ - Student Relational Management System</title>
+    <title>SRMS+ - Student Management</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -135,7 +135,7 @@
             transition: all 0.3s ease;
         }
 
-        .sidebar-menu a:hover {
+        .sidebar-menu a:hover, .sidebar-menu a.active {
             background-color: #f8f9fa;
             color: #01447e;
             padding-left: 25px;
@@ -165,7 +165,9 @@
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 30px;
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .content-header h1 {
@@ -177,44 +179,6 @@
         .content-header p {
             color: #666;
             font-size: 1.1rem;
-        }
-
-        .dashboard-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-        }
-
-        .card i {
-            font-size: 3rem;
-            color: #01447e;
-            margin-bottom: 15px;
-        }
-
-        .card h3 {
-            color: #01447e;
-            margin-bottom: 10px;
-            font-size: 1.3rem;
-        }
-
-        .card p {
-            color: #666;
-            font-size: 0.9rem;
         }
 
         .btn {
@@ -229,7 +193,6 @@
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
-            margin-top: 15px;
         }
 
         .btn:hover {
@@ -238,54 +201,191 @@
             box-shadow: 0 5px 15px rgba(1,68,126,0.3);
         }
 
-        /* Footer Styles */
-        .footer {
-            background: #333333;
-            color: white;
-            padding: 40px 0 20px;
-            margin-top: 50px;
+        .btn-secondary {
+            background: #6c757d;
+            margin-left: 10px;
         }
 
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        .btn-secondary:hover {
+            background: #5a6268;
         }
 
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 30px;
         }
 
-        .footer-section h3 {
-            color: #01447e;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
-        .footer-section p, .footer-section a {
-            color: #ccc;
-            text-decoration: none;
-            margin-bottom: 8px;
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
             display: block;
-            transition: color 0.3s ease;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
         }
 
-        .footer-section a:hover {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #01447e;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: #01447e;
             color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .footer-section i {
-            margin-right: 8px;
+        .search-box {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 250px;
         }
 
-        .footer-bottom {
-            border-top: 1px solid #555;
-            padding-top: 20px;
-            text-align: center;
-            color: #ccc;
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #01447e;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
         }
 
         /* Responsive Design */
@@ -298,25 +398,21 @@
                 display: none;
             }
 
-            .header-container {
-                padding: 0 15px;
-            }
-
-            .main-content {
-                padding: 20px 15px;
+            .content-header {
+                flex-direction: column;
+                text-align: center;
             }
 
             .content-header h1 {
                 font-size: 2rem;
             }
 
-            .dashboard-cards {
+            .form-grid {
                 grid-template-columns: 1fr;
             }
 
-            .footer-content {
-                grid-template-columns: 1fr;
-                text-align: center;
+            .search-box {
+                width: 200px;
             }
         }
 
@@ -339,7 +435,6 @@
             }
         }
 
-        /* Overlay for mobile sidebar */
         .overlay {
             position: fixed;
             top: 0;
@@ -354,10 +449,17 @@
         .overlay.active {
             display: block;
         }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-container">
             <a href="#" class="logo">
@@ -380,117 +482,354 @@
         </div>
     </header>
 
-    <!-- Overlay for mobile -->
     <div class="overlay" onclick="closeSidebar()"></div>
 
-    <!-- Content Wrapper -->
     <div class="content-wrapper">
-        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <i class="fas fa-tachometer-alt"></i>
-                Control Panel
+                Student Management
             </div>
             <ul class="sidebar-menu">
-                <li><a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="#student-records"><i class="fas fa-users"></i> Student Records</a></li>
-                <li><a href="#add-student"><i class="fas fa-user-plus"></i> Add Student</a></li>
-                <li><a href="#academic-details"><i class="fas fa-book"></i> Academic Details</a></li>
-                <li><a href="#attendance"><i class="fas fa-calendar-check"></i> Attendance</a></li>
-                <li><a href="#school-management"><i class="fas fa-school"></i> School Management</a></li>
-                <li><a href="#reports-analytics"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                <li><a href="#" onclick="showSection('dashboard')" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#" onclick="showSection('add-student')"><i class="fas fa-user-plus"></i> Add Student</a></li>
+                <li><a href="#" onclick="showSection('student-records')"><i class="fas fa-users"></i> All Students</a></li>
+                <li><a href="#" onclick="showSection('bulk-upload')"><i class="fas fa-upload"></i> Bulk Upload</a></li>
+                <li><a href="#" onclick="showSection('reports')"><i class="fas fa-chart-bar"></i> Reports</a></li>
             </ul>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content" id="mainContent">
-            <div class="content-header">
-                <h1>Student Relational Management System</h1>
-                <p>Comprehensive platform for managing student information, academic records, and institutional data</p>
+            <div id="dashboard" class="section active">
+                <div class="content-header">
+                    <div>
+                        <h1>Student Management Dashboard</h1>
+                        <p>Manage student records, academic details, and institutional data</p>
+                    </div>
+                    <button class="btn" onclick="showSection('add-student')">
+                        <i class="fas fa-plus"></i> Add New Student
+                    </button>
+                </div>
+
+                <div class="dashboard-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div class="card" style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                        <i class="fas fa-users" style="font-size: 3rem; color: #01447e; margin-bottom: 15px;"></i>
+                        <h3 style="color: #01447e; margin-bottom: 10px;">Total Students</h3>
+                        <p style="color: #666; font-size: 2rem; font-weight: bold;" id="totalStudents">0</p>
+                    </div>
+                    <div class="card" style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                        <i class="fas fa-user-graduate" style="font-size: 3rem; color: #28a745; margin-bottom: 15px;"></i>
+                        <h3 style="color: #28a745; margin-bottom: 10px;">Active Students</h3>
+                        <p style="color: #666; font-size: 2rem; font-weight: bold;" id="activeStudents">0</p>
+                    </div>
+                    <div class="card" style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                        <i class="fas fa-graduation-cap" style="font-size: 3rem; color: #ffc107; margin-bottom: 15px;"></i>
+                        <h3 style="color: #ffc107; margin-bottom: 10px;">Graduated</h3>
+                        <p style="color: #666; font-size: 2rem; font-weight: bold;" id="graduatedStudents">0</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="dashboard-cards">
-                <div class="card">
-                    <i class="fas fa-users"></i>
-                    <h3>Total Students</h3>
-                    <p>Manage and track all enrolled students across different academic levels</p>
-                    <a href="#" class="btn">View Students</a>
+            <div id="add-student" class="section">
+                <div class="content-header">
+                    <div>
+                        <h1>Add New Student</h1>
+                        <p>Enter student details including UDISE+ information</p>
+                    </div>
+                    <button class="btn btn-secondary" onclick="showSection('dashboard')">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
                 </div>
 
-                <div class="card">
-                    <i class="fas fa-school"></i>
-                    <h3>Schools</h3>
-                    <p>Administrative control over educational institutions and their infrastructure</p>
-                    <a href="#" class="btn">Manage Schools</a>
+                <div id="alert-container"></div>
+
+                <div class="form-container">
+                    <form id="studentForm">
+                        <h3 style="margin-bottom: 20px; color: #01447e;">Personal Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="firstName">First Name <span class="required">*</span></label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name <span class="required">*</span></label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dateOfBirth">Date of Birth <span class="required">*</span></label>
+                                <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender <span class="required">*</span></label>
+                                <select id="gender" name="gender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <h3 style="margin: 30px 0 20px 0; color: #01447e;">Academic Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="studentId">Student ID <span class="required">*</span></label>
+                                <input type="text" id="studentId" name="studentId" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="udisePlus">UDISE+ Code <span class="required">*</span></label>
+                                <input type="text" id="udisePlus" name="udisePlus" required placeholder="Enter UDISE+ code">
+                            </div>
+                            <div class="form-group">
+                                <label for="class">Class <span class="required">*</span></label>
+                                <select id="class" name="class" required>
+                                    <option value="">Select Class</option>
+                                    <option value="1">Class 1</option>
+                                    <option value="2">Class 2</option>
+                                    <option value="3">Class 3</option>
+                                    <option value="4">Class 4</option>
+                                    <option value="5">Class 5</option>
+                                    <option value="6">Class 6</option>
+                                    <option value="7">Class 7</option>
+                                    <option value="8">Class 8</option>
+                                    <option value="9">Class 9</option>
+                                    <option value="10">Class 10</option>
+                                    <option value="11">Class 11</option>
+                                    <option value="12">Class 12</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="section">Section</label>
+                                <input type="text" id="section" name="section" placeholder="A, B, C, etc.">
+                            </div>
+                            <div class="form-group">
+                                <label for="rollNumber">Roll Number</label>
+                                <input type="text" id="rollNumber" name="rollNumber">
+                            </div>
+                            <div class="form-group">
+                                <label for="admissionDate">Admission Date <span class="required">*</span></label>
+                                <input type="date" id="admissionDate" name="admissionDate" required>
+                            </div>
+                        </div>
+
+                        <h3 style="margin: 30px 0 20px 0; color: #01447e;">Contact Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="parentName">Parent/Guardian Name <span class="required">*</span></label>
+                                <input type="text" id="parentName" name="parentName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="parentPhone">Parent Phone <span class="required">*</span></label>
+                                <input type="tel" id="parentPhone" name="parentPhone" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Address <span class="required">*</span></label>
+                            <textarea id="address" name="address" required placeholder="Enter complete address"></textarea>
+                        </div>
+
+                        <div style="margin-top: 30px;">
+                            <button type="submit" class="btn">
+                                <i class="fas fa-save"></i> Save Student
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                                <i class="fas fa-undo"></i> Reset Form
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="student-records" class="section">
+                <div class="content-header">
+                    <div>
+                        <h1>All Student Records</h1>
+                        <p>View and manage all student information</p>
+                    </div>
+                    <button class="btn" onclick="showSection('add-student')">
+                        <i class="fas fa-plus"></i> Add New Student
+                    </button>
                 </div>
 
-                <div class="card">
-                    <i class="fas fa-chart-line"></i>
-                    <h3>Academic Performance</h3>
-                    <p>Track student progress, grades, and academic achievements</p>
-                    <a href="#" class="btn">View Reports</a>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Student Records</h3>
+                        <input type="text" class="search-box" placeholder="Search students..." onkeyup="searchStudents(this.value)">
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="studentsTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Class</th>
+                                    <th>UDISE+ Code</th>
+                                    <th>Parent Name</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="bulk-upload" class="section">
+                <div class="content-header">
+                    <div>
+                        <h1>Bulk Upload Students</h1>
+                        <p>Upload multiple student records using CSV file</p>
+                    </div>
                 </div>
 
-                <div class="card">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h3>Attendance</h3>
-                    <p>Monitor daily attendance records and generate attendance reports</p>
-                    <a href="#" class="btn">Check Attendance</a>
+                <div class="form-container">
+                    <div class="form-group">
+                        <label for="csvFile">Select CSV File <span class="required">*</span></label>
+                        <input type="file" id="csvFile" accept=".csv" onchange="previewCSV()">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn" onclick="uploadCSV()">
+                            <i class="fas fa-upload"></i> Upload Students
+                        </button>
+                        <a href="#" class="btn btn-secondary" onclick="downloadTemplate()">
+                            <i class="fas fa-download"></i> Download Template
+                        </a>
+                    </div>
+                    <div id="csvPreview" style="margin-top: 20px;"></div>
+                </div>
+            </div>
+
+            <div id="reports" class="section">
+                <div class="content-header">
+                    <div>
+                        <h1>Student Reports</h1>
+                        <p>Generate and view various student reports</p>
+                    </div>
                 </div>
 
-                <div class="card">
-                    <i class="fas fa-file-alt"></i>
-                    <h3>Documentation</h3>
-                    <p>Manage student documents, certificates, and academic transcripts</p>
-                    <a href="#" class="btn">View Documents</a>
-                </div>
-
-                <div class="card">
-                    <i class="fas fa-cog"></i>
-                    <h3>System Settings</h3>
-                    <p>Configure system parameters, user permissions, and data management</p>
-                    <a href="#" class="btn">Settings</a>
+                <div class="dashboard-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div class="card" style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                        <i class="fas fa-chart-bar" style="font-size: 3rem; color: #01447e; margin-bottom: 15px;"></i>
+                        <h3 style="color: #01447e; margin-bottom: 10px;">Class-wise Report</h3>
+                        <p style="color: #666; margin-bottom: 15px;">View students by class</p>
+                        <button class="btn" onclick="generateClassReport()">Generate</button>
+                    </div>
+                    <div class="card" style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                        <i class="fas fa-file-export" style="font-size: 3rem; color: #28a745; margin-bottom: 15px;"></i>
+                        <h3 style="color: #28a745; margin-bottom: 10px;">Export All Data</h3>
+                        <p style="color: #666; margin-bottom: 15px;">Export complete student data</p>
+                        <button class="btn" onclick="exportAllData()">Export</button>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Contact Info</h3>
-                    <p><i class="fas fa-phone"></i> 8639316512</p>
-                    <p><i class="fas fa-envelope"></i> bvskartheek83@gmail.com</p>
-                    <p><i class="fas fa-globe"></i> twsskat.vercel.app/portfolio.html</p>
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Edit Student</h2>
+            <form id="editStudentForm">
+                <div class="form-group">
+                    <label for="editFirstName">First Name</label>
+                    <input type="text" id="editFirstName" name="firstName" required>
                 </div>
-                
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
-                    <a href="#"><i class="fas fa-file-contract"></i> Terms & Conditions</a>
-                    <a href="#"><i class="fas fa-universal-access"></i> Accessibility</a>
+                <div class="form-group">
+                    <label for="editLastName">Last Name</label>
+                    <input type="text" id="editLastName" name="lastName" required>
                 </div>
-                
-                <div class="footer-section">
-                    <h3>Follow Us</h3>
-                    <a href="https://www.linkedin.com/in/kartheek-bvs-2a82562b9/" target="_blank">
-                        <i class="fab fa-linkedin"></i> LinkedIn
-                    </a>
-                    <a href="https://www.instagram.com/kartheek3693/" target="_blank">
-                        <i class="fab fa-instagram"></i> Instagram
-                    </a>
+                <div class="form-group">
+                    <label for="editClass">Class</label>
+                    <select id="editClass" name="class" required>
+                        <option value="">Select Class</option>
+                        <option value="1">Class 1</option>
+                        <option value="2">Class 2</option>
+                        <option value="3">Class 3</option>
+                        <option value="4">Class 4</option>
+                        <option value="5">Class 5</option>
+                        <option value="6">Class 6</option>
+                        <option value="7">Class 7</option>
+                        <option value="8">Class 8</option>
+                        <option value="9">Class 9</option>
+                        <option value="10">Class 10</option>
+                        <option value="11">Class 11</option>
+                        <option value="12">Class 12</option>
+                    </select>
                 </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2025 SRMS+. Developed by Kartheek. All Rights Reserved.</p>
-            </div>
+                <div class="form-group">
+                    <label for="editUdisePlus">UDISE+ Code</label>
+                    <input type="text" id="editUdisePlus" name="udisePlus" required>
+                </div>
+                <div class="form-group">
+                    <label for="editParentName">Parent Name</label>
+                    <input type="text" id="editParentName" name="parentName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editParentPhone">Parent Phone</label>
+                    <input type="tel" id="editParentPhone" name="parentPhone" required>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button type="submit" class="btn">Update Student</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
         </div>
-    </footer>
+    </div>
 
     <script>
+        // Student data storage (in a real application, this would be a database)
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        let currentEditId = null;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth > 768) {
+                document.getElementById('sidebar').classList.add('active');
+                document.getElementById('mainContent').classList.add('sidebar-open');
+            }
+            loadStudents();
+            updateDashboard();
+        });
+
+        // Show section functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show the selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update active class in sidebar menu
+            document.querySelectorAll('.sidebar-menu a').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.sidebar-menu a[onclick="showSection('${sectionId}')"]`).classList.add('active');
+
+            // If navigating to student-records, reload the table
+            if (sectionId === 'student-records') {
+                loadStudents();
+            }
+
+            // Close sidebar on mobile after clicking a link
+            if (window.innerWidth <= 768) {
+                closeSidebar();
+            }
+        }
+
         // Sidebar toggle functionality
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -529,8 +868,8 @@
             }
         });
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        // Smooth scrolling for navigation links (retained from SRMS (1).html, though sections are now handled by JS)
+        document.querySelectorAll('.nav-menu a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href').substring(1);
@@ -553,25 +892,346 @@
         // Add loading animation to buttons
         document.querySelectorAll('.btn').forEach(button => {
             button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const originalText = this.textContent;
+                // Prevent default form submission for buttons that trigger JS functions
+                if (this.type !== 'submit') {
+                    e.preventDefault();
+                }
+
+                const originalText = this.innerHTML;
                 this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
                 this.disabled = true;
                 
                 setTimeout(() => {
-                    this.textContent = originalText;
+                    this.innerHTML = originalText;
                     this.disabled = false;
-                }, 1500);
+                }, 1500); // Reset after 1.5 seconds, adjust as needed
             });
         });
 
-        // Initialize sidebar state on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            if (window.innerWidth > 768) {
-                document.getElementById('sidebar').classList.add('active');
-                document.getElementById('mainContent').classList.add('sidebar-open');
+        // Form submission for adding a new student
+        document.getElementById('studentForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(this);
+            const student = {};
+            for (let [key, value] of formData.entries()) {
+                student[key] = value;
+            }
+            student.id = Date.now().toString(); // Simple unique ID
+            student.status = 'Active'; // Default status for new students
+
+            students.push(student);
+            localStorage.setItem('students', JSON.stringify(students));
+            showAlert('Student added successfully!', 'success');
+            this.reset();
+            updateDashboard();
+            loadStudents(); // Refresh student records table
+            showSection('student-records'); // Navigate to student records after adding
+        });
+
+        // Reset form function
+        function resetForm() {
+            document.getElementById('studentForm').reset();
+            showAlert('Form has been reset.', 'success');
+        }
+
+        // Show alert messages
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 3000); // Remove alert after 3 seconds
+        }
+
+        // Load students into the table
+        function loadStudents() {
+            const studentsTableBody = document.getElementById('studentsTableBody');
+            studentsTableBody.innerHTML = ''; // Clear existing rows
+
+            if (students.length === 0) {
+                studentsTableBody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No student records found.</td></tr>';
+                return;
+            }
+
+            students.forEach(student => {
+                const row = studentsTableBody.insertRow();
+                row.innerHTML = `
+                    <td>${student.studentId}</td>
+                    <td>${student.firstName} ${student.lastName}</td>
+                    <td>${student.class}</td>
+                    <td>${student.udisePlus}</td>
+                    <td>${student.parentName}</td>
+                    <td>${student.parentPhone}</td>
+                    <td>${student.status}</td>
+                    <td class="action-buttons">
+                        <button class="btn btn-sm" onclick="editStudent('${student.id}')"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteStudent('${student.id}')"><i class="fas fa-trash"></i> Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        // Update dashboard cards
+        function updateDashboard() {
+            document.getElementById('totalStudents').textContent = students.length;
+            document.getElementById('activeStudents').textContent = students.filter(s => s.status === 'Active').length;
+            document.getElementById('graduatedStudents').textContent = students.filter(s => s.status === 'Graduated').length;
+        }
+
+        // Search students
+        function searchStudents(query) {
+            const filter = query.toLowerCase();
+            const table = document.getElementById('studentsTable');
+            const tr = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < tr.length; i++) { // Start from 1 to skip header row
+                let found = false;
+                const td = tr[i].getElementsByTagName('td');
+                for (let j = 0; j < td.length - 1; j++) { // Exclude the last column (actions)
+                    const cellText = td[j].textContent || td[j].innerText;
+                    if (cellText.toLowerCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+                tr[i].style.display = found ? '' : 'none';
+            }
+        }
+
+        // Open edit modal
+        function editStudent(id) {
+            currentEditId = id;
+            const student = students.find(s => s.id === id);
+            if (student) {
+                document.getElementById('editFirstName').value = student.firstName;
+                document.getElementById('editLastName').value = student.lastName;
+                document.getElementById('editClass').value = student.class;
+                document.getElementById('editUdisePlus').value = student.udisePlus;
+                document.getElementById('editParentName').value = student.parentName;
+                document.getElementById('editParentPhone').value = student.parentPhone;
+                document.getElementById('editModal').style.display = 'block';
+            }
+        }
+
+        // Close edit modal
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            currentEditId = null;
+        }
+
+        // Handle edit form submission
+        document.getElementById('editStudentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const studentIndex = students.findIndex(s => s.id === currentEditId);
+            if (studentIndex > -1) {
+                students[studentIndex].firstName = document.getElementById('editFirstName').value;
+                students[studentIndex].lastName = document.getElementById('editLastName').value;
+                students[studentIndex].class = document.getElementById('editClass').value;
+                students[studentIndex].udisePlus = document.getElementById('editUdisePlus').value;
+                students[studentIndex].parentName = document.getElementById('editParentName').value;
+                students[studentIndex].parentPhone = document.getElementById('editParentPhone').value;
+                
+                localStorage.setItem('students', JSON.stringify(students));
+                showAlert('Student updated successfully!', 'success');
+                loadStudents();
+                updateDashboard();
+                closeModal();
+            } else {
+                showAlert('Error: Student not found for update.', 'error');
             }
         });
+
+        // Delete student
+        function deleteStudent(id) {
+            if (confirm('Are you sure you want to delete this student record?')) {
+                students = students.filter(s => s.id !== id);
+                localStorage.setItem('students', JSON.stringify(students));
+                showAlert('Student deleted successfully!', 'success');
+                loadStudents();
+                updateDashboard();
+            }
+        }
+
+        // CSV preview function (simplified for frontend only)
+        function previewCSV() {
+            const fileInput = document.getElementById('csvFile');
+            const previewDiv = document.getElementById('csvPreview');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const csvContent = e.target.result;
+                    const lines = csvContent.split('\n').filter(line => line.trim() !== '');
+                    if (lines.length > 0) {
+                        let html = '<h4>CSV Preview (first 5 rows):</h4>';
+                        html += '<table style="width:100%; border-collapse: collapse; margin-top: 10px;">';
+                        lines.slice(0, 6).forEach((line, index) => { // Show header + 5 rows
+                            const cols = line.split(',');
+                            html += '<tr>';
+                            cols.forEach(col => {
+                                html += `<td style="border: 1px solid #ddd; padding: 8px;">${col.trim()}</td>`;
+                            });
+                            html += '</tr>';
+                        });
+                        html += '</table>';
+                        previewDiv.innerHTML = html;
+                    } else {
+                        previewDiv.innerHTML = '<p>No data found in CSV file.</p>';
+                    }
+                };
+                reader.readAsText(file);
+            } else {
+                previewDiv.innerHTML = '';
+            }
+        }
+
+        // Upload CSV (frontend simulation)
+        function uploadCSV() {
+            const fileInput = document.getElementById('csvFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showAlert('Please select a CSV file to upload.', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const csvContent = e.target.result;
+                const lines = csvContent.split('\n').filter(line => line.trim() !== '');
+
+                if (lines.length === 0) {
+                    showAlert('CSV file is empty or malformed.', 'error');
+                    return;
+                }
+
+                const headers = lines[0].split(',').map(h => h.trim());
+                const newStudents = [];
+
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(',').map(v => v.trim());
+                    if (values.length === headers.length) {
+                        const student = {};
+                        headers.forEach((header, index) => {
+                            student[header] = values[index];
+                        });
+                        student.id = Date.now().toString() + i; // Unique ID for bulk upload
+                        student.status = student.status || 'Active'; // Default status if not provided in CSV
+                        newStudents.push(student);
+                    } else {
+                        console.warn(`Skipping malformed row ${i + 1}: ${lines[i]}`);
+                        showAlert(`Skipped row ${i + 1} due to incorrect number of columns.`, 'error');
+                    }
+                }
+
+                if (newStudents.length > 0) {
+                    students = [...students, ...newStudents];
+                    localStorage.setItem('students', JSON.stringify(students));
+                    showAlert(`${newStudents.length} students uploaded successfully!`, 'success');
+                    fileInput.value = ''; // Clear file input
+                    document.getElementById('csvPreview').innerHTML = ''; // Clear preview
+                    updateDashboard();
+                    loadStudents(); // Refresh the table
+                    showSection('student-records'); // Navigate to student records
+                } else {
+                    showAlert('No valid student records found in the CSV file.', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Download CSV Template
+        function downloadTemplate() {
+            const templateHeaders = [
+                'firstName', 'lastName', 'dateOfBirth', 'gender', 'studentId', 'udisePlus',
+                'class', 'section', 'rollNumber', 'admissionDate', 'email', 'phone',
+                'parentName', 'parentPhone', 'address', 'status' // Added 'status' for completeness
+            ];
+            const csvContent = templateHeaders.join(',');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'student_upload_template.csv');
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            showAlert('Download started for CSV template.', 'success');
+        }
+
+        // Generate Class-wise Report (simplified for frontend only)
+        function generateClassReport() {
+            if (students.length === 0) {
+                showAlert('No students to generate report.', 'error');
+                return;
+            }
+
+            const classReport = students.reduce((acc, student) => {
+                const className = `Class ${student.class}`;
+                if (!acc[className]) {
+                    acc[className] = 0;
+                }
+                acc[className]++;
+                return acc;
+            }, {});
+
+            let reportHtml = '<h4>Class-wise Student Count:</h4><ul>';
+            for (const [className, count] of Object.entries(classReport)) {
+                reportHtml += `<li>${className}: ${count} students</li>`;
+            }
+            reportHtml += '</ul>';
+
+            const newWindow = window.open('', '_blank');
+            newWindow.document.write('<!DOCTYPE html><html><head><title>Class-wise Student Report</title>');
+            newWindow.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">');
+            newWindow.document.write('<style>body { font-family: "Roboto", sans-serif; padding: 20px; } h1 { color: #01447e; } ul { list-style-type: none; padding: 0; } li { background-color: #f8f9fa; margin-bottom: 10px; padding: 10px; border-radius: 5px; border-left: 5px solid #01447e; }</style>');
+            newWindow.document.write('</head><body>');
+            newWindow.document.write('<h1>Class-wise Student Report</h1>');
+            newWindow.document.write(reportHtml);
+            newWindow.document.write('</body></html>');
+            newWindow.document.close();
+            showAlert('Class-wise report generated.', 'success');
+        }
+
+        // Export All Data to CSV
+        function exportAllData() {
+            if (students.length === 0) {
+                showAlert('No student data to export.', 'error');
+                return;
+            }
+
+            const headers = Object.keys(students[0]);
+            const csvRows = [];
+            csvRows.push(headers.join(','));
+
+            for (const student of students) {
+                const values = headers.map(header => {
+                    const value = student[header];
+                    // Handle values that might contain commas or newlines by enclosing them in quotes
+                    return (typeof value === 'string' && (value.includes(',') || value.includes('\n'))) ? `"${value.replace(/"/g, '""')}"` : value;
+                });
+                csvRows.push(values.join(','));
+            }
+
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'srms_all_students_data.csv');
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            showAlert('All student data exported successfully to CSV.', 'success');
+        }
     </script>
 </body>
 </html>

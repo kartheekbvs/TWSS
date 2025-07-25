@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Guide to Linear Regression</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: The application is structured as a five-part, single-page interactive textbook. This linear, progressive structure is ideal for a learning syllabus, guiding the user from basic to advanced concepts logically. Navigation is handled by a fixed top bar, allowing users to jump to any section. Each section is a self-contained module with explanations, mathematical formulas (LaTeX), practical examples, and interactive Chart.js visualizations. This design was chosen over a dashboard to facilitate a step-by-step learning process, which is more effective for understanding a complex topic like linear regression. -->
+    <!-- Visualization & Content Choices: 
+        - Part 1: Goal: Introduce core concepts. Method: Text explanations and a static scatter plot. Interaction: None, focus on foundational knowledge. Justification: A simple scatter plot effectively visualizes the relationship between two variables, the core idea of regression. Library: Chart.js.
+        - Part 2: Goal: Explain Simple Linear Regression. Method: Interactive scatter plot with sliders for slope (m) and intercept (c). Interaction: User adjusts sliders to visually fit a line to the data, seeing the Sum of Squared Errors (SSE) update in real-time. Justification: This provides a powerful, intuitive understanding of what "fitting a line" actually means and the role of the cost function (SSE). Library: Chart.js.
+        - Part 3: Goal: Explain Multiple Linear Regression. Method: Structured HTML/CSS to represent the equation and concepts. Interaction: None, focuses on conceptual expansion. Justification: Visualizing more than 3 dimensions is difficult. A clear textual and symbolic representation is more effective here.
+        - Part 4: Goal: Teach model evaluation. Method: Text and a residual plot. Interaction: Buttons to toggle between a "good" and "bad" residual plot. Justification: Residual plots are a key diagnostic tool. Interactively showing the difference between a random pattern (good) and a structured pattern (bad) is highly instructive. Library: Chart.js.
+        - Part 5: Goal: Introduce advanced topics. Method: HTML/CSS diagrams and text. Interaction: None, focus on conceptual understanding of regularization. Justification: Simple diagrams can effectively convey the core idea of how Ridge and Lasso penalize coefficients to prevent overfitting.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfcfb;
+            color: #3f3c3a;
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav-button.active::after, .nav-button:hover::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #d97706; /* amber-600 */
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .latex {
+            font-family: "Computer Modern", "Latin Modern", serif;
+            font-size: 1.1em;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 40vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-amber-700">Regression Masterclass</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div id="nav-links" class="ml-10 flex items-baseline space-x-4">
+                        <button class="nav-button text-gray-700 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium" data-target="part1">Part 1: Foundations</button>
+                        <button class="nav-button text-gray-700 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium" data-target="part2">Part 2: Simple LR</button>
+                        <button class="nav-button text-gray-700 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium" data-target="part3">Part 3: Multiple LR</button>
+                        <button class="nav-button text-gray-700 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium" data-target="part4">Part 4: Evaluation</button>
+                        <button class="nav-button text-gray-700 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium" data-target="part5">Part 5: Advanced</button>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <select id="mobile-nav" class="bg-white border border-gray-300 rounded-md p-2">
+                        <option value="part1">Part 1: Foundations</option>
+                        <option value="part2">Part 2: Simple LR</option>
+                        <option value="part3">Part 3: Multiple LR</option>
+                        <option value="part4">Part 4: Evaluation</option>
+                        <option value="part5">Part 5: Advanced</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Part 1: Foundations -->
+        <section id="part1" class="content-section">
+            <h2 class="text-3xl font-bold text-amber-800 mb-2">Part 1: Foundations of Regression</h2>
+            <p class="text-lg text-gray-600 mb-6">Welcome, Kartheek. This first module introduces the core building blocks of linear regression. We will explore the fundamental concepts of variables, relationships, and how we can represent them visually. Understanding these basics is the crucial first step to mastering regression analysis.</p>
+
+            <div class="space-y-8">
+                <div class="p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">1.1 Variables: The Language of Data</h3>
+                    <p class="mb-3 text-gray-700">In statistics, a variable is any characteristic, number, or quantity that can be measured or counted. We typically work with two types in linear regression:</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong>Independent Variable (Predictor, $X$):</strong> The variable that you believe influences another variable. You use it to make predictions.</li>
+                        <li><strong>Dependent Variable (Response, $Y$):</strong> The variable you are trying to predict or explain. Its value is thought to depend on the independent variable.</li>
+                    </ul>
+                    <div class="mt-4 p-4 bg-amber-50 rounded-lg">
+                        <p class="font-semibold text-amber-800">Example:</p>
+                        <p class="text-amber-700">If we want to predict a student's exam score based on the number of hours they studied:
+                            <br>• <strong class="latex">X</strong> (Independent): Hours Studied
+                            <br>• <strong class="latex">Y</strong> (Dependent): Exam Score
+                        </p>
+                    </div>
+                </div>
+                <div class="p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">1.2 Visualizing Relationships: The Scatter Plot</h3>
+                    <p class="mb-3 text-gray-700">Before building a model, we must first see if a relationship exists between our variables. The best tool for this is a scatter plot. It plots pairs of data points ($X, Y$) on a graph. By looking at the pattern, we can get an idea of the relationship's strength and direction (positive or negative).</p>
+                    <p class="mb-4 text-gray-700">The chart below shows the relationship between hours studied and exam scores for several students. As you can see, there appears to be a positive trend: as study hours increase, exam scores tend to increase as well.</p>
+                    <div class="chart-container">
+                        <canvas id="scatterPlot"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Part 2: Simple Linear Regression -->
+        <section id="part2" class="content-section">
+            <h2 class="text-3xl font-bold text-amber-800 mb-2">Part 2: Simple Linear Regression</h2>
+            <p class="text-lg text-gray-600 mb-6">Now that we can visualize relationships, let's quantify them. Simple Linear Regression finds the single straight line that best describes the relationship between one independent variable ($X$) and one dependent variable ($Y$). This section will explore the equation of this line and how we find the "best" one.</p>
+
+            <div class="space-y-8">
+                <div class="p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">2.1 The Regression Equation</h3>
+                    <p class="mb-3 text-gray-700">The line is described by a simple mathematical equation. For any given value of $X$, this equation gives us a predicted value for $Y$, which we call $\hat{Y}$ ("Y-hat").</p>
+                    <div class="text-center my-4 p-4 bg-gray-100 rounded-lg">
+                        <p class="text-2xl latex text-gray-800">$\hat{Y} = \beta_0 + \beta_1 X$</p>
+                    </div>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong class="latex">$\hat{Y}$</strong>: The predicted value of the dependent variable.</li>
+                        <li><strong class="latex">$\beta_0$</strong> (Beta-naught): The <strong>intercept</strong>. It's the predicted value of $Y$ when $X$ is 0. This is where the line crosses the vertical Y-axis.</li>
+                        <li><strong class="latex">$\beta_1$</strong> (Beta-one): The <strong>slope</strong> or <strong>coefficient</strong>. It represents the change in $Y$ for a one-unit increase in $X$.</li>
+                    </ul>
+                </div>
+                
+                <div class="p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">2.2 Finding the Best Fit Line: The Cost Function</h3>
+                    <p class="mb-3 text-gray-700">How do we find the best values for $\beta_0$ and $\beta_1$? We find the line that minimizes the total error. The error for a single point is the vertical distance between the actual data point ($Y$) and the predicted point on our line ($\hat{Y}$). This is called the <strong>residual</strong>.</p>
+                    <p class="mb-3 text-gray-700">To get the total error, we square each residual (to make them all positive) and sum them up. This is called the <strong>Sum of Squared Errors (SSE)</strong> or Residual Sum of Squares (RSS). The goal is to find the line that makes this SSE as small as possible.</p>
+                    <div class="text-center my-4 p-4 bg-gray-100 rounded-lg">
+                        <p class="text-xl latex text-gray-800">Cost Function: $SSE = \sum_{i=1}^{n} (Y_i - \hat{Y}_i)^2$</p>
+                    </div>
+                    <h4 class="text-xl font-semibold mt-6 mb-2">Interactive Demo</h4>
+                    <p class="mb-4 text-gray-600">Use the sliders below to manually adjust the intercept ($\beta_0$) and slope ($\beta_1$). Try to find the line that best fits the data. The line that produces the lowest SSE is the best fit line, which an algorithm like Gradient Descent finds automatically.</p>
+                    <div class="chart-container mb-4">
+                        <canvas id="interactivePlot"></canvas>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <div>
+                            <label for="interceptSlider" class="block text-sm font-medium text-gray-700">Intercept ($\beta_0$): <span id="interceptValue">50</span></label>
+                            <input id="interceptSlider" type="range" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        <div>
+                            <label for="slopeSlider" class="block text-sm font-medium text-gray-700">Slope ($\beta_1$): <span id="slopeValue">5</span></label>
+                            <input id="slopeSlider" type="range" min="-10" max="20" value="5" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                    </div>
+                    <div class="mt-4 p-4 bg-amber-100 rounded-lg text-center">
+                        <p class="text-lg font-semibold text-amber-900">Sum of Squared Errors (SSE): <span id="sseValue" class="font-bold"></span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Part 3: Multiple Linear Regression -->
+        <section id="part3" class="content-section">
+            <h2 class="text-3xl font-bold text-amber-800 mb-2">Part 3: Multiple Linear Regression</h2>
+            <p class="text-lg text-gray-600 mb-6">The real world is complex. Often, an outcome is influenced by more than one factor. Multiple Linear Regression extends the simple model by allowing us to use several independent variables ($X_1, X_2, ..., X_p$) to predict a single dependent variable ($Y$). This provides a more realistic and often more accurate model.</p>
+            
+            <div class="space-y-8">
+                <div class="p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">3.1 The Expanded Equation</h3>
+                    <p class="mb-3 text-gray-700">The equation is a natural extension of the simple one. We just add more terms, one for each new independent variable.</p>
+                    <div class="text-center my-4 p-4 bg-gray-100 rounded-lg">
+                        <p class="text-2xl latex text-gray-800">$\hat{Y} = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_p X_p$</p>
+                    </div>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li>Each <strong class="latex">$\beta_j$</strong> is the coefficient for its corresponding variable <strong class="latex">$X_j$</strong>.</li>
+                        <li>Interpretation: <strong class="latex">$\beta_j$</strong> represents the average change in $Y$ for a one-unit increase in <strong class="latex">$X_j$</strong>, <strong>while holding all other variables constant</strong>. This last part is very important.</li>
+                    </ul>
+                     <div class="mt-4 p-4 bg-amber-50 rounded-lg">
+                        <p class="font-semibold text-amber-800">Example:</p>
+                        <p class="text-amber-700">Predicting a house price ($Y$) based on its size ($X_1$) and age ($X_2$).
+                            <br>• <strong class="latex">$\hat{Price} = \beta_0 + \beta_1 Size + \beta_2 Age$</strong>
+                            <br>• $\beta_1$ would be the increase in price for each extra square foot, assuming the age is the same.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">3.2 A Key Challenge: Multicollinearity</h3>
+                    <p class="mb-3 text-gray-700">A new problem arises in multiple regression: multicollinearity. This happens when two or more independent variables are highly correlated with each other. For example, if we included both 'house size in sq. ft.' and 'house size in sq. meters' as predictors, they would be perfectly correlated.</p>
+                    <p class="text-gray-700">Why is this bad?</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li>It becomes difficult for the model to determine the individual effect of each correlated variable. The coefficient estimates ($\beta$) become unstable and hard to interpret.</li>
+                        <li>It doesn't necessarily reduce the predictive accuracy of the model as a whole, but it undermines our ability to understand the importance of individual predictors.</li>
+                    </ul>
+                     <div class="mt-4 p-4 bg-amber-50 rounded-lg">
+                        <p class="font-semibold text-amber-800">Example:</p>
+                        <p class="text-amber-700">If we add 'number of rooms' ($X_3$) to our house price model. It's likely that 'size' ($X_1$) and 'number of rooms' ($X_3$) are highly correlated. The model might struggle to decide whether to attribute price increases to size or the number of rooms, making their coefficients unreliable.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Part 4: Model Evaluation -->
+        <section id="part4" class="content-section">
+            <h2 class="text-3xl font-bold text-amber-800 mb-2">Part 4: Model Evaluation & Diagnostics</h2>
+            <p class="text-lg text-gray-600 mb-6">Building a model is only half the battle. We must rigorously evaluate how good it is. This section covers two critical aspects of evaluation: measuring the model's performance and diagnosing potential problems by examining its errors (residuals).</p>
+
+            <div class="space-y-8">
+                <div class="p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">4.1 Measuring Performance: R-squared ($R^2$)</h3>
+                    <p class="mb-3 text-gray-700">$R^2$, also called the coefficient of determination, is a popular metric that tells us the <strong>proportion of the variance in the dependent variable ($Y$) that is predictable from the independent variable(s) ($X$)</strong>.</p>
+                     <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li>It ranges from 0 to 1 (or 0% to 100%).</li>
+                        <li>A higher $R^2$ indicates that the model explains a larger portion of the variability in the outcome.</li>
+                        <li>An $R^2$ of 0.75 means that 75% of the variation in $Y$ can be explained by our model's inputs $X$.</li>
+                    </ul>
+                     <div class="mt-4 p-4 bg-amber-50 rounded-lg">
+                        <p class="font-semibold text-amber-800">Example:</p>
+                        <p class="text-amber-700">In our 'hours studied vs. exam score' model, if we get an $R^2$ of 0.82, it means that 82% of the differences in exam scores among students can be explained by the differences in how many hours they studied. The remaining 18% is due to other factors (luck, intelligence, etc.).</p>
+                    </div>
+                    <p class="mt-3 text-sm text-gray-500"><strong>Caution:</strong> A high $R^2$ doesn't automatically mean the model is good. Adding more variables will almost always increase $R^2$, even if those variables are useless. This is why we also use Adjusted $R^2$, which penalizes the score for adding non-useful predictors.</p>
+                </div>
+
+                <div class="p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">4.2 Diagnosing Problems: Residual Plots</h3>
+                    <p class="mb-3 text-gray-700">A key assumption of linear regression is that the errors (residuals) are random and have no pattern. A <strong>residual plot</strong>, which graphs the predicted values ($\hat{Y}$) against the residuals ($Y - \hat{Y}$), is the best way to check this.</p>
+                    <p class="text-gray-700"><strong>What we want to see:</strong> A random cloud of points centered around 0 with no discernible shape. This indicates the model assumptions hold.</p>
+                    <p class="text-gray-700"><strong>What we don't want to see:</strong> Any clear pattern, like a U-shape or a funnel shape. This suggests that our linear model is not the right choice for this data.</p>
+                    <div class="text-center my-4">
+                        <button id="goodResidualsBtn" class="bg-amber-600 text-white px-4 py-2 rounded-md shadow hover:bg-amber-700 transition">Show Good Residuals</button>
+                        <button id="badResidualsBtn" class="bg-gray-500 text-white px-4 py-2 rounded-md shadow hover:bg-gray-600 transition">Show Bad Residuals</button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="residualPlot"></canvas>
+                    </div>
+                    <p id="residual-text" class="text-center text-gray-600 mt-2 font-medium">This is a healthy residual plot. The points are randomly scattered around the zero line, indicating that our linear model is a good fit.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Part 5: Advanced Topics -->
+        <section id="part5" class="content-section">
+            <h2 class="text-3xl font-bold text-amber-800 mb-2">Part 5: Advanced Topics & Regularization</h2>
+            <p class="text-lg text-gray-600 mb-6">Finally, we'll touch on advanced techniques used to improve model performance, particularly when dealing with many variables or multicollinearity. The main concept here is <strong>regularization</strong>, which involves adding a penalty to the cost function to discourage overly complex models.</p>
+
+            <div class="space-y-8">
+                <div class="p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">5.1 Overfitting: The Problem of Complexity</h3>
+                    <p class="mb-3 text-gray-700">Overfitting occurs when a model learns the training data *too well*. It captures not only the underlying relationship but also the random noise. This leads to a model that performs great on the data it was trained on, but fails to generalize and make accurate predictions on new, unseen data.</p>
+                    <p class="text-gray-700">This often happens when you have too many independent variables compared to the number of data points.</p>
+                </div>
+                
+                <div class="p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">5.2 Regularization: A Solution to Overfitting</h3>
+                    <p class="mb-3 text-gray-700">Regularization techniques add a penalty term to the cost function (the SSE). This penalty is larger for larger coefficient ($\beta$) values. This forces the model to keep the coefficients small, which in turn creates a simpler, less complex model that is less likely to overfit. The two most common types are:</p>
+                    <div class="grid md:grid-cols-2 gap-8 mt-4">
+                        <div class="p-4 border-l-4 border-amber-500 bg-amber-50">
+                            <h4 class="text-xl font-bold text-amber-900">Ridge Regression (L2)</h4>
+                            <p class="mt-2 text-amber-800">Adds a penalty equal to the <strong>sum of the squared coefficient values</strong>.
+                            <br><span class="latex text-sm">Penalty = $\lambda \sum \beta_j^2$</span></p>
+                            <p class="mt-2 text-amber-800">Ridge shrinks the coefficients towards zero, but never to exactly zero. It's great for handling multicollinearity.</p>
+                        </div>
+                        <div class="p-4 border-l-4 border-gray-500 bg-gray-50">
+                            <h4 class="text-xl font-bold text-gray-900">Lasso Regression (L1)</h4>
+                            <p class="mt-2 text-gray-800">Adds a penalty equal to the <strong>sum of the absolute values of the coefficients</strong>.
+                            <br><span class="latex text-sm">Penalty = $\lambda \sum |\beta_j|$</span></p>
+                            <p class="mt-2 text-gray-800">Lasso can shrink some coefficients all the way to zero, effectively performing variable selection by removing unimportant predictors. This makes the final model easier to interpret.</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-gray-700">The term <strong class="latex">$\lambda$</strong> (lambda) is a hyperparameter that you control. It determines the strength of the penalty. A larger <strong class="latex">$\lambda$</strong> results in smaller coefficients and a simpler model.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.getElementById('nav-links');
+            const mobileNav = document.getElementById('mobile-nav');
+            const sections = document.querySelectorAll('.content-section');
+            const buttons = navLinks ? navLinks.querySelectorAll('.nav-button') : [];
+
+            function showSection(targetId) {
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === targetId) {
+                        section.classList.add('active');
+                    }
+                });
+
+                buttons.forEach(button => {
+                    button.classList.remove('active');
+                    if (button.dataset.target === targetId) {
+                        button.classList.add('active');
+                    }
+                });
+                if (mobileNav.value !== targetId) {
+                    mobileNav.value = targetId;
+                }
+            }
+            
+            if (navLinks) {
+                navLinks.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('nav-button')) {
+                        showSection(e.target.dataset.target);
+                    }
+                });
+            }
+
+            mobileNav.addEventListener('change', (e) => {
+                showSection(e.target.value);
+            });
+            
+            showSection('part1');
+
+            // --- Chart Data ---
+            const studyData = {
+                labels: Array.from({length: 15}, (_, i) => i + 1),
+                datasets: [{
+                    label: 'Exam Score',
+                    data: [
+                        {x: 1, y: 55}, {x: 1.5, y: 62}, {x: 2, y: 68}, {x: 2.5, y: 65}, {x: 3, y: 75}, 
+                        {x: 3.5, y: 78}, {x: 4, y: 85}, {x: 4.5, y: 82}, {x: 5, y: 88}, {x: 5.5, y: 92},
+                        {x: 6, y: 90}, {x: 7, y: 95}, {x: 8, y: 98}, {x: 2, y: 60}, {x: 6, y: 94}
+                    ],
+                    backgroundColor: 'rgba(217, 119, 6, 0.6)', // amber-600
+                    borderColor: 'rgba(217, 119, 6, 1)',
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            };
+
+            // Chart 1: Simple Scatter Plot
+            const ctx1 = document.getElementById('scatterPlot').getContext('2d');
+            new Chart(ctx1, {
+                type: 'scatter',
+                data: studyData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Hours Studied' },
+                            min: 0
+                        },
+                        y: {
+                            title: { display: true, text: 'Exam Score' },
+                            min: 40,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Chart 2: Interactive Plot
+            const ctx2 = document.getElementById('interactivePlot').getContext('2d');
+            const interceptSlider = document.getElementById('interceptSlider');
+            const slopeSlider = document.getElementById('slopeSlider');
+            const interceptValue = document.getElementById('interceptValue');
+            const slopeValue = document.getElementById('slopeValue');
+            const sseValue = document.getElementById('sseValue');
+            
+            const interactiveChartData = JSON.parse(JSON.stringify(studyData));
+            interactiveChartData.datasets.push({
+                label: 'Regression Line',
+                data: [],
+                type: 'line',
+                borderColor: 'rgba(29, 78, 216, 0.8)', // blue-700
+                backgroundColor: 'transparent',
+                borderWidth: 3,
+                pointRadius: 0
+            });
+
+            const interactiveChart = new Chart(ctx2, {
+                type: 'scatter',
+                data: interactiveChartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                     scales: {
+                        x: {
+                            title: { display: true, text: 'Hours Studied' },
+                            min: 0
+                        },
+                        y: {
+                            title: { display: true, text: 'Exam Score' },
+                            min: 40,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            function updateInteractivePlot() {
+                const slope = parseFloat(slopeSlider.value);
+                const intercept = parseFloat(interceptSlider.value);
+                
+                interceptValue.textContent = intercept.toFixed(1);
+                slopeValue.textContent = slope.toFixed(1);
+                
+                const lineData = studyData.datasets[0].data.map(p => ({
+                    x: p.x,
+                    y: slope * p.x + intercept
+                }));
+                interactiveChart.data.datasets[1].data = lineData;
+                
+                let sse = 0;
+                studyData.datasets[0].data.forEach(p => {
+                    const predictedY = slope * p.x + intercept;
+                    sse += Math.pow(p.y - predictedY, 2);
+                });
+                sseValue.textContent = sse.toFixed(0);
+
+                interactiveChart.update();
+            }
+
+            interceptSlider.addEventListener('input', updateInteractivePlot);
+            slopeSlider.addEventListener('input', updateInteractivePlot);
+            updateInteractivePlot();
+
+            // Chart 3: Residual Plot
+            const ctx3 = document.getElementById('residualPlot').getContext('2d');
+            const goodResidualsBtn = document.getElementById('goodResidualsBtn');
+            const badResidualsBtn = document.getElementById('badResidualsBtn');
+            const residualText = document.getElementById('residual-text');
+            
+            const residualData = {
+                good: Array.from({length: 30}, () => ({ x: Math.random() * 80 + 20, y: (Math.random() - 0.5) * 20 })),
+                bad: Array.from({length: 30}, (_, i) => {
+                    const x = i * 3 + 10;
+                    const y = (Math.pow((x - 50) / 20, 2) - 1) * 10 + (Math.random() - 0.5) * 5;
+                    return { x, y };
+                })
+            };
+
+            const residualChart = new Chart(ctx3, {
+                 type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Residuals',
+                        data: residualData.good,
+                        backgroundColor: 'rgba(217, 119, 6, 0.6)',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Predicted Value (Ŷ)' },
+                            min: 0,
+                            max: 100
+                        },
+                        y: {
+                            title: { display: true, text: 'Residual (Y - Ŷ)' },
+                            min: -20,
+                            max: 20
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    elements: {
+                        line: {
+                            borderWidth: 2,
+                            borderColor: 'red',
+                            borderDash: [5, 5]
+                        }
+                    },
+                    annotation: {
+                       annotations: [{
+                           type: 'line',
+                           mode: 'horizontal',
+                           scaleID: 'y-axis-0',
+                           value: 0,
+                           borderColor: 'black',
+                           borderWidth: 1
+                       }]
+                    }
+                }
+            });
+
+            function updateResidualPlot(type) {
+                residualChart.data.datasets[0].data = residualData[type];
+                if (type === 'good') {
+                    residualChart.options.scales.y.min = -20;
+                    residualChart.options.scales.y.max = 20;
+                    residualText.textContent = "This is a healthy residual plot. The points are randomly scattered around the zero line, indicating that our linear model is a good fit.";
+                } else {
+                    residualChart.options.scales.y.min = -15;
+                    residualChart.options.scales.y.max = 25;
+                    residualText.textContent = "This is a problematic residual plot. The U-shape (pattern) indicates that the relationship is non-linear, and a simple straight line is not the best model.";
+                }
+                residualChart.update();
+            }
+            
+            goodResidualsBtn.addEventListener('click', () => updateResidualPlot('good'));
+            badResidualsBtn.addEventListener('click', () => updateResidualPlot('bad'));
+            
+        });
+    </script>
+</body>
+</html>

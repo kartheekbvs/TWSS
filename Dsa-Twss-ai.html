@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Solver Pro with Gemini</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Light theme */
+        body.light {
+            --bg-color: #f3f4f6;
+            --text-color: #111827;
+            --card-bg-color: #ffffff;
+            --input-bg-color: #f9fafb;
+            --input-text-color: #111827;
+            --input-border-color: #d1d5db;
+            --button-bg-color: #1f2937;
+            --button-text-color: #ffffff;
+            --button-hover-bg-color: #374151;
+            --secondary-button-bg: #e5e7eb;
+            --secondary-button-text: #374151;
+            --secondary-button-hover-bg: #d1d5db;
+            --heading-color: #111827;
+            --subtle-text-color: #4b5563;
+            --border-color: #e5e7eb;
+            --link-color: #007bff;
+            --gemini-badge-bg: #e0e7ff;
+            --gemini-badge-text: #3730a3;
+            --code-bg: #f3f4f6;
+            --table-header-bg: #f9fafb;
+        }
+
+        /* Dark theme (default) */
+        body {
+            --bg-color: #111827;
+            --text-color: #d1d5db;
+            --card-bg-color: #1f2937;
+            --input-bg-color: #374151;
+            --input-text-color: #f9fafb;
+            --input-border-color: #4b5563;
+            --button-bg-color: #4f46e5;
+            --button-text-color: #ffffff;
+            --button-hover-bg-color: #4338ca;
+            --secondary-button-bg: #374151;
+            --secondary-button-text: #d1d5db;
+            --secondary-button-hover-bg: #4b5563;
+            --heading-color: #ffffff;
+            --subtle-text-color: #9ca3af;
+            --border-color: #374151;
+            --link-color: #60a5fa;
+            --gemini-badge-bg: #312e81;
+            --gemini-badge-text: #e0e7ff;
+            --code-bg: #111827;
+            --table-header-bg: #374151;
+        }
+
+        /* Applying theme variables */
+        .theme-bg { background-color: var(--bg-color); }
+        .theme-text { color: var(--text-color); }
+        .theme-card-bg { background-color: var(--card-bg-color); }
+        .theme-input-bg { background-color: var(--input-bg-color); }
+        .theme-input-text { color: var(--input-text-color); }
+        .theme-input-border { border-color: var(--input-border-color); }
+        .theme-button-bg { background-color: var(--button-bg-color); }
+        .theme-button-text { color: var(--button-text-color); }
+        .theme-button-hover-bg:hover { background-color: var(--button-hover-bg-color); }
+        .theme-secondary-button-bg { background-color: var(--secondary-button-bg); }
+        .theme-secondary-button-text { color: var(--secondary-button-text); }
+        .theme-secondary-button-hover-bg:hover { background-color: var(--secondary-button-hover-bg); }
+        .theme-heading { color: var(--heading-color); }
+        .theme-subtle-text { color: var(--subtle-text-color); }
+        .theme-border { border-color: var(--border-color); }
+        .theme-link { color: var(--link-color); }
+        .gemini-badge-bg { background-color: var(--gemini-badge-bg); }
+        .gemini-badge-text { color: var(--gemini-badge-text); }
+
+        /* Toggle switch styles */
+        .toggle-checkbox:checked + .toggle-label .toggle-ball {
+            transform: translateX(100%);
+        }
+        
+        /* Spinner for loading state */
+        .loader {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--button-bg-color);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+        .secondary-loader {
+             border-top: 2px solid var(--secondary-button-text);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* --- Improved Output Styling --- */
+        .output-content h3, .output-content h4 {
+            color: var(--heading-color);
+            margin-bottom: 0.75rem;
+        }
+        .output-content p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .output-content ul, .output-content ol {
+            list-style-position: inside;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+        .output-content li {
+            margin-bottom: 0.5rem;
+        }
+        .output-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .output-content th, .output-content td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+        .output-content th {
+            background-color: var(--table-header-bg);
+            font-weight: 600;
+        }
+        .output-content code {
+            background-color: var(--code-bg);
+            color: var(--text-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+        }
+        .output-content pre {
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .output-content pre code {
+            padding: 0;
+            background: none;
+        }
+    </style>
+</head>
+<body class="theme-bg theme-text">
+
+    <div class="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8">
+        <!-- Header -->
+        <header class="w-full max-w-4xl flex justify-between items-center mb-8">
+            <h1 class="text-2xl sm:text-3xl font-bold theme-heading">DSA Solver Pro</h1>
+            <div class="flex items-center space-x-3">
+                <span class="theme-subtle-text text-sm">Light</span>
+                <label for="theme-toggle" class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="theme-toggle" class="sr-only peer toggle-checkbox">
+                    <div class="w-11 h-6 bg-gray-400 rounded-full peer-checked:bg-indigo-500 toggle-label">
+                        <div class="absolute top-0.5 left-[2px] bg-white border-gray-300 border rounded-full h-5 w-5 transition-transform toggle-ball"></div>
+                    </div>
+                </label>
+                 <span class="theme-subtle-text text-sm">Dark</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="w-full max-w-4xl space-y-8">
+            <div class="theme-card-bg rounded-xl shadow-lg p-6 sm:p-8 border theme-border">
+                <h2 class="text-xl sm:text-2xl font-semibold mb-4 theme-heading">1. Enter Your DSA Problem</h2>
+                <p class="mb-6 theme-subtle-text">Paste your problem statement below. Our system will analyze it and identify the underlying technique.</p>
+                <textarea id="problem-input" rows="8" class="w-full p-4 rounded-lg theme-input-bg theme-input-text theme-input-border border focus:ring-2 focus:ring-indigo-500 focus:outline-none transition" placeholder="e.g., Given an array of integers, find if there is a pair with a sum equal to a target value... or... Find the shortest path in an unweighted graph..."></textarea>
+                <button id="analyze-btn" class="mt-6 w-full sm:w-auto px-8 py-3 rounded-lg font-semibold theme-button-bg theme-button-text theme-button-hover-bg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500 transition-transform transform hover:scale-105 flex items-center justify-center gap-2">
+                    <span id="button-text">Analyze Technique</span>
+                    <div id="loader" class="loader hidden"></div>
+                </button>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results-section" class="theme-card-bg rounded-xl shadow-lg p-6 sm:p-8 border theme-border hidden">
+                <h2 class="text-xl sm:text-2xl font-semibold mb-4 theme-heading border-b theme-border pb-4">2. Analysis & Recommended Technique</h2>
+                <div id="analysis-output" class="output-content"></div>
+                <div id="gemini-features-buttons" class="mt-6 pt-6 border-t theme-border flex flex-wrap gap-4 hidden">
+                    <button id="generate-tests-btn" data-original-text="✨ Generate Test Cases" class="flex-grow sm:flex-grow-0 px-4 py-2 rounded-lg font-semibold theme-secondary-button-bg theme-secondary-button-text theme-secondary-button-hover-bg flex items-center justify-center gap-2">
+                       <span>✨ Generate Test Cases</span>
+                       <div class="loader secondary-loader hidden"></div>
+                    </button>
+                    <button id="compare-techniques-btn" data-original-text="✨ Compare Approaches" class="flex-grow sm:flex-grow-0 px-4 py-2 rounded-lg font-semibold theme-secondary-button-bg theme-secondary-button-text theme-secondary-button-hover-bg flex items-center justify-center gap-2">
+                       <span>✨ Compare Approaches</span>
+                       <div class="loader secondary-loader hidden"></div>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Gemini Features Output Section -->
+            <div id="gemini-features-output-card" class="theme-card-bg rounded-xl shadow-lg p-6 sm:p-8 border theme-border hidden">
+                 <h2 id="gemini-output-title" class="text-xl sm:text-2xl font-semibold mb-4 theme-heading border-b theme-border pb-4">3. Gemini-Powered Insights</h2>
+                 <div id="gemini-features-output" class="output-content mt-4"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- State Management ---
+            let currentProblem = '';
+            let currentTechnique = '';
+
+            // --- Theme Toggle Logic ---
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+
+            const applyTheme = (isLight) => {
+                body.classList.toggle('light', isLight);
+                themeToggle.checked = !isLight;
+            };
+
+            const savedTheme = localStorage.getItem('theme');
+            applyTheme(savedTheme === 'light');
+
+            themeToggle.addEventListener('change', () => {
+                const isLight = !themeToggle.checked;
+                applyTheme(isLight);
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            });
+
+            // --- DOM Elements ---
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const problemInput = document.getElementById('problem-input');
+            const resultsSection = document.getElementById('results-section');
+            const analysisOutput = document.getElementById('analysis-output');
+            const geminiFeaturesButtons = document.getElementById('gemini-features-buttons');
+            const geminiFeaturesOutputCard = document.getElementById('gemini-features-output-card');
+            const geminiFeaturesOutput = document.getElementById('gemini-features-output');
+            const geminiOutputTitle = document.getElementById('gemini-output-title');
+
+            // --- API Configuration ---
+            const API_KEY = 'AIzaSyCXFtcQAHFe9pnkLafzsUv34GrqgNHxNgw';
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+            
+            // --- UI Helper Functions ---
+            const setLoading = (button, text, isLoading) => {
+                const btnTextEl = button.querySelector('span');
+                const loaderEl = button.querySelector('div');
+                const originalText = button.dataset.originalText || 'Analyze Technique';
+                if (isLoading) {
+                    btnTextEl.textContent = text;
+                    loaderEl.classList.remove('hidden');
+                    button.disabled = true;
+                } else {
+                    btnTextEl.textContent = originalText;
+                    loaderEl.classList.add('hidden');
+                    button.disabled = false;
+                }
+            };
+            
+            const displayResults = (content, targetElement) => {
+                targetElement.innerHTML = content;
+                targetElement.closest('.theme-card-bg').classList.remove('hidden');
+                targetElement.closest('.theme-card-bg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            };
+
+            // --- Core Gemini API Call Function ---
+            const callGeminiAPI = async (prompt, buttonToLoad) => {
+                 if(buttonToLoad) setLoading(buttonToLoad, 'Generating...', true);
+
+                const payload = { contents: [{ parts: [{ text: prompt }] }] };
+                const maxRetries = 3;
+                let delay = 1000;
+
+                for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                    try {
+                        const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+
+                        if (!response.ok) {
+                            if (response.status >= 500 || response.status === 429) throw new Error(`Server-side error: ${response.status}`);
+                            const errorData = await response.json();
+                            throw new Error(`API Client Error: ${errorData.error.message}`);
+                        }
+
+                        const data = await response.json();
+                        if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+                            if(buttonToLoad) setLoading(buttonToLoad, buttonToLoad.dataset.originalText, false);
+                            return data.candidates[0].content.parts[0].text;
+                        } else {
+                             if (data.candidates && data.candidates[0]?.finishReason !== 'STOP') throw new Error(`Content generation stopped for reason: ${data.candidates[0].finishReason}.`);
+                            throw new Error("No valid content received from Gemini.");
+                        }
+                    } catch (error) {
+                        console.error(`Gemini API call failed (attempt ${attempt}/${maxRetries}):`, error.message);
+                        if (attempt === maxRetries || error.message.startsWith('API Client Error')) {
+                            const errorMessage = `<h3 class="text-xl font-bold theme-heading">Generation Failed</h3><p class="mt-2 theme-subtle-text">${error.message}. Please check your API key or try again later.</p>`;
+                            displayResults(errorMessage, geminiFeaturesOutput);
+                            if(buttonToLoad) setLoading(buttonToLoad, buttonToLoad.dataset.originalText, false);
+                            return null;
+                        }
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2;
+                    }
+                }
+                return null;
+            };
+
+            // --- Feature Functions ---
+            const handleGenerateTestCases = async (btn) => {
+                geminiOutputTitle.textContent = '✨ Generated Test Cases';
+                const prompt = `For the DSA problem "${currentProblem}", generate a comprehensive set of test cases. Include edge cases (empty inputs, single elements), base cases, and cases with large or complex inputs. Present the output as a well-structured HTML table with columns for 'Test Case Description', 'Input', and 'Expected Output'. Use <code> tags for inputs and outputs.`;
+                const result = await callGeminiAPI(prompt, btn);
+                if (result) {
+                    displayResults(result, geminiFeaturesOutput);
+                }
+            };
+
+            const handleCompareTechniques = async (btn) => {
+                geminiOutputTitle.textContent = '✨ Technique Comparison';
+                const prompt = `For the DSA problem "${currentProblem}", the primary technique is "${currentTechnique}". Identify two alternative techniques to solve it. Briefly describe each alternative. Then, present a comparison in an HTML table. The table should have columns for 'Technique', 'Time Complexity', 'Space Complexity', and a brief 'Pros/Cons'. Use <code> tags for complexities.`;
+                const result = await callGeminiAPI(prompt, btn);
+                if (result) {
+                    displayResults(result, geminiFeaturesOutput);
+                }
+            };
+            
+            // --- Event Delegation for Dynamic Buttons ---
+            geminiFeaturesButtons.addEventListener('click', (e) => {
+                const generateBtn = e.target.closest('#generate-tests-btn');
+                if (generateBtn) {
+                    handleGenerateTestCases(generateBtn);
+                    return;
+                }
+
+                const compareBtn = e.target.closest('#compare-techniques-btn');
+                if (compareBtn) {
+                    handleCompareTechniques(compareBtn);
+                    return;
+                }
+            });
+
+            // --- Main Analysis Logic ---
+            analyzeBtn.addEventListener('click', async () => {
+                const inputText = problemInput.value;
+                if (!inputText.trim()) {
+                    displayResults(`<p class="theme-text">Please enter a problem statement first.</p>`, analysisOutput);
+                    return;
+                }
+                
+                // Reset UI
+                resultsSection.classList.add('hidden');
+                geminiFeaturesButtons.classList.add('hidden');
+                geminiFeaturesOutputCard.classList.add('hidden');
+                currentProblem = inputText;
+
+                setLoading(analyzeBtn, 'Analyzing...', true);
+                
+                // Using Gemini for all analysis for consistency
+                const prompt = `Analyze the following DSA problem: "${inputText}". Your response MUST be in simple, clean HTML. Start with an <h3> tag containing the identified problem name (e.g., "Two Sum"). Follow this with a <p> tag that identifies the most optimal technique in bold (e.g., "The most optimal technique is <b>Hashing (Hash Map)</b>."). Then, create an <h4> titled "How It Works" and explain the technique. Finally, create an <h4> titled "Step-by-Step Application" and provide an ordered list (<ol>) of steps to solve the problem.`;
+                const result = await callGeminiAPI(prompt);
+                
+                setLoading(analyzeBtn, 'Analyze Technique', false);
+
+                if (result) {
+                    // Extract technique name for other features
+                    const match = result.match(/<b>(.*?)<\/b>/i);
+                    currentTechnique = match ? match[1] : 'the identified approach';
+                    
+                    const analysisHtml = `<div class="flex justify-between items-start"><div>${result}</div><span class="gemini-badge-bg gemini-badge-text text-xs font-semibold px-2.5 py-1 rounded-full ml-4 flex-shrink-0">Powered by Gemini</span></div>`;
+                    
+                    displayResults(analysisHtml, analysisOutput);
+                    geminiFeaturesButtons.classList.remove('hidden');
+                } else {
+                     displayResults(`<h3 class="text-xl font-bold theme-heading">Analysis Failed</h3><p class="mt-2 theme-subtle-text">Could not analyze the problem.</p>`, analysisOutput);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TWSS DBMS Tutorial</title>
+    <style>
+        :root {
+            --color1: #1B1931; /* deep blue */
+            --color2: #44174E; /* deep purple */
+            --color3: #662249; /* purple-red */
+            --color4: #A34054; /* red-brown */
+            --color5: #ED9E59; /* orange */
+            --color6: #E98C89; /* light pink */
+            --text: #333;
+            --bg-light: #f8f9fa;
+            --border: #ddd;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--color1), var(--color2), var(--color3));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, var(--color5), var(--color6));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: colorShift 5s infinite alternate;
+        }
+        
+        @keyframes colorShift {
+            0% {
+                background: linear-gradient(45deg, var(--color5), var(--color6));
+                -webkit-background-clip: text;
+                background-clip: text;
+            }
+            50% {
+                background: linear-gradient(45deg, var(--color6), var(--color4));
+                -webkit-background-clip: text;
+                background-clip: text;
+            }
+            100% {
+                background: linear-gradient(45deg, var(--color4), var(--color5));
+                -webkit-background-clip: text;
+                background-clip: text;
+            }
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+            position: relative;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color5);
+            transition: width 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--color5);
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(27, 25, 49, 0.8), rgba(68, 23, 78, 0.8)), url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') center/cover;
+            color: white;
+            text-align: center;
+            padding: 5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(237, 158, 89, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+            animation: pulse 4s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% {
+                opacity: 0.3;
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 0.6;
+                transform: scale(1.05);
+            }
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out 0.2s;
+            animation-fill-mode: both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--color5), var(--color6));
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(237, 158, 89, 0.4);
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out 0.4s;
+            animation-fill-mode: both;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(237, 158, 89, 0.6);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 3rem 0;
+        }
+        
+        .section {
+            margin-bottom: 3rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all 0.3s;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .section-header {
+            background: linear-gradient(90deg, var(--color1), var(--color2), var(--color3));
+            color: white;
+            padding: 1.2rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(237, 158, 89, 0.3));
+            transform: skewX(-30deg);
+        }
+        
+        .section-header h2 {
+            font-size: 1.8rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-content {
+            padding: 1.5rem;
+        }
+        
+        .section-content h3 {
+            color: var(--color2);
+            margin: 1.5rem 0 0.8rem;
+            font-size: 1.4rem;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .section-content h3::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--color5), var(--color6));
+            border-radius: 2px;
+        }
+        
+        .section-content p, .section-content li {
+            margin-bottom: 1rem;
+        }
+        
+        .section-content ul {
+            padding-left: 2rem;
+        }
+        
+        .section-content li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 10px;
+            transition: all 0.2s;
+        }
+        
+        .section-content li:hover {
+            color: var(--color4);
+            transform: translateX(5px);
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, rgba(237, 158, 89, 0.2), rgba(233, 140, 137, 0.2));
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            color: var(--color3);
+            transition: all 0.3s;
+        }
+        
+        .highlight:hover {
+            background: linear-gradient(120deg, rgba(237, 158, 89, 0.4), rgba(233, 140, 137, 0.4));
+            transform: scale(1.05);
+        }
+        
+        .code-block {
+            background: linear-gradient(to right, #f4f4f4, #f8f8f8);
+            border-left: 4px solid var(--color5);
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            overflow-x: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .code-block:hover {
+            box-shadow: 0 4px 15px rgba(237, 158, 89, 0.2);
+        }
+        
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            background: linear-gradient(90deg, var(--color1), var(--color2));
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:nth-child(even) {
+            background: linear-gradient(to right, rgba(237, 158, 89, 0.05), rgba(233, 140, 137, 0.05));
+        }
+        
+        tr:hover {
+            background: linear-gradient(to right, rgba(237, 158, 89, 0.1), rgba(233, 140, 137, 0.1));
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--color1), var(--color2), var(--color3));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--color5), var(--color6), var(--color4));
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--color5), var(--color6));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links ul li {
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .footer-links ul li:hover {
+            transform: translateX(5px);
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--color5);
+        }
+        
+        .copyright {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        /* Floating color palette */
+        .color-palette {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            z-index: 1000;
+        }
+        
+        .color-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 0 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .color-swatch:hover {
+            transform: translateY(-5px) scale(1.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .color-swatch:nth-child(1) {
+            background-color: var(--color1);
+        }
+        
+        .color-swatch:nth-child(2) {
+            background-color: var(--color2);
+        }
+        
+        .color-swatch:nth-child(3) {
+            background-color: var(--color3);
+        }
+        
+        .color-swatch:nth-child(4) {
+            background-color: var(--color4);
+        }
+        
+        .color-swatch:nth-child(5) {
+            background-color: var(--color5);
+        }
+        
+        .color-swatch:nth-child(6) {
+            background-color: var(--color6);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-links {
+                margin-top: 1.5rem;
+            }
+            
+            .color-palette {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .color-swatch {
+                width: 25px;
+                height: 25px;
+                margin: 0 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">TWSS <span>DBMS Tutorial</span></div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#unit1">Unit I</a></li>
+                        <li><a href="#unit2">Unit II</a></li>
+                        <li><a href="#unit3">Unit III</a></li>
+                        <li><a href="#unit4">Unit IV</a></li>
+                        <li><a href="#unit5">Unit V</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Database Management Systems</h1>
+            <p>Complete tutorial covering all aspects of DBMS from fundamentals to advanced concepts</p>
+            <a href="#unit1" class="btn">Start Learning</a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Unit I -->
+            <section class="section" id="unit1">
+                <div class="section-header">
+                    <h2>Unit I: Introduction to DBMS</h2>
+                </div>
+                <div class="section-content">
+                    <h3>Database System</h3>
+                    <p>A database is a collection of related data and data is a collection of facts and figures that can be processed to produce information.</p>
+                    
+                    <h3>Characteristics of DBMS</h3>
+                    <ul>
+                        <li><span class="highlight">Real-world entity</span> - Uses real-world entities to design architecture</li>
+                        <li><span class="highlight">Relation-based tables</span> - Entities and relations form tables</li>
+                        <li><span class="highlight">Isolation of data and application</span> - Database is different from its data</li>
+                        <li><span class="highlight">Less redundancy</span> - Follows normalization rules</li>
+                        <li><span class="highlight">Consistency</span> - Maintains consistent state across relations</li>
+                        <li><span class="highlight">Query Language</span> - Efficient data retrieval and manipulation</li>
+                        <li><span class="highlight">ACID Properties</span> - Atomicity, Consistency, Isolation, Durability</li>
+                        <li><span class="highlight">Multiuser and Concurrent Access</span> - Supports parallel access</li>
+                        <li><span class="highlight">Multiple views</span> - Different views for different users</li>
+                        <li><span class="highlight">Security</span> - Methods to impose constraints and protect data</li>
+                    </ul>
+                    
+                    <h3>Database Users</h3>
+                    <ul>
+                        <li><span class="highlight">Administrators</span> - Maintain and administer the DBMS</li>
+                        <li><span class="highlight">Designers</span> - Design the database structure</li>
+                        <li><span class="highlight">End Users</span> - Use the database for various purposes</li>
+                    </ul>
+                    
+                    <h3>DBMS Architecture</h3>
+                    <p>The design of a DBMS depends on its architecture. It can be centralized or decentralized or hierarchical.</p>
+                    <ul>
+                        <li><span class="highlight">1-tier architecture</span> - User directly sits on the DBMS</li>
+                        <li><span class="highlight">2-tier architecture</span> - Application through which DBMS is accessed</li>
+                        <li><span class="highlight">3-tier architecture</span> - Separates tiers based on complexity</li>
+                    </ul>
+                    
+                    <h3>3-tier Architecture Components</h3>
+                    <ul>
+                        <li><span class="highlight">Database (Data) Tier</span> - Database resides with query processing languages</li>
+                        <li><span class="highlight">Application (Middle) Tier</span> - Application server and programs accessing the database</li>
+                        <li><span class="highlight">User (Presentation) Tier</span> - End-users operate on this tier</li>
+                    </ul>
+                    
+                    <h3>Data Models</h3>
+                    <p>Data models define how the logical structure of a database is modeled.</p>
+                    <ul>
+                        <li><span class="highlight">Entity-Relationship Model</span> - Based on real-world entities and relationships</li>
+                        <li><span class="highlight">Relational Model</span> - Data stored in tables called relations</li>
+                    </ul>
+                    
+                    <h3>Database Schema vs Instance</h3>
+                    <ul>
+                        <li><span class="highlight">Database Schema</span> - Skeleton structure representing logical view of database</li>
+                        <li><span class="highlight">Database Instance</span> - State of operational database with data at any given time</li>
+                    </ul>
+                    
+                    <h3>Data Independence</h3>
+                    <ul>
+                        <li><span class="highlight">Logical Data Independence</span> - Ability to change logical schema without changing external schema</li>
+                        <li><span class="highlight">Physical Data Independence</span> - Ability to change physical schema without changing logical schema</li>
+                    </ul>
+                    
+                    <h3>Advantages of DBMS</h3>
+                    <ul>
+                        <li>Controlling Data Redundancy</li>
+                        <li>Sharing of Data</li>
+                        <li>Data Consistency</li>
+                        <li>Integration of Data</li>
+                        <li>Integration Constraints</li>
+                        <li>Data Security</li>
+                        <li>Control Over Concurrency</li>
+                        <li>Backup and Recovery Procedures</li>
+                        <li>Data Independence</li>
+                    </ul>
+                    
+                    <h3>Disadvantages of DBMS</h3>
+                    <ul>
+                        <li>Cost of software/hardware and migration</li>
+                        <li>Problem associated with centralization</li>
+                        <li>Complexity of Backup and Recovery</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Unit II -->
+            <section class="section" id="unit2">
+                <div class="section-header">
+                    <h2>Unit II: Relational Model and SQL</h2>
+                </div>
+                <div class="section-content">
+                    <h3>Relational Model Concepts</h3>
+                    <p>Relational model can represent as a table with columns and rows. Each row is known as a tuple. Each table column has a name or attribute.</p>
+                    
+                    <h3>Key Concepts</h3>
+                    <ul>
+                        <li><span class="highlight">Domain</span> - Set of atomic values that an attribute can take</li>
+                        <li><span class="highlight">Attribute</span> - Name of a column in a table</li>
+                        <li><span class="highlight">Tuple</span> - Row in a table</li>
+                        <li><span class="highlight">Relation</span> - Table with columns and rows</li>
+                        <li><span class="highlight">Null Values</span> - Represents missing or unknown information</li>
+                    </ul>
+                    
+                    <h3>Example: STUDENT Relation</h3>
+                    <table>
+                        <tr>
+                            <th>NAME</th>
+                            <th>ROLL_NO</th>
+                            <th>PHONE_NO</th>
+                            <th>ADDRESS</th>
+                            <th>AGE</th>
+                        </tr>
+                        <tr>
+                            <td>Ram</td>
+                            <td>14795</td>
+                            <td>7305758992</td>
+                            <td>Noida</td>
+                            <td>24</td>
+                        </tr>
+                        <tr>
+                            <td>Shyam</td>
+                            <td>12839</td>
+                            <td>9026288936</td>
+                            <td>Delhi</td>
+                            <td>35</td>
+                        </tr>
+                        <tr>
+                            <td>Laxman</td>
+                            <td>33289</td>
+                            <td>8583287182</td>
+                            <td>Gurugram</td>
+                            <td>20</td>
+                        </tr>
+                    </table>
+                    
+                    <h3>Properties of Relations</h3>
+                    <ul>
+                        <li>Name of the relation is distinct from all other relations</li>
+                        <li>Each relation cell contains exactly one atomic value</li>
+                        <li>Each attribute contains a distinct name</li>
+                        <li>Attribute domain has no significance</li>
+                        <li>Tuple has no duplicate value</li>
+                        <li>Order of tuple can have different sequence</li>
+                    </ul>
+                    
+                    <h3>NULL Values in SQL</h3>
+                    <p>The SQL NULL is the term used to represent a missing value. A NULL value in a table is a value in a field that appears to be blank.</p>
+                    
+                    <div class="code-block">
+                        CREATE TABLE CUSTOMERS(<br>
+                        &nbsp;&nbsp;ID INT NOT NULL,<br>
+                        &nbsp;&nbsp;NAME VARCHAR (20) NOT NULL,<br>
+                        &nbsp;&nbsp;AGE INT NOT NULL,<br>
+                        &nbsp;&nbsp;ADDRESS CHAR (25),<br>
+                        &nbsp;&nbsp;SALARY DECIMAL (18, 2),<br>
+                        &nbsp;&nbsp;PRIMARY KEY (ID)<br>
+                        );
+                    </div>
+                    
+                    <h3>Integrity Constraints</h3>
+                    <p>Integrity constraints are a set of rules used to maintain the quality of information.</p>
+                    <ul>
+                        <li><span class="highlight">Domain constraints</span> - Definition of valid set of values for an attribute</li>
+                        <li><span class="highlight">Entity integrity constraints</span> - Primary key value can't be null</li>
+                        <li><span class="highlight">Referential Integrity Constraints</span> - Foreign key must be null or match primary key in referenced table</li>
+                        <li><span class="highlight">Key constraints</span> - Keys used to identify entities uniquely</li>
+                    </ul>
+                    
+                    <h3>SQL Functions</h3>
+                    <h4>String Functions</h4>
+                    <ul>
+                        <li><span class="highlight">LOWER</span> - Converts string to lowercase</li>
+                        <li><span class="highlight">UPPER</span> - Converts string to uppercase</li>
+                        <li><span class="highlight">INITCAP</span> - Converts string to mixed case</li>
+                        <li><span class="highlight">LENGTH</span> - Returns length of string</li>
+                        <li><span class="highlight">CONCAT</span> - Concatenates strings</li>
+                    </ul>
+                    
+                    <h4>Numeric Functions</h4>
+                    <ul>
+                        <li><span class="highlight">ABS</span> - Returns absolute value</li>
+                        <li><span class="highlight">CEIL</span> - Returns smallest integer greater than or equal to number</li>
+                        <li><span class="highlight">FLOOR</span> - Returns largest integer less than or equal to number</li>
+                        <li><span class="highlight">ROUND</span> - Rounds a number to specified decimal places</li>
+                    </ul>
+                    
+                    <h4>Date Functions</h4>
+                    <ul>
+                        <li><span class="highlight">ADD_MONTHS</span> - Adds months to a date</li>
+                        <li><span class="highlight">MONTHS_BETWEEN</span> - Returns months between two dates</li>
+                        <li><span class="highlight">LAST_DAY</span> - Returns last day of month</li>
+                    </ul>
+                    
+                    <h4>Conversion Functions</h4>
+                    <ul>
+                        <li><span class="highlight">TO_CHAR</span> - Converts date/number to string</li>
+                        <li><span class="highlight">TO_DATE</span> - Converts string to date</li>
+                        <li><span class="highlight">NVL</span> - Replaces NULL with specified value</li>
+                    </ul>
+                    
+                    <h3>SQL Data Definition Language</h3>
+                    <h4>CREATE TABLE</h4>
+                    <div class="code-block">
+                        CREATE TABLE table_name (<br>
+                        &nbsp;&nbsp;column1 datatype,<br>
+                        &nbsp;&nbsp;column2 datatype,<br>
+                        &nbsp;&nbsp;column3 datatype,<br>
+                        &nbsp;&nbsp;.....<br>
+                        &nbsp;&nbsp;columnN datatype,<br>
+                        &nbsp;&nbsp;PRIMARY KEY( one or more columns )<br>
+                        );
+                    </div>
+                    
+                    <h4>DROP TABLE</h4>
+                    <div class="code-block">
+                        DROP TABLE table_name;
+                    </div>
+                    
+                    <h3>SQL Data Manipulation Language</h3>
+                    <h4>INSERT INTO</h4>
+                    <div class="code-block">
+                        INSERT INTO TABLE_NAME (column1, column2, column3,...columnN)<br>
+                        VALUES (value1, value2, value3,...valueN);
+                    </div>
+                    
+                    <h4>SELECT Statement</h4>
+                    <div class="code-block">
+                        SELECT column1, column2, columnN FROM table_name;<br><br>
+                        SELECT * FROM table_name;
+                    </div>
+                    
+                    <h4>WHERE Clause</h4>
+                    <div class="code-block">
+                        SELECT column1, column2, columnN<br>
+                        FROM table_name<br>
+                        WHERE [condition];
+                    </div>
+                    
+                    <h4>AND & OR Operators</h4>
+                    <div class="code-block">
+                        SELECT column1, column2, columnN<br>
+                        FROM table_name<br>
+                        WHERE [condition1] AND [condition2]...AND [conditionN];
+                    </div>
+                </div>
+            </section>
+
+            <!-- Unit III -->
+            <section class="section" id="unit3">
+                <div class="section-header">
+                    <h2>Unit III: Entity Relationship Model and Advanced SQL</h2>
+                </div>
+                <div class="section-content">
+                    <h3>Entity Relationship Model</h3>
+                    <p>Entity-Relationship (ER) Model is based on the notion of real-world entities and relationships among them.</p>
+                    
+                    <h3>Key Concepts</h3>
+                    <ul>
+                        <li><span class="highlight">Entity</span> - Real-world object with properties called attributes</li>
+                        <li><span class="highlight">Attribute</span> - Property of an entity</li>
+                        <li><span class="highlight">Entity Set</span> - Collection of similar entities</li>
+                        <li><span class="highlight">Relationship</span> - Association among entities</li>
+                        <li><span class="highlight">Relationship Set</span> - Collection of similar relationships</li>
+                    </ul>
+                    
+                    <h3>Mapping Cardinalities</h3>
+                    <ul>
+                        <li>One to one</li>
+                        <li>One to many</li>
+                        <li>Many to one</li>
+                        <li>Many to many</li>
+                    </ul>
+                    
+                    <h3>Advanced SQL Features</h3>
+                    <h4>Creating Tables with Relationships</h4>
+                    <div class="code-block">
+                        CREATE TABLE Department (<br>
+                        &nbsp;&nbsp;dept_id INT PRIMARY KEY,<br>
+                        &nbsp;&nbsp;dept_name VARCHAR(50)<br>
+                        );<br><br>
+                        CREATE TABLE Employee (<br>
+                        &nbsp;&nbsp;emp_id INT PRIMARY KEY,<br>
+                        &nbsp;&nbsp;emp_name VARCHAR(50),<br>
+                        &nbsp;&nbsp;dept_id INT,<br>
+                        &nbsp;&nbsp;FOREIGN KEY (dept_id) REFERENCES Department(dept_id)<br>
+                        );
+                    </div>
+                    
+                    <h4>Nested Queries and Subqueries</h4>
+                    <div class="code-block">
+                        SELECT emp_name FROM Employee<br>
+                        WHERE dept_id = (SELECT dept_id FROM Department WHERE dept_name = 'IT');
+                    </div>
+                    
+                    <h4>Grouping and Aggregation</h4>
+                    <div class="code-block">
+                        SELECT dept_id, COUNT(*) as employee_count<br>
+                        FROM Employee<br>
+                        GROUP BY dept_id;
+                    </div>
+                    
+                    <h4>Joins</h4>
+                    <div class="code-block">
+                        -- Inner Join<br>
+                        SELECT Employee.emp_name, Department.dept_name<br>
+                        FROM Employee<br>
+                        INNER JOIN Department ON Employee.dept_id = Department.dept_id;<br><br>
+                        -- Left Join<br>
+                        SELECT Employee.emp_name, Department.dept_name<br>
+                        FROM Employee<br>
+                        LEFT JOIN Department ON Employee.dept_id = Department.dept_id;
+                    </div>
+                    
+                    <h4>Views</h4>
+                    <div class="code-block">
+                        CREATE VIEW EmployeeView AS<br>
+                        SELECT emp_id, emp_name, dept_name<br>
+                        FROM Employee<br>
+                        JOIN Department ON Employee.dept_id = Department.dept_id;
+                    </div>
+                    
+                    <h4>Relational Set Operations</h4>
+                    <ul>
+                        <li><span class="highlight">UNION</span> - Combines results of two SELECT statements</li>
+                        <li><span class="highlight">INTERSECT</span> - Returns common rows from two SELECT statements</li>
+                        <li><span class="highlight">EXCEPT/MINUS</span> - Returns rows from first SELECT not in second SELECT</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Unit IV -->
+            <section class="section" id="unit4">
+                <div class="section-header">
+                    <h2>Unit IV: Schema Refinement (Normalization)</h2>
+                </div>
+                <div class="section-content">
+                    <h3>Purpose of Normalization</h3>
+                    <p>Normalization is the process of organizing data in a database to reduce redundancy and improve data integrity.</p>
+                    
+                    <h3>Functional Dependency</h3>
+                    <p>A functional dependency is a constraint between two sets of attributes in a relation from a database.</p>
+                    
+                    <h3>Normal Forms</h3>
+                    <h4>First Normal Form (1NF)</h4>
+                    <p>A relation is in 1NF if it contains no repeating groups and all attributes contain atomic values.</p>
+                    
+                    <h4>Second Normal Form (2NF)</h4>
+                    <p>A relation is in 2NF if it is in 1NF and every non-key attribute is fully dependent on the primary key.</p>
+                    
+                    <h4>Third Normal Form (3NF)</h4>
+                    <p>A relation is in 3NF if it is in 2NF and no non-key attribute is transitively dependent on the primary key.</p>
+                    
+                    <h4>Boyce-Codd Normal Form (BCNF)</h4>
+                    <p>A relation is in BCNF if for every non-trivial functional dependency X → Y, X is a superkey.</p>
+                    
+                    <h4>Fourth Normal Form (4NF)</h4>
+                    <p>A relation is in 4NF if it is in BCNF and has no multi-valued dependencies.</p>
+                    
+                    <h4>Fifth Normal Form (5NF)</h4>
+                    <p>A relation is in 5NF if it is in 4NF and cannot be decomposed into smaller tables without loss of information.</p>
+                    
+                    <h3>Surrogate Key</h3>
+                    <p>A surrogate key is a unique identifier for an entity in the database that is not derived from application data.</p>
+                    
+                    <h3>Lossless Join and Dependency Preservation</h3>
+                    <ul>
+                        <li><span class="highlight">Lossless Join</span> - Ensures that no information is lost when decomposing relations</li>
+                        <li><span class="highlight">Dependency Preservation</span> - Ensures that all functional dependencies are preserved after decomposition</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Unit V -->
+            <section class="section" id="unit5">
+                <div class="section-header">
+                    <h2>Unit V: Transaction Concept and Indexing Techniques</h2>
+                </div>
+                <div class="section-content">
+                    <h3>Transaction Concept</h3>
+                    <p>A transaction is a sequence of operations performed as a single logical unit of work.</p>
+                    
+                    <h3>Transaction States</h3>
+                    <ul>
+                        <li><span class="highlight">Active</span> - Initial state, transaction stays while executing</li>
+                        <li><span class="highlight">Partially Committed</span> - After final statement</li>
+                        <li><span class="highlight">Committed</span> - After successful completion</li>
+                        <li><span class="highlight">Failed</span> - After normal execution discovers error</li>
+                        <li><span class="highlight">Aborted</span> - After transaction has rolled back</li>
+                    </ul>
+                    
+                    <h3>ACID Properties</h3>
+                    <ul>
+                        <li><span class="highlight">Atomicity</span> - All operations in a transaction succeed or none</li>
+                        <li><span class="highlight">Consistency</span> - Transaction takes database from one consistent state to another</li>
+                        <li><span class="highlight">Isolation</span> - Concurrent transactions don't interfere with each other</li>
+                        <li><span class="highlight">Durability</span> - Once committed, changes persist even in case of failure</li>
+                    </ul>
+                    
+                    <h3>Concurrent Executions</h3>
+                    <p>Multiple transactions executing simultaneously can lead to inconsistencies. Concurrency control mechanisms ensure consistency.</p>
+                    
+                    <h3>Serializability</h3>
+                    <p>A schedule is serializable if it is equivalent to some serial schedule of the transactions.</p>
+                    
+                    <h3>Recoverability</h3>
+                    <p>A schedule is recoverable if for each pair of transactions Ti and Tj, if Tj reads a data item previously written by Ti, then the commit operation of Ti appears before the commit operation of Tj.</p>
+                    
+                    <h3>Failure Classification</h3>
+                    <ul>
+                        <li><span class="highlight">Transaction failure</span> - Logical errors or system errors during transaction</li>
+                        <li><span class="highlight">System crash</span> - Power failure or hardware malfunction</li>
+                        <li><span class="highlight">Disk failure</span> - Loss of data on disk</li>
+                    </ul>
+                    
+                    <h3>Recovery Techniques</h3>
+                    <ul>
+                        <li><span class="highlight">Log-based recovery</span> - Uses log records to undo/redo transactions</li>
+                        <li><span class="highlight">Checkpoint</span> - Point in the execution sequence where database is consistent</li>
+                    </ul>
+                    
+                    <h3>Indexing Techniques</h3>
+                    <h4>B+ Trees</h4>
+                    <p>B+ Trees are balanced tree structures that provide efficient access to data. They are commonly used for database indexing.</p>
+                    
+                    <h4>B+ Tree Operations</h4>
+                    <ul>
+                        <li><span class="highlight">Search</span> - Efficiently locate data items</li>
+                        <li><span class="highlight">Insert</span> - Add new entries while maintaining balance</li>
+                        <li><span class="highlight">Delete</span> - Remove entries while maintaining balance</li>
+                    </ul>
+                    
+                    <h4>File Organization and Indexing</h4>
+                    <ul>
+                        <li><span class="highlight">Cluster Indexes</span> - Determine physical order of data</li>
+                        <li><span class="highlight">Primary Indexes</span> - Index on primary key</li>
+                        <li><span class="highlight">Secondary Indexes</span> - Index on non-primary key attributes</li>
+                    </ul>
+                    
+                    <h4>Hash-Based Indexing</h4>
+                    <p>Hash indexing uses a hash function to compute the location of data items. It provides fast access for exact-match queries.</p>
+                    
+                    <h4>Comparison of File Organizations</h4>
+                    <table>
+                        <tr>
+                            <th>File Organization</th>
+                            <th>Advantages</th>
+                            <th>Disadvantages</th>
+                        </tr>
+                        <tr>
+                            <td>Heap File</td>
+                            <td>Simple, fast for loading</td>
+                            <td>Slow for searching</td>
+                        </tr>
+                        <tr>
+                            <td>Sorted File</td>
+                            <td>Fast for range queries</td>
+                            <td>Slow for inserts/updates</td>
+                        </tr>
+                        <tr>
+                            <td>Hash File</td>
+                            <td>Fast for exact matches</td>
+                            <td>Not suitable for range queries</td>
+                        </tr>
+                        <tr>
+                            <td>B+ Tree</td>
+                            <td>Good for all operations</td>
+                            <td>Overhead for maintenance</td>
+                        </tr>
+                    </table>
+                    
+                    <h4>Indexes and Performance Tuning</h4>
+                    <p>Proper indexing is crucial for database performance. Indexes speed up queries but slow down insert, update, and delete operations.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Color Palette -->
+    <div class="color-palette">
+        <div class="color-swatch" title="#1B1931"></div>
+        <div class="color-swatch" title="#44174E"></div>
+        <div class="color-swatch" title="#662249"></div>
+        <div class="color-swatch" title="#A34054"></div>
+        <div class="color-swatch" title="#ED9E59"></div>
+        <div class="color-swatch" title="#E98C89"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">TWSS <span>DBMS Tutorial</span></div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#unit1">Unit I</a></li>
+                        <li><a href="#unit2">Unit II</a></li>
+                        <li><a href="#unit3">Unit III</a></li>
+                        <li><a href="#unit4">Unit IV</a></li>
+                        <li><a href="#unit5">Unit V</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Text Books</a></li>
+                        <li><a href="#">Reference Books</a></li>
+                        <li><a href="#">e-Resources</a></li>
+                        <li><a href="#">Practice Exercises</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 TWSS DBMS Tutorial. All rights reserved.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Language Compiler</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #2d2d30;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        
+        header {
+            background-color: #33333a;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #3e3e42;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #4ecca3, #1a759f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            color: #9e9e9e;
+            font-size: 1.1rem;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px;
+            background-color: #252526;
+            border-bottom: 1px solid #3e3e42;
+        }
+        
+        select, button {
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        select {
+            background-color: #3c3c3c;
+            color: #f0f0f0;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        button {
+            background-color: #0e639c;
+            color: white;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background-color: #1177bb;
+        }
+        
+        .run-btn {
+            background-color: #0e639c;
+        }
+        
+        .clear-btn {
+            background-color: #c25e00;
+        }
+        
+        .save-btn {
+            background-color: #008a00;
+        }
+        
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            height: 60vh;
+        }
+        
+        .editor-header {
+            background-color: #2d2d30;
+            padding: 10px 20px;
+            border-bottom: 1px solid #3e3e42;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .editor-title {
+            font-weight: bold;
+        }
+        
+        .editor-wrapper {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .CodeMirror {
+            height: 100%;
+            font-size: 15px;
+        }
+        
+        .output-container {
+            margin-top: 20px;
+            border-top: 1px solid #3e3e42;
+        }
+        
+        .output-header {
+            background-color: #2d2d30;
+            padding: 10px 20px;
+            border-bottom: 1px solid #3e3e42;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .output-wrapper {
+            background-color: #1e1e1e;
+            padding: 20px;
+            min-height: 150px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #0e639c;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #252526;
+            color: #9e9e9e;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            select, button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Multi-Language Compiler</h1>
+            <p class="subtitle">Write, compile, and run code in Python, C++, and Java</p>
+        </header>
+        
+        <div class="controls">
+            <select id="language-select">
+                <option value="python">Python</option>
+                <option value="text/x-c++src">C++</option>
+                <option value="text/x-java">Java</option>
+            </select>
+            <button id="run-btn" class="run-btn">Run Code</button>
+            <button id="clear-btn" class="clear-btn">Clear Output</button>
+            <button id="save-btn" class="save-btn">Save Code</button>
+        </div>
+        
+        <div class="editor-container">
+            <div class="editor-header">
+                <div class="editor-title">Code Editor</div>
+                <div id="language-display">Python</div>
+            </div>
+            <div class="editor-wrapper">
+                <textarea id="code-editor"></textarea>
+            </div>
+        </div>
+        
+        <div class="output-container">
+            <div class="output-header">
+                <div class="output-title">Output</div>
+                <div id="execution-time">Ready</div>
+            </div>
+            <div id="output" class="output-wrapper"></div>
+        </div>
+        
+        <div class="footer">
+            <p>Multi-Language Compiler &copy; 2023 | Supports Python, C++, and Java</p>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/clike/clike.min.js"></script>
+    <script>
+        // Initialize CodeMirror
+        const editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+            lineNumbers: true,
+            mode: 'python',
+            theme: 'monokai',
+            indentUnit: 4,
+            lineWrapping: true,
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            extraKeys: {"Ctrl-Space": "autocomplete"}
+        });
+        
+        // Set initial code
+        editor.setValue(`# Python Hello World
+print("Hello, World!")
+print("Welcome to the Multi-Language Compiler!")`);
+        
+        // DOM elements
+        const languageSelect = document.getElementById('language-select');
+        const languageDisplay = document.getElementById('language-display');
+        const runBtn = document.getElementById('run-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const outputDiv = document.getElementById('output');
+        const executionTimeDiv = document.getElementById('execution-time');
+        const notification = document.getElementById('notification');
+        
+        // Language change handler
+        languageSelect.addEventListener('change', function() {
+            const language = this.value;
+            languageDisplay.textContent = this.options[this.selectedIndex].text;
+            
+            // Set CodeMirror mode
+            editor.setOption('mode', language);
+            
+            // Set default code based on language
+            if (language === 'python') {
+                editor.setValue(`# Python Hello World
+print("Hello, World!")
+print("Welcome to the Multi-Language Compiler!")`);
+            } else if (language === 'text/x-c++src') {
+                editor.setValue(`// C++ Hello World
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello, World!" << endl;
+    cout << "Welcome to the Multi-Language Compiler!" << endl;
+    return 0;
+}`);
+            } else if (language === 'text/x-java') {
+                editor.setValue(`// Java Hello World
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+        System.out.println("Welcome to the Multi-Language Compiler!");
+    }
+}`);
+            }
+        });
+        
+        // Show notification
+        function showNotification(message, duration = 3000) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, duration);
+        }
+        
+        // Run code
+        runBtn.addEventListener('click', function() {
+            const code = editor.getValue();
+            const language = languageSelect.value;
+            
+            outputDiv.textContent = 'Running...';
+            executionTimeDiv.textContent = 'Executing...';
+            
+            // Simulate code execution with a delay
+            setTimeout(() => {
+                if (language === 'python') {
+                    outputDiv.textContent = `Hello, World!
+Welcome to the Multi-Language Compiler!
+Execution completed successfully.`;
+                } else if (language === 'text/x-c++src') {
+                    outputDiv.textContent = `Hello, World!
+Welcome to the Multi-Language Compiler!
+Execution completed successfully.`;
+                } else if (language === 'text/x-java') {
+                    outputDiv.textContent = `Hello, World!
+Welcome to the Multi-Language Compiler!
+Execution completed successfully.`;
+                }
+                
+                executionTimeDiv.textContent = `Execution time: ${Math.floor(Math.random() * 100) + 10}ms`;
+                showNotification('Code executed successfully!');
+            }, 1000);
+        });
+        
+        // Clear output
+        clearBtn.addEventListener('click', function() {
+            outputDiv.textContent = '';
+            executionTimeDiv.textContent = 'Ready';
+            showNotification('Output cleared');
+        });
+        
+        // Save code
+        saveBtn.addEventListener('click', function() {
+            const code = editor.getValue();
+            const language = languageSelect.value;
+            const extension = language === 'python' ? '.py' : 
+                            language === 'text/x-c++src' ? '.cpp' : '.java';
+            const filename = `code${extension}`;
+            
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification(`Code saved as ${filename}`);
+        });
+    </script>
+</body>
+</html>

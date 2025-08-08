@@ -695,53 +695,90 @@
                 });
             });
         });
+// Smooth scrolling for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
 
-        // --- RAZORPAY PAYMENT LOGIC ---
-        const buyButtons = document.querySelectorAll('.buy-btn');
+// --- RAZORPAY PAYMENT LOGIC ---
 
-        buyButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const amount = e.target.getAttribute('data-amount');
-                const planName = e.target.getAttribute('data-name');
-                
-                const options = {
-                    "key": "rzp_live_iwzig23hBqUD90", // <-- IMPORTANT: PASTE YOUR NEW, SAFE KEY ID HERE
-                    "amount": amount, 
-                    "currency": "INR",
-                    "name": "TWSS",
-                    "description": `Purchase of ${planName}`,
-                    "handler": function (response){
-                   "handler": function (response) {
-    // Shows a success message, then redirects after a short delay for better user experience.
-    alert('Payment Successful! You will now be redirected to our Telegram channel.');
-    
-    setTimeout(function() {
-        // IMPORTANT: Replace with your actual Telegram channel link below
-        window.location.href = "https://t.me/+YZAEiLCzEDkwNjdl"; 
-    }, 2000); // 2000 milliseconds = 2-second delay
-},
-"prefill": {
-    "name": "",
-    "email": "",
-    "contact": ""
-},
-"theme": {
-    "color": "#3498db"
-}
+// <-- STEP 1: UPDATE YOUR UNIQUE TELEGRAM LINKS HERE
+// The names like "C Language Notes" must EXACTLY match the 'data-name' in your HTML buttons.
+const planRedirectLinks = {
+    "C Language Notes": "https://t.me/your_C_language_channel",
+    "C++ Language Notes": "https://t.me/+YZAEiLCzEDkwNjdl",
+    "JAVA Language Notes": "https://t.me/your_JAVA_language_channel",
+    "Python Language Notes": "https://t.me/your_PYTHON_language_channel",
+    "SQL Language Notes": "https://t.me/your_SQL_language_channel",
+    "DSA + Data Analytics Plan": "https://t.me/your_DSA_Analytics_channel",
+    "DSA + Full-Stack Plan": "https://t.me/your_DSA_FullStack_channel",
+    "default": "https://t.me/your_main_fallback_channel" // A fallback link
 };
 
-                const rzp1 = new Razorpay(options);
+// Select all the buy buttons on the page
+const buyButtons = document.querySelectorAll('.buy-btn');
 
-                rzp1.on('payment.failed', function (response){
-                    alert("Payment failed: " + response.error.description);
-                });
+// Add a click event listener to every buy button
+buyButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+        // Get the plan details from the button's data attributes
+        const amount = e.target.getAttribute('data-amount');
+        const planName = e.target.getAttribute('data-name');
+        
+        // Find the correct redirect link for the selected plan from the map above
+        const redirectUrl = planRedirectLinks[planName] || planRedirectLinks["default"];
 
-                rzp1.open();
-                e.preventDefault();
-            });
+        // Configure the Razorpay payment options
+        const options = {
+            "key": "YOUR_NEW_REGENERATED_KEY_ID", // <-- STEP 2: PASTE YOUR NEW, SAFE KEY ID HERE
+            "amount": amount, 
+            "currency": "INR",
+            "name": "TWSS",
+            "description": Purchase of ${planName},
+            
+            // Pass the unique redirect URL to Razorpay
+            "notes": {
+                "plan_name": planName,
+                "redirect_url": redirectUrl
+            },
+            
+            // This function runs after a successful payment
+            "handler": function (response){
+                alert('Payment Successful! You will now be redirected.');
+                
+                // Redirect to the unique link after a 2-second delay
+                setTimeout(function() {
+                    window.location.href = response.notes.redirect_url;
+                }, 2000);
+            },
+            "prefill": {
+                "name": "",
+                "email": "",
+                "contact": ""
+            },
+            "theme": {
+                "color": "#3498db"
+            }
+        };
+
+        // Create a new Razorpay instance and open the checkout window
+        const rzp1 = new Razorpay(options);
+
+        // Handle payment failures
+        rzp1.on('payment.failed', function (response){
+            alert("Payment failed: " + response.error.description);
         });
-    </script>
-        <script>
+
+        rzp1.open();
+        e.preventDefault();
+    });
+});
 // Remove alert calls for better user experience
 document.onkeydown = function(e) {
     if (

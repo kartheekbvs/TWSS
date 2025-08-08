@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -125,9 +126,14 @@
             font-size: 1rem;
         }
         
-        .btn:hover {
+        .btn:hover:not(:disabled) {
             background-color: var(--accent);
             transform: translateY(-3px);
+        }
+
+        .btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
         }
         
         /* Course Units Section */
@@ -685,7 +691,7 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
-
+        // --- SMOOTH SCROLLING LOGIC ---
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -695,7 +701,7 @@
             });
         });
 
-
+        // --- RAZORPAY PAYMENT LOGIC ---
         const planRedirectLinks = {
             "C Language Notes": "https://t.me/your_C_language_channel",
             "C++ Language Notes": "https://t.me/+YZAEiLCzEDkwNjdl",
@@ -711,16 +717,21 @@
 
         buyButtons.forEach(button => {
             button.addEventListener('click', (e) => {
+                // <-- UX IMPROVEMENT: Disable button and show "Processing..." -->
+                const originalButtonText = button.innerHTML;
+                button.innerHTML = 'Processing...';
+                button.disabled = true;
+
                 const amount = e.target.getAttribute('data-amount');
                 const planName = e.target.getAttribute('data-name');
                 const redirectUrl = planRedirectLinks[planName] || planRedirectLinks["default"];
 
                 const options = {
-                    "key": "rzp_live_iwzig23hBqUD90", 
+                    "key": "rzp_live_iwzig23hBqUD90", // <-- IMPORTANT: Replace with your new, safe key
                     "amount": amount,
                     "currency": "INR",
                     "name": "TWSS",
-                    "description": Purchase of ${planName}, // <-- FIXED: Corrected this line with backticks
+                    "description": Purchase of ${planName}, // This line is now correct
                     "notes": {
                         "plan_name": planName,
                         "redirect_url": redirectUrl
@@ -729,7 +740,14 @@
                         alert('Payment Successful! You will now be redirected.');
                         setTimeout(function () {
                             window.location.href = response.notes.redirect_url;
-                        }, 2000);
+                        }, 1500); // 1.5-second delay
+                    },
+                    "modal": {
+                        "ondismiss": function() {
+                            // Re-enable the button if the user closes the payment window
+                            button.innerHTML = originalButtonText;
+                            button.disabled = false;
+                        }
                     },
                     "prefill": {
                         "name": "",
@@ -743,6 +761,9 @@
 
                 const rzp1 = new Razorpay(options);
                 rzp1.on('payment.failed', function (response) {
+                    // Re-enable the button on payment failure
+                    button.innerHTML = originalButtonText;
+                    button.disabled = false;
                     alert("Payment failed: " + response.error.description);
                 });
 
@@ -755,7 +776,6 @@
         document.addEventListener('contextmenu', event => {
             event.preventDefault();
         });
-
         document.onkeydown = function (e) {
             if (
                 e.key === 'F12' ||
@@ -765,6 +785,22 @@
                 return false;
             }
         };
+    </script>
+    <script>
+    document.onkeydown = function(e) {
+    if (
+        e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S') ||
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i'))
+    ) {
+        // console.log("Developer tools or source view attempt detected.");
+        return false; // Prevent default action for these keys
+    }
+};
+
+document.addEventListener('contextmenu', event => {
+    event.preventDefault(); // Prevent right-click context menu
+});
     </script>
 </body>
 </html>

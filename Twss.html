@@ -685,115 +685,86 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
-        // Smooth scrolling for navigation links
+        // --- SMOOTH SCROLLING LOGIC ---
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
             });
         });
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
-    });
-});
 
-// --- RAZORPAY PAYMENT LOGIC ---
-
-// <-- STEP 1: UPDATE YOUR UNIQUE TELEGRAM LINKS HERE
-// The names like "C Language Notes" must EXACTLY match the 'data-name' in your HTML buttons.
-const planRedirectLinks = {
-    "C Language Notes": "https://t.me/your_C_language_channel",
-    "C++ Language Notes": "https://t.me/+YZAEiLCzEDkwNjdl",
-    "JAVA Language Notes": "https://t.me/your_JAVA_language_channel",
-    "Python Language Notes": "https://t.me/your_PYTHON_language_channel",
-    "SQL Language Notes": "https://t.me/your_SQL_language_channel",
-    "DSA + Data Analytics Plan": "https://t.me/your_DSA_Analytics_channel",
-    "DSA + Full-Stack Plan": "https://t.me/your_DSA_FullStack_channel",
-    "default": "https://t.me/your_main_fallback_channel" // A fallback link
-};
-
-// Select all the buy buttons on the page
-const buyButtons = document.querySelectorAll('.buy-btn');
-
-// Add a click event listener to every buy button
-buyButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-        // Get the plan details from the button's data attributes
-        const amount = e.target.getAttribute('data-amount');
-        const planName = e.target.getAttribute('data-name');
-        
-        // Find the correct redirect link for the selected plan from the map above
-        const redirectUrl = planRedirectLinks[planName] || planRedirectLinks["default"];
-
-        // Configure the Razorpay payment options
-        const options = {
-            "key": "YOUR_NEW_REGENERATED_KEY_ID", // <-- STEP 2: PASTE YOUR NEW, SAFE KEY ID HERE
-            "amount": amount, 
-            "currency": "INR",
-            "name": "TWSS",
-            "description": Purchase of ${planName},
-            
-            // Pass the unique redirect URL to Razorpay
-            "notes": {
-                "plan_name": planName,
-                "redirect_url": redirectUrl
-            },
-            
-            // This function runs after a successful payment
-            "handler": function (response){
-                alert('Payment Successful! You will now be redirected.');
-                
-                // Redirect to the unique link after a 2-second delay
-                setTimeout(function() {
-                    window.location.href = response.notes.redirect_url;
-                }, 2000);
-            },
-            "prefill": {
-                "name": "",
-                "email": "",
-                "contact": ""
-            },
-            "theme": {
-                "color": "#3498db"
-            }
+        // --- RAZORPAY PAYMENT LOGIC ---
+        const planRedirectLinks = {
+            "C Language Notes": "https://t.me/your_C_language_channel",
+            "C++ Language Notes": "https://t.me/+YZAEiLCzEDkwNjdl",
+            "JAVA Language Notes": "https://t.me/your_JAVA_language_channel",
+            "Python Language Notes": "https://t.me/your_PYTHON_language_channel",
+            "SQL Language Notes": "https://t.me/your_SQL_language_channel",
+            "DSA + Data Analytics Plan": "https://t.me/your_DSA_Analytics_channel",
+            "DSA + Full-Stack Plan": "https://t.me/your_DSA_FullStack_channel",
+            "default": "https://t.me/your_main_fallback_channel"
         };
 
-        // Create a new Razorpay instance and open the checkout window
-        const rzp1 = new Razorpay(options);
+        const buyButtons = document.querySelectorAll('.buy-btn');
 
-        // Handle payment failures
-        rzp1.on('payment.failed', function (response){
-            alert("Payment failed: " + response.error.description);
+        buyButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const amount = e.target.getAttribute('data-amount');
+                const planName = e.target.getAttribute('data-name');
+                const redirectUrl = planRedirectLinks[planName] || planRedirectLinks["default"];
+
+                const options = {
+                    "key": "YOUR_NEW_REGENERATED_KEY_ID", // <-- PASTE YOUR NEW, SAFE KEY ID HERE
+                    "amount": amount,
+                    "currency": "INR",
+                    "name": "TWSS",
+                    "description": Purchase of ${planName}, // <-- FIXED: Corrected this line with backticks
+                    "notes": {
+                        "plan_name": planName,
+                        "redirect_url": redirectUrl
+                    },
+                    "handler": function (response) {
+                        alert('Payment Successful! You will now be redirected.');
+                        setTimeout(function () {
+                            window.location.href = response.notes.redirect_url;
+                        }, 2000);
+                    },
+                    "prefill": {
+                        "name": "",
+                        "email": "",
+                        "contact": ""
+                    },
+                    "theme": {
+                        "color": "#3498db"
+                    }
+                };
+
+                const rzp1 = new Razorpay(options);
+                rzp1.on('payment.failed', function (response) {
+                    alert("Payment failed: " + response.error.description);
+                });
+
+                rzp1.open();
+                e.preventDefault();
+            });
         });
 
-        rzp1.open();
-        e.preventDefault();
-    });
-});
-// Remove alert calls for better user experience
-document.onkeydown = function(e) {
-    if (
-        e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S') ||
-        e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i'))
-    ) {
-        // console.log("Developer tools or source view attempt detected.");
-        return false; // Prevent default action for these keys
-    }
-};
+        // --- DEV TOOLS & RIGHT-CLICK PREVENTION ---
+        document.addEventListener('contextmenu', event => {
+            event.preventDefault();
+        });
 
-document.addEventListener('contextmenu', event => {
-    event.preventDefault(); // Prevent right-click context menu
-});
-        </script>
+        document.onkeydown = function (e) {
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) ||
+                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S'))
+            ) {
+                return false;
+            }
+        };
+    </script>
 </body>
 </html>

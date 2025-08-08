@@ -27,7 +27,7 @@
         nav ul { display: flex; list-style: none; gap: 2rem; }
         nav a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s; }
         nav a:hover { color: var(--secondary); }
-        .hero { background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.8)), url('https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'); background-size: cover; background-position: center; color: white; padding: 5rem 0; text-align: center; }
+        .hero { background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.8)), url('https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&ixid=M3wxwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'); background-size: cover; background-position: center; color: white; padding: 5rem 0; text-align: center; }
         .hero h2 { font-size: 3rem; margin-bottom: 1rem; }
         .hero p { font-size: 1.2rem; max-width: 800px; margin: 0 auto 2rem; }
         .btn { display: inline-block; background-color: var(--secondary); color: white; padding: 0.8rem 2rem; border-radius: 30px; text-decoration: none; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; font-size: 1rem; }
@@ -157,7 +157,6 @@
             "DSA + Full-Stack Plan": "https://t.me/your_DSA_FullStack_channel",
             "default": "https://t.me/your_main_fallback_channel"
         };
-
         const buyButtons = document.querySelectorAll('.buy-btn');
 
         buyButtons.forEach(button => {
@@ -166,31 +165,60 @@
                 button.innerHTML = 'Processing...';
                 button.disabled = true;
 
-                const amount = e.target.getAttribute('data-amount');
                 const planName = e.target.getAttribute('data-name');
+                const amountInPaise = e.target.getAttribute('data-amount');
                 const redirectUrl = planRedirectLinks[planName] || planRedirectLinks["default"];
 
+                // A much more secure and common way to handle payments is to create an order
+                // on a server, and then pass the order ID to the Razorpay checkout.
+                // The amount is then validated on the server, preventing clients from
+                // changing the price.
+                //
+                // The following section simulates this process. You would replace this
+                // with an actual API call to your backend server.
+
+                // Simulate a server-side call to create an order
+                // You would need to use fetch() or axios to make a POST request to your backend.
+                // For example: fetch('/create-razorpay-order', { method: 'POST', body: JSON.stringify({ amount: amountInPaise }) })
+                // .then(response => response.json())
+                // .then(data => {
+                //     const orderId = data.orderId;
+                //     // Now pass this orderId to the Razorpay options
+                // })
+                
+                // For this example, we will proceed directly, but you should not do this in production.
+                // Instead, get the order_id from your backend.
+                
+                // Razorpay options object
                 const options = {
-                  
-                    //  STEP 3: PASTE YOUR *TEST KEY ID* (from Step 1) HERE
+                    // This is your Test Key ID
                     "key": "rzp_live_iwzig23hBqUD90", 
-           
-                    "amount": amount,
+                    "amount": amountInPaise, 
                     "currency": "INR",
                     "name": "TWSS",
                     "description": Purchase of ${planName},
+                    // This is where the order ID from your backend would go.
+                    // For this example, we are leaving it out, but it's crucial for security.
+                    // "order_id": orderId, 
                     "notes": {
                         "plan_name": planName,
                         "redirect_url": redirectUrl
                     },
                     "handler": function (response) {
+                        // After a successful payment, Razorpay returns a response.
+                        // You should send this response to your server for validation.
+                        // For example: fetch('/verify-payment', { method: 'POST', body: JSON.stringify(response) })
+                        // This prevents fraud.
+                        
+                        // For this example, we are redirecting directly.
                         alert('Payment Successful! You will now be redirected.');
                         setTimeout(function () {
-                            window.location.href = response.notes.redirect_url;
+                            window.location.href = redirectUrl;
                         }, 1500);
                     },
                     "modal": {
                         "ondismiss": function() {
+                            // If the user closes the modal, reset the button state
                             button.innerHTML = originalButtonText;
                             button.disabled = false;
                         }
@@ -218,12 +246,7 @@
         });
 
         // --- This code prevents users from easily seeing your code. It can be removed if you want. ---
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.onkeydown = function (e) {
-            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u')) {
-                return false;
-            }
-        };
+    
     </script>
 </body>
 </html>

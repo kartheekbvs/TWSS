@@ -1,0 +1,20 @@
+/* /frontend/style.css */
+:root { --primary: #2c3e50; --secondary: #3498db; --accent: #e74c3c; --light: #ecf0f1; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+body { background-color: var(--light); }
+.container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 20px; }
+header, footer { background-color: var(--primary); color: white; padding: 1rem 0; text-align: center; }
+.btn { background-color: var(--secondary); color: white; padding: 0.8rem 2rem; border-radius: 30px; border: none; cursor: pointer; font-size: 1rem; transition: all 0.3s; }
+.btn:hover:not(:disabled) { background-color: var(--accent); transform: translateY(-3px); }
+.btn:disabled { background-color: #95a5a6; cursor: not-allowed; }
+.course-units { padding: 4rem 0; }
+.section-title h2 { text-align: center; font-size: 2.5rem; color: var(--primary); margin-bottom: 2rem; }
+.units-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+.unit-card { background-color: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+.unit-header { background-color: var(--primary); color: white; padding: 1.5rem; border-radius: 10px 10px 0 0; }
+.unit-header h3 { font-size: 1.5rem; }
+.unit-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.unit-content ul { list-style-type: none; padding: 0; }
+.unit-content li { padding: 0.5rem 0; display: flex; align-items: center; }
+.unit-content i { color: var(--secondary); margin-right: 10px; }
+.unit-content .buy-btn { margin-top: 1rem; align-self: flex-start; }

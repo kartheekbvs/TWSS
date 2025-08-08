@@ -711,19 +711,24 @@
                     "name": "TWSS",
                     "description": `Purchase of ${planName}`,
                     "handler": function (response){
-                        alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
-                        // For a real product, you should send this payment ID to your server
-                        // to verify the payment and grant access to the course materials.
-                    },
-                    "prefill": {
-                        "name": "",
-                        "email": "",
-                        "contact": ""
-                    },
-                    "theme": {
-                        "color": "#3498db"
-                    }
-                };
+                   "handler": function (response) {
+    // Shows a success message, then redirects after a short delay for better user experience.
+    alert('Payment Successful! You will now be redirected to our Telegram channel.');
+    
+    setTimeout(function() {
+        // IMPORTANT: Replace with your actual Telegram channel link below
+        window.location.href = "https://t.me/+YZAEiLCzEDkwNjdl"; 
+    }, 2000); // 2000 milliseconds = 2-second delay
+},
+"prefill": {
+    "name": "",
+    "email": "",
+    "contact": ""
+},
+"theme": {
+    "color": "#3498db"
+}
+};
 
                 const rzp1 = new Razorpay(options);
 

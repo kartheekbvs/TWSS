@@ -1,0 +1,45 @@
+<!-- /frontend/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TWSS - Programming Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Cache-clearing for CSS -->
+    <script>
+        const cssVersion = new Date().getTime();
+        document.write(`<link rel="stylesheet" href="style.css?v=${cssVersion}">`);
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container"><h1>TWSS</h1></div>
+    </header>
+    <main>
+        <section class="course-units" id="topics">
+            <div class="container">
+                <div class="section-title"><h2>ALL PLANS</h2></div>
+                <div id="plans-container" class="units-grid">
+                    <!-- Product cards will be dynamically inserted here by script.js -->
+                    <p>Loading plans...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="container"><p>&copy; 2025 TWSS</p></div>
+    </footer>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    <!-- Cache-clearing for JavaScript -->
+    <script>
+        const jsVersion = new Date().getTime();
+        const script = document.createElement('script');
+        script.src = `script.js?v=${jsVersion}`;
+        document.body.appendChild(script);
+    </script>
+</body>
+</html>index

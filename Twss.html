@@ -685,7 +685,7 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
-        // --- SMOOTH SCROLLING LOGIC ---
+
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -695,7 +695,7 @@
             });
         });
 
-        // --- RAZORPAY PAYMENT LOGIC ---
+
         const planRedirectLinks = {
             "C Language Notes": "https://t.me/your_C_language_channel",
             "C++ Language Notes": "https://t.me/+YZAEiLCzEDkwNjdl",
@@ -716,7 +716,7 @@
                 const redirectUrl = planRedirectLinks[planName] || planRedirectLinks["default"];
 
                 const options = {
-                    "key": "YOUR_NEW_REGENERATED_KEY_ID", // <-- PASTE YOUR NEW, SAFE KEY ID HERE
+                    "key": "rzp_live_iwzig23hBqUD90", 
                     "amount": amount,
                     "currency": "INR",
                     "name": "TWSS",

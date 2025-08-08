@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TWSS - Python Programming Hub</title>
+    <title>TWSS - Programming Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -16,392 +15,45 @@
             --success: #2ecc71;
             --warning: #f39c12;
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: var(--light);
-            color: var(--dark);
-            line-height: 1.6;
-        }
-        
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Header Styles */
-        header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .logo i {
-            font-size: 2rem;
-            color: var(--secondary);
-        }
-        
-        .logo h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-        
-        .logo span {
-            color: var(--secondary);
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-        
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        nav a:hover {
-            color: var(--secondary);
-        }
-        
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.8)), url('https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 5rem 0;
-            text-align: center;
-        }
-        
-        .hero h2 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto 2rem;
-        }
-        
-        .btn {
-            display: inline-block;
-            background-color: var(--secondary);
-            color: white;
-            padding: 0.8rem 2rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        
-        .btn:hover:not(:disabled) {
-            background-color: var(--accent);
-            transform: translateY(-3px);
-        }
-
-        .btn:disabled {
-            background-color: #95a5a6;
-            cursor: not-allowed;
-        }
-        
-        /* Course Units Section */
-        .course-units {
-            padding: 4rem 0;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-        
-        .section-title p {
-            font-size: 1.1rem;
-            max-width: 700px;
-            margin: 0 auto;
-            color: var(--dark);
-        }
-        
-        .units-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .unit-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .unit-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-        
-        .unit-header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1.5rem;
-        }
-        
-        .unit-header h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .unit-content {
-            padding: 1.5rem;
-        }
-        
-        .unit-content ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        
-        .unit-content li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-        }
-        
-        .unit-content li:last-child {
-            border-bottom: none;
-        }
-        
-        .unit-content li i {
-            color: var(--secondary);
-            margin-right: 10px;
-        }
-        
-        /* Features Section */
-        .features {
-            background-color: var(--primary);
-            color: white;
-            padding: 4rem 0;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-        
-        .feature-card {
-            text-align: center;
-            padding: 2rem;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            transition: transform 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-        }
-        
-        .feature-card i {
-            font-size: 3rem;
-            color: var(--secondary);
-            margin-bottom: 1.5rem;
-        }
-        
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        /* Resources Section */
-        .resources {
-            padding: 4rem 0;
-        }
-        
-        .resources-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .resource-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .resource-header {
-            background-color: var(--secondary);
-            color: white;
-            padding: 1.5rem;
-        }
-        
-        .resource-header h3 {
-            font-size: 1.5rem;
-        }
-        
-        .resource-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-        }
-        
-        .resource-content ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        
-        .resource-content li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .resource-content li:last-child {
-            border-bottom: none;
-        }
-        
-        .resource-content li strong {
-            color: var(--primary);
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 3rem 0 1rem;
-        }
-        
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .footer-col h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-        
-        .footer-col h3:after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: -10px;
-            width: 50px;
-            height: 3px;
-            background-color: var(--secondary);
-        }
-        
-        .footer-col ul {
-            list-style: none;
-        }
-        
-        .footer-col ul li {
-            margin-bottom: 0.8rem;
-        }
-        
-        .footer-col ul li a {
-            color: #bbb;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-col ul li a:hover {
-            color: var(--secondary);
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: white;
-            transition: all 0.3s;
-        }
-        
-        .social-links a:hover {
-            background-color: var(--secondary);
-            transform: translateY(-5px);
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #bbb;
-            font-size: 0.9rem;
-        }
-        
-        /* Responsive */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--light); color: var(--dark); line-height: 1.6; }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        header { background-color: var(--primary); color: white; padding: 1rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .header-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo i { font-size: 2rem; color: var(--secondary); }
+        .logo h1 { font-size: 1.8rem; font-weight: 700; }
+        .logo span { color: var(--secondary); }
+        nav ul { display: flex; list-style: none; gap: 2rem; }
+        nav a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        nav a:hover { color: var(--secondary); }
+        .hero { background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.8)), url('https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'); background-size: cover; background-position: center; color: white; padding: 5rem 0; text-align: center; }
+        .hero h2 { font-size: 3rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; max-width: 800px; margin: 0 auto 2rem; }
+        .btn { display: inline-block; background-color: var(--secondary); color: white; padding: 0.8rem 2rem; border-radius: 30px; text-decoration: none; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; font-size: 1rem; }
+        .btn:hover:not(:disabled) { background-color: var(--accent); transform: translateY(-3px); }
+        .btn:disabled { background-color: #95a5a6; cursor: not-allowed; }
+        .course-units { padding: 4rem 0; }
+        .section-title { text-align: center; margin-bottom: 3rem; }
+        .section-title h2 { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
+        .section-title p { font-size: 1.1rem; max-width: 700px; margin: 0 auto; color: var(--dark); }
+        .units-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .unit-card { background-color: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; }
+        .unit-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .unit-header { background-color: var(--primary); color: white; padding: 1.5rem; }
+        .unit-header h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .unit-content { padding: 1.5rem; }
+        .unit-content ul { list-style-type: none; padding-left: 0; }
+        .unit-content li { padding: 0.5rem 0; border-bottom: 1px solid #eee; display: flex; align-items: center; }
+        .unit-content li:last-child { border-bottom: none; }
+        .unit-content li i { color: var(--secondary); margin-right: 10px; }
+        footer { background-color: var(--dark); color: white; padding: 3rem 0 1rem; }
+        .copyright { text-align: center; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); color: #bbb; font-size: 0.9rem; }
         @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            nav ul {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-            
-            .hero h2 {
-                font-size: 2rem;
-            }
-            
-            .section-title h2 {
-                font-size: 2rem;
-            }
+            .header-container { flex-direction: column; gap: 1rem; }
+            nav ul { flex-direction: column; gap: 1rem; text-align: center; }
+            .hero h2 { font-size: 2rem; }
+            .section-title h2 { font-size: 2rem; }
         }
     </style>
 </head>
@@ -416,7 +68,6 @@
                 <ul>
                     <li><a href="#home">Home</a></li>
                     <li><a href="#topics">Courses</a></li>
-                    <li><a href="#resources">Resources</a></li>
                     <li><a href="#about">About</a></li>
                 </ul>
             </nav>
@@ -426,8 +77,7 @@
     <section class="hero" id="home">
         <div class="container">
             <h2>Programming and Problem Solving are Made Easy</h2>
-            <p>A simple and practical approach to mastering programming and problem-solving skills with ease
-     </p>
+            <p>A simple and practical approach to mastering programming and problem-solving skills with ease</p>
             <a href="#topics" class="btn">Explore PLANS</a>
         </div>
     </section>
@@ -438,254 +88,49 @@
                 <h2>ALL PLANS</h2>
                 <p>Choose your plan and start your journey toward mastering programming and problem solving today</p>
             </div>
-            
             <div class="units-grid">
                 <div class="unit-card">
-                    <div class="unit-header">
-                        <h3>PLAN I: Go With C language</h3>
-                    </div>
-                    <div class="unit-content">
-                        <ul>
-                            <li><i class="fas fa-play-circle"></i> C NOTES (HAND WRITTEN) </li>
-                            <li><i class="fas fa-play-circle"></i> C E-NOTES(STANDARD DANIS RITCHE)</li>
-                            <li><button class="btn buy-btn" data-amount="900" data-name="C Language Notes">Buy for ₹9</button></li>
-                        </ul>
-                    </div>
+                    <div class="unit-header"><h3>PLAN I: Go With C language</h3></div>
+                    <div class="unit-content"><ul><li><i class="fas fa-play-circle"></i> C NOTES (HAND WRITTEN)</li><li><i class="fas fa-play-circle"></i> C E-NOTES(STANDARD DANIS RITCHE)</li><li><button class="btn buy-btn" data-amount="900" data-name="C Language Notes">Buy for ₹9</button></li></ul></div>
                 </div>
-                
                 <div class="unit-card">
-                    <div class="unit-header">
-                        <h3>PLAN II: Go With C++ language </h3>
-                    </div>
-                    <div class="unit-content">
-                        <ul>
-                          <li><i class="fas fa-play-circle"></i> C++ NOTES (HAND WRITTEN) </li>
-                            <li><i class="fas fa-play-circle"></i> C++ E-NOTES(STANDARD AUTHOR)</li>
-                            <li><button class="btn buy-btn" data-amount="900" data-name="C++ Language Notes">Buy for ₹9</button></li>
-                        </ul>
-                    </div>
+                    <div class="unit-header"><h3>PLAN II: Go With C++ language</h3></div>
+                    <div class="unit-content"><ul><li><i class="fas fa-play-circle"></i> C++ NOTES (HAND WRITTEN)</li><li><i class="fas fa-play-circle"></i> C++ E-NOTES(STANDARD AUTHOR)</li><li><button class="btn buy-btn" data-amount="900" data-name="C++ Language Notes">Buy for ₹9</button></li></ul></div>
                 </div>
-                
                 <div class="unit-card">
-                    <div class="unit-header">
-                        <h3>PLAN III: Go with JAVA language</h3>
-                    </div>
-                   <div class="unit-content">
-                        <ul>
-                            <li><i class="fas fa-play-circle"></i> JAVA NOTES (HAND WRITTEN) </li>
-                            <li><i class="fas fa-play-circle"></i> JAVA E-NOTES(STANDARD AUTHOR)</li>
-                             <li><button class="btn buy-btn" data-amount="900" data-name="JAVA Language Notes">Buy for ₹9</button></li>
-                        </ul>
-                    </div>
+                    <div class="unit-header"><h3>PLAN III: Go with JAVA language</h3></div>
+                    <div class="unit-content"><ul><li><i class="fas fa-play-circle"></i> JAVA NOTES (HAND WRITTEN)</li><li><i class="fas fa-play-circle"></i> JAVA E-NOTES(STANDARD AUTHOR)</li><li><button class="btn buy-btn" data-amount="900" data-name="JAVA Language Notes">Buy for ₹9</button></li></ul></div>
                 </div>
-                
                 <div class="unit-card">
-                    <div class="unit-header">
-                        <h3>PLAN IV: PYTHON</h3>
-                    </div>
-                     <div class="unit-content">
-                        <ul>
-                            <li><i class="fas fa-play-circle"></i> PYTHON NOTES (HAND WRITTEN) </li>
-                            <li><i class="fas fa-play-circle"></i> PYTHON E-NOTES(STANDARD AUTHOR)</li>
-                             <li><button class="btn buy-btn" data-amount="900" data-name="Python Language Notes">Buy for ₹9</button></li>
-                        </ul>
-                    </div>
+                    <div class="unit-header"><h3>PLAN IV: PYTHON</h3></div>
+                    <div class="unit-content"><ul><li><i class="fas fa-play-circle"></i> PYTHON NOTES (HAND WRITTEN)</li><li><i class="fas fa-play-circle"></i> PYTHON E-NOTES(STANDARD AUTHOR)</li><li><button class="btn buy-btn" data-amount="900" data-name="Python Language Notes">Buy for ₹9</button></li></ul></div>
                 </div>
-                
                 <div class="unit-card">
-                    <div class="unit-header">
-                        <h3>PLAN V: SQL</h3>
-                    </div>
-                     <div class="unit-content">
-                        <ul>
-                            <li><i class="fas fa-play-circle"></i> SQL NOTES (HAND WRITTEN) </li>
-                            <li><i class="fas fa-play-circle"></i> SQL E-NOTES(STANDARD)</li>
-                             <li><button class="btn buy-btn" data-amount="900" data-name="SQL Language Notes">Buy for ₹9</button></li>
-                        </ul>
-                    </div>
+                    <div class="unit-header"><h3>PLAN V: SQL</h3></div>
+                    <div class="unit-content"><ul><li><i class="fas fa-play-circle"></i> SQL NOTES (HAND WRITTEN)</li><li><i class="fas fa-play-circle"></i> SQL E-NOTES(STANDARD)</li><li><button class="btn buy-btn" data-amount="900" data-name="SQL Language Notes">Buy for ₹9</button></li></ul></div>
                 </div>
-                
             </div>
         </div>
     </section>
     
-    <div style="display: flex; justify-content: center;">
-        <h1>PLACEMENT VIEW</h1>
-    </div>
-
+    <div style="display: flex; justify-content: center;"><h1>PLACEMENT VIEW</h1></div>
     <section class="course-units">
         <div class="container">
             <div class="units-grid">
-                  <div class="unit-card">
-                    <div class="unit-header">
-                        <h3>PLAN I: DSA + DATA ANALYTICS</h3>
-                    </div>
-                     <div class="unit-content">
-                        <ul>
-                            <li><i class="fas fa-play-circle"></i> ROADMAP(DSA+DATA ANALYTICS)</li>
-                            <li><i class="fas fa-play-circle"></i> DSA NOTES (HAND-WRITTEN C++/JAVA)</li>
-                            <li><i class="fas fa-play-circle"></i> TOP 150 QUESTIONS</li>
-                            <li><i class="fas fa-play-circle"></i> COMPANY WISE CHEAT SHEET</li>
-                            <li><i class="fas fa-play-circle"></i> DATA ANALYTICS COMBINED KIT</li>
-                             <li><button class="btn buy-btn" data-amount="15900" data-name="DSA + Data Analytics Plan">Buy for ₹159 🔥</button></li>
-                        </ul>
-                    </div>
+                <div class="unit-card">
+                    <div class="unit-header"><h3>PLAN I: DSA + DATA ANALYTICS</h3></div>
+                    <div class="unit-content"><ul><li><i class="fas fa-play-circle"></i> ROADMAP(DSA+DATA ANALYTICS)</li><li><i class="fas fa-play-circle"></i> DSA NOTES (HAND-WRITTEN C++/JAVA)</li><li><i class="fas fa-play-circle"></i> TOP 150 QUESTIONS</li><li><i class="fas fa-play-circle"></i> COMPANY WISE CHEAT SHEET</li><li><i class="fas fa-play-circle"></i> DATA ANALYTICS COMBINED KIT</li><li><button class="btn buy-btn" data-amount="15900" data-name="DSA + Data Analytics Plan">Buy for ₹159 🔥</button></li></ul></div>
                 </div>
-                
-                  <div class="unit-card">
-                    <div class="unit-header">
-                        <h3>PLAN II: DSA + FULL-STACK</h3>
-                    </div>
-                     <div class="unit-content">
-                        <ul>
-                            <li><i class="fas fa-play-circle"></i> ROADMAP(DSA+FULL-STACK)</li>
-                            <li><i class="fas fa-play-circle"></i> DSA NOTES (HAND-WRITTEN C++/JAVA)</li>
-                            <li><i class="fas fa-play-circle"></i> TOP 150 QUESTIONS</li>
-                            <li><i class="fas fa-play-circle"></i> COMPANY WISE CHEAT SHEET</li>
-                            <li><i class="fas fa-play-circle"></i> FULL-STACK COMBINED KIT</li>
-                             <li><button class="btn buy-btn" data-amount="14900" data-name="DSA + Full-Stack Plan">Buy for ₹149 🔥</button></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="features">
-        <div class="container">
-            <div class="section-title">
-                <h2>Why Learn Python?</h2>
-                <p>Discover the advantages of learning Python programming</p>
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fas fa-laptop-code"></i>
-                    <h3>Easy to Learn</h3>
-                    <p>Python has a simple syntax that makes it ideal for beginners</p>
-                </div>
-                
-                <div class="feature-card">
-                    <i class="fas fa-industry"></i>
-                    <h3>Industry Standard</h3>
-                    <p>Widely used in data science, AI, web development, and automation</p>
-                </div>
-                
-                <div class="feature-card">
-                    <i class="fas fa-users"></i>
-                    <h3>Large Community</h3>
-                    <p>Extensive support and resources from a global community</p>
-                </div>
-                
-                <div class="feature-card">
-                    <i class="fas fa-briefcase"></i>
-                    <h3>Career Opportunities</h3>
-                    <p>High demand for Python developers in the job market</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="resources" id="resources">
-        <div class="container">
-            <div class="section-title">
-                <h2>Learning Resources</h2>
-                <p>Recommended textbooks and reference materials for Python programming</p>
-            </div>
-            
-            <div class="resources-grid">
-                <div class="resource-card">
-                    <div class="resource-header">
-                        <h3>Textbooks</h3>
-                    </div>
-                    <div class="resource-content">
-                        <ul>
-                            <li><strong>Think Python:</strong> How to Think Like a Computer Scientist by Allen B. Downey</li>
-                            <li><strong>Core Python Programming:</strong> by R. Nageswara Rao</li>
-                            <li><strong>Python Programming:</strong> A Modern Approach by Vamsi Kurama</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="resource-card">
-                    <div class="resource-header">
-                        <h3>Reference Books</h3>
-                    </div>
-                    <div class="resource-content">
-                        <ul>
-                            <li><strong>Core Python Programming:</strong> by W. Chun</li>
-                            <li><strong>Introduction to Python:</strong> by Kenneth A. Lambert</li>
-                            <li><strong>Learning Python:</strong> by Mark Lutz</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="resource-card">
-                    <div class="resource-header">
-                        <h3>Online Resources</h3>
-                    </div>
-                    <div class="resource-content">
-                        <ul>
-                            <li><strong>Official Python Documentation:</strong> docs.python.org</li>
-                            <li><strong>Python Tutor:</strong> Visualize code execution</li>
-                            <li><strong>Real Python:</strong> Tutorials and articles</li>
-                            <li><strong>Codecademy:</strong> Interactive Python course</li>
-                        </ul>
-                    </div>
+                <div class="unit-card">
+                    <div class="unit-header"><h3>PLAN II: DSA + FULL-STACK</h3></div>
+                    <div class="unit-content"><ul><li><i class="fas fa-play-circle"></i> ROADMAP(DSA+FULL-STACK)</li><li><i class="fas fa-play-circle"></i> DSA NOTES (HAND-WRITTEN C++/JAVA)</li><li><i class="fas fa-play-circle"></i> TOP 150 QUESTIONS</li><li><i class="fas fa-play-circle"></i> COMPANY WISE CHEAT SHEET</li><li><i class="fas fa-play-circle"></i> FULL-STACK COMBINED KIT</li><li><button class="btn buy-btn" data-amount="14900" data-name="DSA + Full-Stack Plan">Buy for ₹149 🔥</button></li></ul></div>
                 </div>
             </div>
         </div>
     </section>
 
     <footer id="about">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h3>TWSS</h3>
-                    <p>The Web School of Science provides comprehensive programming courses to help students master in-demand skills.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-col">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#topics">Courses</a></li>
-                        <li><a href="#resources">Resources</a></li>
-                        <li><a href="#about">About</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-col">
-                    <h3>Course Units</h3>
-                    <ul>
-                        <li><a href="#">Introduction to Python</a></li>
-                        <li><a href="#">Control Flow</a></li>
-                        <li><a href="#">Functions & Arrays</a></li>
-                        <li><a href="#">Data Structures</a></li>
-                        <li><a href="#">Files & Exceptions</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-col">
-                    <h3>Contact Us</h3>
-                    <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> 123 Education St, Learning City</li>
-                        <li><i class="fas fa-phone"></i> (123) 456-7890</li>
-                        <li><i class="fas fa-envelope"></i> info@twss.edu</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="copyright">
-                <p>&copy; 2023 TWSS - The Web School of Science. All Rights Reserved.</p>
-            </div>
-        </div>
+        <div class="container"><div class="copyright"><p>&copy; 2025 TWSS. All Rights Reserved.</p></div></div>
     </footer>
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -717,7 +162,6 @@
 
         buyButtons.forEach(button => {
             button.addEventListener('click', (e) => {
-                // <-- UX IMPROVEMENT: Disable button and show "Processing..." -->
                 const originalButtonText = button.innerHTML;
                 button.innerHTML = 'Processing...';
                 button.disabled = true;
@@ -727,11 +171,14 @@
                 const redirectUrl = planRedirectLinks[planName] || planRedirectLinks["default"];
 
                 const options = {
-                    "key": "rzp_live_iwzig23hBqUD90", // <-- IMPORTANT: Replace with your new, safe key
+                  
+                    //  STEP 3: PASTE YOUR *TEST KEY ID* (from Step 1) HERE
+                    "key": "rzp_live_iwzig23hBqUD90", 
+           
                     "amount": amount,
                     "currency": "INR",
                     "name": "TWSS",
-                    "description": Purchase of ${planName}, // This line is now correct
+                    "description": Purchase of ${planName},
                     "notes": {
                         "plan_name": planName,
                         "redirect_url": redirectUrl
@@ -740,11 +187,10 @@
                         alert('Payment Successful! You will now be redirected.');
                         setTimeout(function () {
                             window.location.href = response.notes.redirect_url;
-                        }, 1500); // 1.5-second delay
+                        }, 1500);
                     },
                     "modal": {
                         "ondismiss": function() {
-                            // Re-enable the button if the user closes the payment window
                             button.innerHTML = originalButtonText;
                             button.disabled = false;
                         }
@@ -761,7 +207,6 @@
 
                 const rzp1 = new Razorpay(options);
                 rzp1.on('payment.failed', function (response) {
-                    // Re-enable the button on payment failure
                     button.innerHTML = originalButtonText;
                     button.disabled = false;
                     alert("Payment failed: " + response.error.description);
@@ -772,35 +217,13 @@
             });
         });
 
-        // --- DEV TOOLS & RIGHT-CLICK PREVENTION ---
-        document.addEventListener('contextmenu', event => {
-            event.preventDefault();
-        });
+        // --- This code prevents users from easily seeing your code. It can be removed if you want. ---
+        document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function (e) {
-            if (
-                e.key === 'F12' ||
-                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) ||
-                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S'))
-            ) {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u')) {
                 return false;
             }
         };
-    </script>
-    <script>
-    document.onkeydown = function(e) {
-    if (
-        e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S') ||
-        e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i'))
-    ) {
-        // console.log("Developer tools or source view attempt detected.");
-        return false; // Prevent default action for these keys
-    }
-};
-
-document.addEventListener('contextmenu', event => {
-    event.preventDefault(); // Prevent right-click context menu
-});
     </script>
 </body>
 </html>

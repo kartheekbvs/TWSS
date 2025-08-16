@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Fundamentals - Cloud Concepts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0078D4;
+            --dark-blue: #005A9E;
+            --light-blue: #E0F2FF;
+            --black: #121212;
+            --gray: #333333;
+            --white: #FFFFFF;
+            --light-gray: #F5F5F5;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--black);
+            background-color: var(--white);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            color: var(--white);
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background-color: var(--black);
+            clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .btn-primary-custom {
+            background-color: var(--primary-blue);
+            border: none;
+            color: var(--white);
+            padding: 12px 30px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary-custom:hover {
+            background-color: var(--dark-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+            color: var(--white);
+        }
+        
+        .section-padding {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            position: relative;
+            text-align: center;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-blue);
+            border-radius: 2px;
+        }
+        
+        .concept-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            height: 100%;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--primary-blue);
+        }
+        
+        .concept-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .concept-icon {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+        }
+        
+        .cloud-model {
+            background-color: var(--light-gray);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cloud-model::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background-color: var(--primary-blue);
+        }
+        
+        .model-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary-blue);
+        }
+        
+        .service-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            height: 100%;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-bottom: 4px solid var(--primary-blue);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+        }
+        
+        .security-section {
+            background-color: var(--light-blue);
+            padding: 80px 0;
+        }
+        
+        .security-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+        }
+        
+        .security-icon {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-right: 20px;
+        }
+        
+        .pricing-section {
+            background-color: var(--black);
+            color: var(--white);
+            padding: 80px 0;
+        }
+        
+        .pricing-section h2 {
+            color: var(--white);
+        }
+        
+        .pricing-card {
+            background-color: var(--gray);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .pricing-card:hover {
+            background-color: #444;
+            transform: translateY(-5px);
+        }
+        
+        .pricing-card h4 {
+            color: var(--light-blue);
+            margin-bottom: 20px;
+        }
+        
+        .footer {
+            background-color: var(--black);
+            color: var(--white);
+            padding: 50px 0 20px;
+        }
+        
+        .footer a {
+            color: var(--light-blue);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer a:hover {
+            color: var(--white);
+        }
+        
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background-color: var(--dark-blue);
+            transform: translateY(-3px);
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .hero-section::before {
+                width: 100%;
+                height: 40%;
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 60%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center hero-content">
+                <div class="col-lg-6">
+                    <h1 class="hero-title">Azure Fundamentals</h1>
+                    <p class="hero-subtitle">Master Cloud Computing Concepts with Microsoft Azure</p>
+                    <a href="#concepts" class="btn btn-primary-custom">Explore Concepts</a>
+<a href="/AZ-900 Azure Fundamentals.pdf" class="btn btn-primary-custom">PDF</a>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ms-5">
+                        <h2 class="mb-4">Cloud Computing Fundamentals</h2>
+                        <p>Understand core Azure architectural components, services, and solutions to build a solid foundation in cloud technologies.</p>
+                        <div class="mt-4">
+                            <i class="fas fa-cloud fa-3x me-3"></i>
+                            <i class="fas fa-shield-alt fa-3x me-3"></i>
+                            <i class="fas fa-database fa-3x me-3"></i>
+                            <i class="fas fa-server fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Concepts Section -->
+    <section id="concepts" class="section-padding">
+        <div class="container">
+            <h2 class="section-title">Key Cloud Concepts</h2>
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="concept-card">
+                        <div class="concept-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3>Agility</h3>
+                        <p>Quickly deploy resources and scale operations to meet changing business needs without physical infrastructure constraints.</p>
+                        <ul>
+                            <li>Scalability</li>
+                            <li>Elasticity</li>
+                            <li>Global Reach</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="concept-card">
+                        <div class="concept-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>Availability</h3>
+                        <p>Ensure your applications and services are always accessible to users with minimal downtime.</p>
+                        <ul>
+                            <li>Fault Tolerance</li>
+                            <li>Disaster Recovery</li>
+                            <li>High Availability</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="concept-card">
+                        <div class="concept-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <h3>Cost</h3>
+                        <p>Optimize spending with pay-as-you-go pricing and economies of scale.</p>
+                        <ul>
+                            <li>Economies of Scale</li>
+                            <li>Predictive Planning</li>
+                            <li>CapEx vs OpEx</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="concept-card">
+                        <div class="concept-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Security</h3>
+                        <p>Protect your data and applications with enterprise-grade security features.</p>
+                        <ul>
+                            <li>Intelligence</li>
+                            <li>Threat Detection</li>
+                            <li>Compliance Reporting</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cloud Models Section -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <h2 class="section-title">Cloud Deployment Models</h2>
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="cloud-model">
+                        <h3 class="model-title">Public Cloud</h3>
+                        <p>Resources owned and operated by third-party cloud service providers and delivered over the Internet.</p>
+                        <h4>Characteristics:</h4>
+                        <ul>
+                            <li>Multiple end users share resources</li>
+                            <li>Connected via the internet</li>
+                            <li>No deep technical knowledge required</li>
+                            <li>Lower upfront costs</li>
+                        </ul>
+                        <p><strong>Example:</strong> Microsoft Azure</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="cloud-model">
+                        <h3 class="model-title">Private Cloud</h3>
+                        <p>Computing resources used exclusively by a single organization, which may be physically located at the organization's on-site datacenter.</p>
+                        <h4>Characteristics:</h4>
+                        <ul>
+                            <li>Organization manages all hardware</li>
+                            <li>Resources used by single organization</li>
+                            <li>Connected via private network</li>
+                            <li>Requires deep technical knowledge</li>
+                        </ul>
+                        <p><strong>Use Case:</strong> Organizations with strict security requirements</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="cloud-model">
+                        <h3 class="model-title">Hybrid Cloud</h3>
+                        <p>Combines public and private clouds, bound together by technology that allows data and applications to be shared between them.</p>
+                        <h4>Characteristics:</h4>
+                        <ul>
+                            <li>Resources split between public and private</li>
+                            <li>Cost efficiency from public cloud</li>
+                            <li>Control from private cloud</li>
+                            <li>Technical skills required for integration</li>
+                        </ul>
+                        <p><strong>Use Case:</strong> Organizations with sensitive data (e.g., medical records)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Azure Services Section -->
+    <section class="section-padding">
+        <div class="container">
+            <h2 class="section-title">Core Azure Services</h2>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="service-card">
+                        <h3><i class="fas fa-server me-2"></i> Compute</h3>
+                        <p>Virtual machines, containers, and serverless computing to run your applications.</p>
+                        <ul>
+                            <li>Azure Virtual Machines</li>
+                            <li>VM Scale Sets</li>
+                            <li>Azure Container Instances</li>
+                            <li>Azure Functions</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="service-card">
+                        <h3><i class="fas fa-network-wired me-2"></i> Networking</h3>
+                        <p>Connect cloud resources and on-premises infrastructure securely.</p>
+                        <ul>
+                            <li>Virtual Network</li>
+                            <li>Load Balancer</li>
+                            <li>VPN Gateway</li>
+                            <li>Content Delivery Network</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="service-card">
+                        <h3><i class="fas fa-database me-2"></i> Storage</h3>
+                        <p>Scalable, secure, and durable cloud storage solutions.</p>
+                        <ul>
+                            <li>Blob Storage</li>
+                            <li>Disk Storage</li>
+                            <li>File Storage</li>
+                            <li>Archive Storage</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="service-card">
+                        <h3><i class="fas fa-chart-line me-2"></i> Big Data & Analytics</h3>
+                        <p>Process and analyze massive volumes of data to gain insights.</p>
+                        <ul>
+                            <li>Azure SQL Data Warehouse</li>
+                            <li>Azure HDInsight</li>
+                            <li>Azure Data Lake</li>
+                            <li>Azure Databricks</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="service-card">
+                        <h3><i class="fas fa-microchip me-2"></i> IoT & AI</h3>
+                        <p>Connect devices and leverage artificial intelligence capabilities.</p>
+                        <ul>
+                            <li>Azure IoT Hub</li>
+                            <li>Azure Machine Learning</li>
+                            <li>Cognitive Services</li>
+                            <li>Azure Bot Service</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="service-card">
+                        <h3><i class="fas fa-shield-alt me-2"></i> Security & Identity</h3>
+                        <p>Protect your resources with advanced security and identity management.</p>
+                        <ul>
+                            <li>Azure Active Directory</li>
+                            <li>Azure Security Center</li>
+                            <li>Azure Key Vault</li>
+                            <li>Azure Firewall</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Section -->
+    <section class="security-section">
+        <div class="container">
+            <h2 class="section-title">Azure Security & Governance</h2>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div>
+                            <h4>Azure Security Center</h4>
+                            <p>Unified security management and threat protection across hybrid workloads.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div>
+                            <h4>Azure Active Directory</h4>
+                            <p>Identity and access management service for secure resource access.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <div>
+                            <h4>Azure Key Vault</h4>
+                            <p>Safeguard cryptographic keys and secrets used by cloud applications.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div>
+                            <h4>Azure Policy</h4>
+                            <p>Create, assign, and manage policies to enforce rules and effects over resources.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <div>
+                            <h4>Network Security</h4>
+                            <p>Protect network traffic with security groups, firewalls, and DDoS protection.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div>
+                            <h4>Compliance & Privacy</h4>
+                            <p>Meet regulatory requirements with comprehensive compliance offerings.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing & Support Section -->
+    <section class="pricing-section">
+        <div class="container">
+            <h2 class="section-title">Pricing & Support</h2>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="pricing-card">
+                        <h4>Azure Subscriptions</h4>
+                        <p>Logical units that link to an Azure account for billing and access management.</p>
+                        <ul>
+                            <li>Free and paid options</li>
+                            <li>Billing boundaries</li>
+                            <li>Access control boundaries</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="pricing-card">
+                        <h4>Cost Management</h4>
+                        <p>Tools for monitoring, allocating, and optimizing Azure costs.</p>
+                        <ul>
+                            <li>Cost analysis</li>
+                            <li>Budgets and alerts</li>
+                            <li>Recommendations</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="pricing-card">
+                        <h4>Support Plans</h4>
+                        <p>Choose the right support level for your organization's needs.</p>
+                        <ul>
+                            <li>Developer (trial/non-production)</li>
+                            <li>Standard (production)</li>
+                            <li>Professional Direct (business-critical)</li>
+                            <li>Premier (substantial dependence)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="pricing-card">
+                        <h4>Service Level Agreements</h4>
+                        <p>Microsoft's commitment to uptime and performance for Azure services.</p>
+                        <ul>
+                            <li>99.9% to 99.99% uptime</li>
+                            <li>Service credits for failures</li>
+                            <li>Individual SLAs per service</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="pricing-card">
+                        <h4>Purchasing Options</h4>
+                        <p>Flexible purchasing models to suit your organization's needs.</p>
+                        <ul>
+                            <li>Enterprise Agreement</li>
+                            <li>Web Direct</li>
+                            <li>Cloud Solution Provider</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="pricing-card">
+                        <h4>Service Lifecycle</h4>
+                        <p>Understand the lifecycle of Azure features and services.</p>
+                        <ul>
+                            <li>Private Preview</li>
+                            <li>Public Preview</li>
+                            <li>General Availability</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>Azure Fundamentals</h5>
+                    <p>Learn cloud concepts with Microsoft Azure to build a solid foundation in cloud technologies.</p>
+                    <div class="social-icons mt-3">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#concepts">Key Concepts</a></li>
+                        <li><a href="#cloud-models">Cloud Models</a></li>
+                        <li><a href="#services">Azure Services</a></li>
+                        <li><a href="#security">Security</a></li>
+                        <li><a href="#pricing">Pricing & Support</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Resources</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Microsoft Learn</a></li>
+                        <li><a href="#">Azure Documentation</a></li>
+                        <li><a href="#">Azure Pricing Calculator</a></li>
+                        <li><a href="#">Azure Updates</a></li>
+                        <li><a href="#">Microsoft Compliance</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 bg-secondary">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2023 Azure Fundamentals. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add smooth scrolling to all links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

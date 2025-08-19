@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TWSS Birthday Wishes</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24, #6c5ce7);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            overflow-x: hidden;
+            cursor: none;
+            transition: opacity 0.5s ease;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            mix-blend-mode: difference;
+        }
+        
+        .container {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .header {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 15px 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .company-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+            letter-spacing: 3px;
+        }
+        
+        .website {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 5px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0px); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+        
+        .main-title {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            color: white;
+            text-align: center;
+            margin: 60px 0 40px 0;
+            text-shadow: 0 0 30px rgba(255,255,255,0.6);
+            animation: titlePulse 2s ease-in-out infinite alternate;
+            position: relative;
+            z-index: 100;
+        }
+        
+        @keyframes titlePulse {
+            0% { transform: scale(1); text-shadow: 0 0 30px rgba(255,255,255,0.6); }
+            100% { transform: scale(1.05); text-shadow: 0 0 50px rgba(255,255,255,0.8); }
+        }
+        
+        .birthday-text {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            color: white;
+            text-align: center;
+            margin: 20px 0;
+            opacity: 0;
+            animation: slideInUp 1s ease-out 0.5s forwards;
+            text-shadow: 0 0 20px rgba(255,255,255,0.4);
+            position: relative;
+            z-index: 100;
+        }
+        
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .wish-message {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: white;
+            text-align: center;
+            max-width: 800px;
+            margin: 30px auto;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInScale 1.5s ease-out 1s forwards;
+            text-shadow: 0 0 15px rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 100;
+        }
+        
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .celebration-button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 40px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            opacity: 0;
+            animation: bounceIn 1s ease-out 1.5s forwards;
+            position: relative;
+            z-index: 100;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        
+        .celebration-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+        
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { transform: scale(1.1); }
+            70% { transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+        }
+        
+        .confetti:nth-child(odd) { background: #4ecdc4; }
+        .confetti:nth-child(3n) { background: #f9ca24; }
+        .confetti:nth-child(4n) { background: #6c5ce7; }
+        .confetti:nth-child(5n) { background: #ff9ff3; }
+        
+        .balloons {
+            position: fixed;
+            bottom: -100px;
+            width: 100%;
+            z-index: 50;
+            animation: balloonFloat 15s ease-in-out infinite;
+        }
+        
+        @keyframes balloonFloat {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .balloon {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: balloonBob 3s ease-in-out infinite;
+        }
+        
+        .balloon:nth-child(1) { left: 10%; background: #ff6b6b; animation-delay: 0s; }
+        .balloon:nth-child(2) { left: 25%; background: #4ecdc4; animation-delay: 0.5s; }
+        .balloon:nth-child(3) { left: 40%; background: #f9ca24; animation-delay: 1s; }
+        .balloon:nth-child(4) { left: 55%; background: #6c5ce7; animation-delay: 1.5s; }
+        .balloon:nth-child(5) { left: 70%; background: #ff9ff3; animation-delay: 2s; }
+        .balloon:nth-child(6) { left: 85%; background: #45b7d1; animation-delay: 2.5s; }
+        
+        @keyframes balloonBob {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+        
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            width: 2px;
+            height: 50px;
+            background: rgba(0,0,0,0.2);
+            transform: translateX(-50%);
+        }
+        
+        #threejs-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkleAnim 2s ease-in-out infinite;
+        }
+        
+        @keyframes sparkleAnim {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        
+        .fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes fireworkExplosion {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--vx), var(--vy)) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                top: 20px;
+                padding: 10px 20px;
+            }
+            
+            .company-logo {
+                font-size: 1.5rem;
+            }
+            
+            .main-title {
+                margin: 80px 0 30px 0;
+            }
+            
+            .celebration-button {
+                padding: 15px 30px;
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* Portfolio Styles */
+        body.portfolio {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            cursor: default;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero-content .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+        
+        .hero-content .contact-info {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+            animation: fadeInUp 1s ease 0.6s both;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .about, .experience, .contact {
+            background: white;
+            margin: 2rem 0;
+            border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #667eea;
+            text-align: center;
+        }
+        
+        .about-content, .experience-content {
+            padding: 0 2rem 2rem;
+        }
+        
+        .experience-item {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .experience-item h3 {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .experience-item .company {
+            font-weight: bold;
+            color: #764ba2;
+            font-size: 1.2rem;
+        }
+        
+        .experience-item .duration {
+            color: #666;
+            font-style: italic;
+        }
+        
+        .contact-content {
+            padding: 2rem;
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        #submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        #submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        #submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section {
+                padding: 3rem 1rem;
+            }
+            
+            .contact-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    
+    <div id="threejs-container"></div>
+    
+    <div class="fireworks"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="company-logo">TWSS</div>
+            <div class="website">TWSS.netlify.app</div>
+        </div>
+        
+        <h1 class="main-title">HAPPY BIRTHDAY!</h1>
+        
+        <div class="birthday-text">
+            🎉 Wishing You a Fantastic Day! 🎂
+        </div>
+        
+        <div class="wish-message">
+            May this special day bring you joy, laughter, and wonderful memories! 
+            From all of us at TWSS, we hope your birthday is as amazing as you are!
+        </div>
+        
+        <button class="celebration-button" onclick="celebrate()">
+            🎊 Start Celebration! 🎊
+        </button>
+        
+        <div class="balloons">
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        
+        // Three.js 3D Scene
+        let scene, camera, renderer, particles, cake;
+        
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            const container = document.getElementById('threejs-container');
+            if (container) {
+                container.appendChild(renderer.domElement);
+            }
+            
+            // Create floating 3D particles
+            const geometry = new THREE.BufferGeometry();
+            const particleCount = 1000;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 50;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
+                
+                colors[i * 3] = Math.random();
+                colors[i * 3 + 1] = Math.random();
+                colors[i * 3 + 2] = Math.random();
+            }
+            
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const material = new THREE.PointsMaterial({ 
+                size: 0.1, 
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.6
+            });
+            
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+            
+            // Create 3D Birthday Cake
+            const cakeGroup = new THREE.Group();
+            
+            // Cake base
+            const cakeGeometry = new THREE.CylinderGeometry(2, 2, 1, 32);
+            const cakeMaterial = new THREE.MeshBasicMaterial({ color: 0xffa500 });
+            const cakeBase = new THREE.Mesh(cakeGeometry, cakeMaterial);
+            cakeGroup.add(cakeBase);
+            
+            // Cake layers
+            const layer1Geometry = new THREE.CylinderGeometry(1.5, 1.5, 0.8, 32);
+            const layer1Material = new THREE.MeshBasicMaterial({ color: 0xff69b4 });
+            const layer1 = new THREE.Mesh(layer1Geometry, layer1Material);
+            layer1.position.y = 0.9;
+            cakeGroup.add(layer1);
+            
+            // Candles
+            for (let i = 0; i < 5; i++) {
+                const candleGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.5, 8);
+                const candleMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+                const candle = new THREE.Mesh(candleGeometry, candleMaterial);
+                const angle = (i / 5) * Math.PI * 2;
+                candle.position.x = Math.cos(angle) * 0.8;
+                candle.position.z = Math.sin(angle) * 0.8;
+                candle.position.y = 1.55;
+                cakeGroup.add(candle);
+                
+                // Flame
+                const flameGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+                const flameMaterial = new THREE.MeshBasicMaterial({ color: 0xff4444 });
+                const flame = new THREE.Mesh(flameGeometry, flameMaterial);
+                flame.position.copy(candle.position);
+                flame.position.y += 0.35;
+                cakeGroup.add(flame);
+            }
+            
+            cakeGroup.position.set(5, -2, -10);
+            cakeGroup.scale.set(0.8, 0.8, 0.8);
+            scene.add(cakeGroup);
+            cake = cakeGroup;
+            
+            camera.position.z = 5;
+            
+            animate();
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            if (particles) {
+                // Rotate particles
+                particles.rotation.x += 0.001;
+                particles.rotation.y += 0.002;
+                
+                // Update particle positions
+                const positions = particles.geometry.attributes.position.array;
+                for (let i = 1; i < positions.length; i += 3) {
+                    positions[i] += Math.sin(Date.now() * 0.001 + i) * 0.001;
+                }
+                particles.geometry.attributes.position.needsUpdate = true;
+            }
+            
+            // Rotate cake
+            if (cake) {
+                cake.rotation.y += 0.01;
+            }
+            
+            if (renderer) {
+                renderer.render(scene, camera);
+            }
+        }
+        
+        function onWindowResize() {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+        
+        // Confetti animation
+        function createConfetti() {
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-10px';
+                confetti.style.animation = `confettiFall ${Math.random() * 3 + 2}s linear forwards`;
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+        
+        // Fireworks
+        function createFireworks() {
+            const fireworksContainer = document.querySelector('.fireworks');
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight * 0.5;
+                    
+                    for (let j = 0; j < 15; j++) {
+                        const firework = document.createElement('div');
+                        firework.className = 'firework';
+                        firework.style.left = x + 'px';
+                        firework.style.top = y + 'px';
+                        firework.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                        
+                        const angle = (j / 15) * Math.PI * 2;
+                        const velocity = Math.random() * 100 + 50;
+                        const vx = Math.cos(angle) * velocity;
+                        const vy = Math.sin(angle) * velocity;
+                        
+                        firework.style.animation = `fireworkExplosion 2s ease-out forwards`;
+                        firework.style.setProperty('--vx', vx + 'px');
+                        firework.style.setProperty('--vy', vy + 'px');
+                        
+                        fireworksContainer.appendChild(firework);
+                        
+                        setTimeout(() => firework.remove(), 2000);
+                    }
+                }, i * 200);
+            }
+        }
+        
+        // Sparkles
+        function createSparkles() {
+            for (let i = 0; i < 50; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                sparkle.style.top = Math.random() * window.innerHeight + 'px';
+                sparkle.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => sparkle.remove(), 4000);
+            }
+        }
+        
+        // Main celebration function
+        function celebrate() {
+            createConfetti();
+            createFireworks();
+            createSparkles();
+            
+            // Play celebration sound (visual feedback)
+            const button = document.querySelector('.celebration-button');
+            if (button) {
+                button.style.animation = 'bounceIn 0.5s ease-out';
+                setTimeout(() => {
+                    button.style.animation = '';
+                }, 500);
+            }
+            
+            // Transform to portfolio after celebration
+            setTimeout(() => {
+                transformToPortfolio();
+            }, 3000);
+        }
+        
+        function transformToPortfolio() {
+            document.body.style.opacity = '0';
+            
+            setTimeout(() => {
+                // Remove all three.js elements and event listeners
+                const threeContainer = document.getElementById('threejs-container');
+                if (threeContainer) {
+                    while (threeContainer.firstChild) {
+                        threeContainer.removeChild(threeContainer.firstChild);
+                    }
+                }
+                
+                // Stop any running animations
+                // This is a simple approach, more complex apps would need cleanup
+                window.removeEventListener('resize', onWindowResize);
+                
+                // Create new portfolio HTML
+                const portfolioHTML = `
+                    <style>
+                        body.portfolio {
+                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                            line-height: 1.6;
+                            color: #333;
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                            min-height: 100vh;
+                            cursor: default;
+                        }
+                        .navbar {
+                            position: fixed;
+                            top: 0;
+                            width: 100%;
+                            background: rgba(255, 255, 255, 0.95);
+                            backdrop-filter: blur(10px);
+                            padding: 1rem 0;
+                            z-index: 1000;
+                            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+                        }
+                        .nav-container {
+                            max-width: 1200px;
+                            margin: 0 auto;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            padding: 0 2rem;
+                        }
+                        .logo {
+                            font-size: 1.5rem;
+                            font-weight: bold;
+                            color: #667eea;
+                        }
+                        .nav-links {
+                            display: flex;
+                            list-style: none;
+                            gap: 2rem;
+                        }
+                        .nav-links a {
+                            text-decoration: none;
+                            color: #333;
+                            font-weight: 500;
+                            transition: color 0.3s ease;
+                            cursor: pointer;
+                        }
+                        .nav-links a:hover {
+                            color: #667eea;
+                        }
+                        .section {
+                            padding: 5rem 2rem;
+                            max-width: 1200px;
+                            margin: 0 auto;
+                        }
+                        .hero {
+                            min-height: 100vh;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            text-align: center;
+                            color: white;
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        }
+                        .hero-content h1 {
+                            font-size: 3.5rem;
+                            margin-bottom: 1rem;
+                            animation: fadeInUp 1s ease;
+                        }
+                        .hero-content .subtitle {
+                            font-size: 1.5rem;
+                            margin-bottom: 1rem;
+                            opacity: 0.9;
+                            animation: fadeInUp 1s ease 0.2s both;
+                        }
+                        .hero-content .contact-info {
+                            font-size: 1.1rem;
+                            margin-bottom: 2rem;
+                            opacity: 0.8;
+                            animation: fadeInUp 1s ease 0.4s both;
+                        }
+                        .cta-button {
+                            display: inline-block;
+                            background: rgba(255,255,255,0.2);
+                            color: white;
+                            padding: 1rem 2rem;
+                            text-decoration: none;
+                            border-radius: 50px;
+                            font-weight: bold;
+                            transition: all 0.3s ease;
+                            backdrop-filter: blur(10px);
+                            border: 2px solid rgba(255,255,255,0.3);
+                            animation: fadeInUp 1s ease 0.6s both;
+                            cursor: pointer;
+                        }
+                        .cta-button:hover {
+                            background: rgba(255,255,255,0.3);
+                            transform: translateY(-2px);
+                            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                        }
+                        @keyframes fadeInUp {
+                            from {
+                                opacity: 0;
+                                transform: translateY(30px);
+                            }
+                            to {
+                                opacity: 1;
+                                transform: translateY(0);
+                            }
+                        }
+                        .about, .experience, .contact {
+                            background: white;
+                            margin: 2rem 0;
+                            border-radius: 20px;
+                            box-shadow: 0 10px 50px rgba(0,0,0,0.1);
+                            overflow: hidden;
+                        }
+                        .section h2 {
+                            font-size: 2.5rem;
+                            margin-bottom: 2rem;
+                            color: #667eea;
+                            text-align: center;
+                        }
+                        .about-content, .experience-content {
+                            padding: 0 2rem 2rem;
+                        }
+                        .experience-item {
+                            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                            padding: 2rem;
+                            border-radius: 15px;
+                            margin-bottom: 2rem;
+                            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                        }
+                        .experience-item h3 {
+                            color: #667eea;
+                            font-size: 1.5rem;
+                            margin-bottom: 0.5rem;
+                        }
+                        .experience-item .company {
+                            font-weight: bold;
+                            color: #764ba2;
+                            font-size: 1.2rem;
+                        }
+                        .experience-item .duration {
+                            color: #666;
+                            font-style: italic;
+                        }
+                        .contact-content {
+                            padding: 2rem;
+                        }
+                        .contact-form {
+                            max-width: 600px;
+                            margin: 0 auto;
+                        }
+                        .form-group {
+                            margin-bottom: 1.5rem;
+                        }
+                        .form-group label {
+                            display: block;
+                            margin-bottom: 0.5rem;
+                            font-weight: bold;
+                            color: #333;
+                        }
+                        .form-group input,
+                        .form-group textarea {
+                            width: 100%;
+                            padding: 1rem;
+                            border: 2px solid #e0e0e0;
+                            border-radius: 10px;
+                            font-size: 1rem;
+                            transition: border-color 0.3s ease;
+                        }
+                        .form-group input:focus,
+                        .form-group textarea:focus {
+                            outline: none;
+                            border-color: #667eea;
+                        }
+                        #submit-btn {
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                            color: white;
+                            border: none;
+                            padding: 1rem 2rem;
+                            border-radius: 10px;
+                            font-size: 1.1rem;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            width: 100%;
+                        }
+                        #submit-btn:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+                        }
+                        #submit-btn:disabled {
+                            opacity: 0.6;
+                            cursor: not-allowed;
+                            transform: none;
+                        }
+                        @media (max-width: 768px) {
+                            .nav-links {
+                                gap: 1rem;
+                                font-size: 0.9rem;
+                            }
+                            .hero-content h1 {
+                                font-size: 2.5rem;
+                            }
+                            .hero-content .subtitle {
+                                font-size: 1.2rem;
+                            }
+                            .section {
+                                padding: 3rem 1rem;
+                            }
+                            .contact-content {
+                                padding: 1rem;
+                            }
+                        }
+                    </style>
+                    
+                    <nav class="navbar">
+                        <div class="nav-container">
+                            <div class="logo">Pavan Kumar</div>
+                            <ul class="nav-links">
+                                <li><a onclick="scrollToSection('home')">Home</a></li>
+                                <li><a onclick="scrollToSection('about')">About Me</a></li>
+                                <li><a onclick="scrollToSection('experience')">Experience</a></li>
+                                <li><a onclick="scrollToSection('contact')">Contact</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                    
+                    <section id="home" class="hero">
+                        <div class="hero-content">
+                            <h1>Vemuri Pavan Kumar</h1>
+                            <div class="subtitle">Mechanical Engineer</div>
+                            <div class="contact-info">
+                                📞 9705043483 | ✉️ vemuripavankumar4u@gmail.com
+                            </div>
+                            <a class="cta-button" onclick="scrollToSection('about')">Learn More About Me</a>
+                        </div>
+                    </section>
+                    
+                    <section id="about" class="section about">
+                        <h2>About Me</h2>
+                        <div class="about-content">
+                            <p style="font-size: 1.2rem; text-align: center; line-height: 1.8;">
+                                I am a dedicated Mechanical Engineer with a passion for innovation and problem-solving. 
+                                I graduated from D M S S V H College of Engineering and have been building my career 
+                                in the engineering field with a focus on practical applications and continuous learning.
+                            </p>
+                        </div>
+                    </section>
+                    
+                    <section id="experience" class="section experience">
+                        <h2>Experience</h2>
+                        <div class="experience-content">
+                            <div class="experience-item">
+                                <h3>Mechanical Engineer</h3>
+                                <div class="company">INFOLOBS</div>
+                                <div class="duration">2 Years of Experience</div>
+                                <p style="margin-top: 1rem;">
+                                    Working as a Mechanical Engineer at INFOLOBS, where I have gained valuable experience 
+                                    in engineering design, analysis, and project management. I have been involved in 
+                                    various projects that have enhanced my technical skills and professional growth.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section id="contact" class="section contact">
+                        <h2>Contact Me</h2>
+                        <div class="contact-content">
+                            <form id="contact-form" class="contact-form">
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" id="name" name="from_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="from_email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="subject">Subject</label>
+                                    <input type="text" id="subject" name="subject" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message">Message</label>
+                                    <textarea id="message" name="message" rows="5" required></textarea>
+                                </div>
+                                <button type="submit" id="submit-btn">Send Message</button>
+                            </form>
+                            <div id="success-message" style="display: none; color: green; margin-top: 10px; text-align: center; padding: 10px; background: #d4edda; border-radius: 5px;">
+                                Thank you for your message! I'll contact you soon.
+                            </div>
+                            <div id="error-message" style="display: none; color: red; margin-top: 10px; text-align: center; padding: 10px; background: #f8d7da; border-radius: 5px;">
+                                Something went wrong. Please try again later.
+                            </div>
+                        </div>
+                    </section>
+                `;
+                
+                document.body.innerHTML = portfolioHTML;
+                document.body.className = 'portfolio'; // Add new class for portfolio styles
+                document.body.style.opacity = '1';
+                
+                // Re-initialize JavaScript for the new content
+                setupPortfolioJS();
+            }, 500);
+        }
+        
+        function setupPortfolioJS() {
+            // Smooth scrolling function
+            window.scrollToSection = (sectionId) => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    window.scrollTo({
+                        top: section.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            };
+            
+            // Setup EmailJS for the contact form
+            function setupEmailJS() {
+                // Initialize EmailJS with your Public Key
+                // Replace 'YOUR_PUBLIC_KEY' with your actual key from EmailJS.com
+                // emailjs.init('YOUR_PUBLIC_KEY');
+                
+                const contactForm = document.getElementById('contact-form');
+                if (contactForm) {
+                    contactForm.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        
+                        const submitBtn = document.getElementById('submit-btn');
+                        const successMessage = document.getElementById('success-message');
+                        const errorMessage = document.getElementById('error-message');
+                        
+                        submitBtn.disabled = true;
+                        
+                        // Use this to send the email with EmailJS
+                        // emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this)
+                        //     .then(() => {
+                        //         successMessage.style.display = 'block';
+                        //         errorMessage.style.display = 'none';
+                        //         contactForm.reset();
+                        //         submitBtn.disabled = false;
+                        //     }, (error) => {
+                        //         errorMessage.style.display = 'block';
+                        //         successMessage.style.display = 'none';
+                        //         console.error('Email sending failed:', error);
+                        //         submitBtn.disabled = false;
+                        //     });
+                        
+                        // For demonstration purposes without an EmailJS key:
+                        setTimeout(() => {
+                            successMessage.style.display = 'block';
+                            errorMessage.style.display = 'none';
+                            contactForm.reset();
+                            submitBtn.disabled = false;
+                        }, 1000);
+                    });
+                }
+            }
+            
+            setupEmailJS();
+        }
+        
+        // Auto-create sparkles periodically
+        setInterval(createSparkles, 3000);
+        
+        // Auto-confetti
+        setTimeout(createConfetti, 2000);
+        
+        // Responsive handling
+        window.addEventListener('resize', onWindowResize);
+        
+        // Initialize Three.js on page load
+        window.addEventListener('load', initThreeJS);
+    </script>
+</body>
+</html>

@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TWSS - Authentication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary-color: #6366f1;
+            --background-color: #f9fafb;
+            --card-background: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--card-background);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .auth-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .auth-btn.secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .auth-btn.secondary:hover {
+            background-color: var(--background-color);
+        }
+
+        .github-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .github-btn:hover {
+            background-color: #24292e;
+        }
+
+        /* Profile Dropdown */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 200px;
+            z-index: 1000;
+            display: none;
+            margin-top: 10px;
+        }
+
+        .profile-dropdown.active {
+            display: block;
+        }
+
+        .profile-dropdown-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .profile-dropdown-header h4 {
+            margin-bottom: 5px;
+        }
+
+        .profile-dropdown-header span {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .profile-dropdown-menu {
+            list-style: none;
+        }
+
+        .profile-dropdown-menu li {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .profile-dropdown-menu li:last-child {
+            border-bottom: none;
+        }
+
+        .profile-dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .profile-dropdown-menu a:hover {
+            background-color: var(--background-color);
+        }
+
+        .profile-dropdown-menu i {
+            width: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        /* Main Content */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .auth-container {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .auth-container h1 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .auth-container p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .auth-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .auth-form {
+            display: none;
+            text-align: left;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-submit {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .form-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: var(--text-secondary);
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: var(--border-color);
+        }
+
+        .auth-divider span {
+            padding: 0 15px;
+        }
+
+        .auth-status {
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .auth-status.success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+
+        .auth-status.error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .auth-status.info {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary-color);
+        }
+
+        .welcome-message {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .welcome-message h2 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .welcome-message p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .user-info .user-avatar {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            font-size: 24px;
+        }
+
+        .user-info h3 {
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--text-primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 3000;
+            display: none;
+            animation: fadeInUp 0.3s, fadeOutDown 0.3s 2.7s;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        @keyframes fadeOutDown {
+            from {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+            to {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-comments"></i>
+                    <span>TWSS</span>
+                </div>
+                
+                <div class="user-menu">
+                    <!-- Auth Buttons (shown when not logged in) -->
+                    <div class="auth-buttons" id="authButtons">
+                        <button class="auth-btn secondary" onclick="openAuthModal('login')">Log In</button>
+                        <button class="auth-btn" onclick="openAuthModal('signup')">Sign Up</button>
+                    </div>
+                    
+                    <!-- User Profile (shown when logged in) -->
+                    <div class="user-profile" id="profileSection" style="display: none;">
+                        <div class="user-avatar" id="profileAvatar">JD</div>
+                        <span id="profileName">John Doe</span>
+                        
+                        <!-- Profile Dropdown -->
+                        <div class="profile-dropdown" id="profileMenu">
+                            <div class="profile-dropdown-header">
+                                <h4 id="profileFullName">John Doe</h4>
+                                <span id="profileEmail">john@example.com</span>
+                            </div>
+                            <ul class="profile-dropdown-menu">
+                                <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+                                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                                <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Welcome Section (shown when not logged in) -->
+        <div id="welcomeSection" class="welcome-message">
+            <h1>Welcome to TWSS</h1>
+            <p>A modern social media platform with secure authentication. Sign in or create an account to get started.</p>
+        </div>
+
+        <!-- Auth Container (shown when not logged in) -->
+        <div id="authContainer" class="auth-container">
+            <h1>Join TWSS Today</h1>
+            <p>Connect with others and share your thoughts</p>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchTab('login')">Sign In</div>
+                <div class="auth-tab" onclick="switchTab('signup')">Sign Up</div>
+            </div>
+            
+            <!-- Sign In Form -->
+            <form id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="button" class="form-submit" onclick="login()">Sign In</button>
+                <div class="auth-status" id="loginStatus"></div>
+            </form>
+            
+            <!-- Sign Up Form -->
+            <form id="signupForm" class="auth-form">
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a password" required>
+                </div>
+                <button type="button" class="form-submit" onclick="signup()">Sign Up</button>
+                <div class="auth-status" id="signupStatus"></div>
+            </form>
+            
+            <div class="auth-divider">
+                <span>OR</span>
+            </div>
+            
+            <button class="github-btn" onclick="loginWithGitHub()">
+                <i class="fab fa-github"></i>
+                Continue with GitHub
+            </button>
+        </div>
+
+        <!-- User Info (shown when logged in) -->
+        <div id="userInfo" class="user-info" style="display: none;">
+            <div class="user-avatar" id="userInfoAvatar">JD</div>
+            <h3 id="userInfoName">John Doe</h3>
+            <p id="userInfoEmail">john@example.com</p>
+            <p>Successfully logged in to TWSS!</p>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Supabase Client Initialization
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://fzwvxesrtdilljgrntpw.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'
+        );
+
+        // Global variables
+        let currentUser = null;
+        let isAuthenticated = false;
+
+        // DOM Elements
+        const authButtons = document.getElementById('authButtons');
+        const profileSection = document.getElementById('profileSection');
+        const profileMenu = document.getElementById('profileMenu');
+        const profileAvatar = document.getElementById('profileAvatar');
+        const profileName = document.getElementById('profileName');
+        const profileFullName = document.getElementById('profileFullName');
+        const profileEmail = document.getElementById('profileEmail');
+        const welcomeSection = document.getElementById('welcomeSection');
+        const authContainer = document.getElementById('authContainer');
+        const userInfo = document.getElementById('userInfo');
+        const userInfoAvatar = document.getElementById('userInfoAvatar');
+        const userInfoName = document.getElementById('userInfoName');
+        const userInfoEmail = document.getElementById('userInfoEmail');
+        const toast = document.getElementById('toast');
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            initializeEventListeners();
+        });
+
+        // Check authentication status
+        async function checkAuthStatus() {
+            const { data, error } = await supabaseClient.auth.getSession();
+            
+            if (data.session) {
+                isAuthenticated = true;
+                currentUser = data.session.user;
+                updateUIForAuthenticatedUser();
+            } else {
+                // Check localStorage as fallback
+                const loggedIn = localStorage.getItem("loggedIn") === "true";
+                if (loggedIn) {
+                    isAuthenticated = true;
+                    currentUser = {
+                        email: localStorage.getItem("userEmail") || "user@example.com",
+                        user_metadata: {
+                            full_name: localStorage.getItem("userName") || "User"
+                        }
+                    };
+                    updateUIForAuthenticatedUser();
+                }
+            }
+        }
+
+        // Initialize event listeners
+        function initializeEventListeners() {
+            // Profile menu toggle
+            if (profileSection) {
+                profileSection.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleProfileMenu();
+                });
+            }
+
+            // Close profile menu when clicking anywhere else
+            document.addEventListener('click', function(event) {
+                if (profileSection && profileMenu && !profileSection.contains(event.target) && profileMenu.classList.contains('active')) {
+                    profileMenu.classList.remove('active');
+                }
+            });
+
+            // Enter key support for forms
+            const loginPassword = document.getElementById('loginPassword');
+            if (loginPassword) {
+                loginPassword.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        login();
+                    }
+                });
+            }
+
+            const signupPassword = document.getElementById('signupPassword');
+            if (signupPassword) {
+                signupPassword.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        signup();
+                    }
+                });
+            }
+        }
+
+        // Switch between login and signup tabs
+        function switchTab(tab) {
+            const loginTab = document.querySelector('.auth-tab:first-child');
+            const signupTab = document.querySelector('.auth-tab:last-child');
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            
+            if (tab === 'login') {
+                loginTab.classList.add('active');
+                signupTab.classList.remove('active');
+                loginForm.classList.add('active');
+                signupForm.classList.remove('active');
+            } else {
+                signupTab.classList.add('active');
+                loginTab.classList.remove('active');
+                signupForm.classList.add('active');
+                loginForm.classList.remove('active');
+            }
+            
+            clearAuthStatus();
+        }
+
+        // Login with email and password
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const statusElement = document.getElementById('loginStatus');
+            
+            clearAuthStatus();
+            
+            if (!email || !password) {
+                showAuthStatus('Please fill in all fields', 'error', 'loginStatus');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                showAuthStatus('Please enter a valid email address', 'error', 'loginStatus');
+                return;
+            }
+            
+            showAuthStatus('Signing in...', 'info', 'loginStatus');
+            
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                });
+                
+                if (error) {
+                    showAuthStatus(error.message, 'error', 'loginStatus');
+                } else {
+                    isAuthenticated = true;
+                    currentUser = data.user;
+                    
+                    // Store in localStorage as fallback
+                    localStorage.setItem("loggedIn", "true");
+                    localStorage.setItem("userEmail", currentUser.email);
+                    localStorage.setItem("userName", currentUser.user_metadata?.full_name || extractNameFromEmail(currentUser.email));
+                    
+                    showAuthStatus('Login successful! Redirecting...', 'success', 'loginStatus');
+                    
+                    setTimeout(() => {
+                        updateUIForAuthenticatedUser();
+                    }, 1500);
+                }
+            } catch (err) {
+                console.error('Login error:', err);
+                showAuthStatus('An unexpected error occurred', 'error', 'loginStatus');
+            }
+        }
+
+        // Sign up with email and password
+        async function signup() {
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const statusElement = document.getElementById('signupStatus');
+            
+            clearAuthStatus();
+            
+            if (!email || !password) {
+                showAuthStatus('Please fill in all fields', 'error', 'signupStatus');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                showAuthStatus('Please enter a valid email address', 'error', 'signupStatus');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showAuthStatus('Password must be at least 6 characters', 'error', 'signupStatus');
+                return;
+            }
+            
+            showAuthStatus('Creating account...', 'info', 'signupStatus');
+            
+            try {
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email,
+                    password
+                });
+                
+                if (error) {
+                    showAuthStatus(error.message, 'error', 'signupStatus');
+                } else {
+                    // Store in localStorage as fallback
+                    localStorage.setItem("loggedIn", "true");
+                    localStorage.setItem("userEmail", email);
+                    localStorage.setItem("userName", extractNameFromEmail(email));
+                    
+                    showAuthStatus('Account created successfully! Please check your email to verify your account.', 'success', 'signupStatus');
+                    
+                    // If email confirmation is disabled, log the user in immediately
+                    if (!data.user?.identities?.length) {
+                        isAuthenticated = true;
+                        currentUser = data.user;
+                        updateUIForAuthenticatedUser();
+                    }
+                }
+            } catch (err) {
+                console.error('Signup error:', err);
+                showAuthStatus('An unexpected error occurred', 'error', 'signupStatus');
+            }
+        }
+
+        // Login with GitHub
+        async function loginWithGitHub() {
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'github',
+                    options: {
+                        redirectTo: window.location.origin
+                    }
+                });
+                
+                if (error) {
+                    showToast('Error logging in with GitHub: ' + error.message);
+                }
+            } catch (err) {
+                console.error('GitHub login error:', err);
+                showToast('An unexpected error occurred');
+            }
+        }
+
+        // Logout
+        async function logout() {
+            try {
+                await supabaseClient.auth.signOut();
+                
+                currentUser = null;
+                isAuthenticated = false;
+                
+                // Clear localStorage
+                localStorage.removeItem("loggedIn");
+                localStorage.removeItem("userEmail");
+                localStorage.removeItem("userName");
+                
+                updateUIForUnauthenticatedUser();
+                showToast('You have been logged out successfully');
+            } catch (err) {
+                console.error('Logout error:', err);
+                showToast('An error occurred during logout');
+            }
+        }
+
+        // Update UI for authenticated user
+        function updateUIForAuthenticatedUser() {
+            if (authButtons) authButtons.style.display = 'none';
+            if (welcomeSection) welcomeSection.style.display = 'none';
+            if (authContainer) authContainer.style.display = 'none';
+            if (profileSection) profileSection.style.display = 'flex';
+            if (userInfo) userInfo.style.display = 'block';
+            
+            if (currentUser) {
+                const userName = currentUser.user_metadata?.full_name || 
+                                 currentUser.user_metadata?.name || 
+                                 extractNameFromEmail(currentUser.email) || 
+                                 "User";
+                
+                const userEmail = currentUser.email || "user@example.com";
+                const userInitials = getUserInitials(userName);
+                
+                // Update profile section
+                if (profileAvatar) profileAvatar.textContent = userInitials;
+                if (profileName) profileName.textContent = userName;
+                if (profileFullName) profileFullName.textContent = userName;
+                if (profileEmail) profileEmail.textContent = userEmail;
+                
+                // Update user info section
+                if (userInfoAvatar) userInfoAvatar.textContent = userInitials;
+                if (userInfoName) userInfoName.textContent = userName;
+                if (userInfoEmail) userInfoEmail.textContent = userEmail;
+            }
+        }
+
+        // Update UI for unauthenticated user
+        function updateUIForUnauthenticatedUser() {
+            if (authButtons) authButtons.style.display = 'flex';
+            if (welcomeSection) welcomeSection.style.display = 'block';
+            if (authContainer) authContainer.style.display = 'block';
+            if (profileSection) profileSection.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'none';
+            
+            // Reset avatar to default
+            if (profileAvatar) profileAvatar.textContent = 'JD';
+        }
+
+        // Toggle profile menu
+        function toggleProfileMenu() {
+            if (profileMenu) {
+                profileMenu.classList.toggle('active');
+            }
+        }
+
+        // Show auth status message
+        function showAuthStatus(message, type, elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = message;
+                element.className = `auth-status ${type}`;
+            }
+        }
+
+        // Clear auth status
+        function clearAuthStatus() {
+            const statusElements = document.querySelectorAll('.auth-status');
+            statusElements.forEach(element => {
+                element.textContent = '';
+                element.className = 'auth-status';
+            });
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            if (toast) {
+                toast.textContent = message;
+                toast.style.display = 'block';
+                
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Extract name from email
+        function extractNameFromEmail(email) {
+            if (!email) return "User";
+            const name = email.split('@')[0];
+            return name.charAt(0).toUpperCase() + name.slice(1);
+        }
+
+        // Get user initials
+        function getUserInitials(name) {
+            if (!name) return "U";
+            
+            const parts = name.split(' ');
+            if (parts.length >= 2) {
+                return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+            } else {
+                return name.substring(0, 2).toUpperCase();
+            }
+        }
+
+        // Validate email
+        function isValidEmail(email) {
+            if (!email) return false;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Handle OAuth callback
+        async function handleOAuthCallback() {
+            const { data, error } = await supabaseClient.auth.getSession();
+            
+            if (data.session) {
+                isAuthenticated = true;
+                currentUser = data.session.user;
+                
+                // Store in localStorage as fallback
+                localStorage.setItem("loggedIn", "true");
+                localStorage.setItem("userEmail", currentUser.email);
+                localStorage.setItem("userName", currentUser.user_metadata?.full_name || extractNameFromEmail(currentUser.email));
+                
+                updateUIForAuthenticatedUser();
+                showToast('Successfully logged in with GitHub!');
+            }
+        }
+
+        // Check if we're returning from OAuth
+        if (window.location.hash && window.location.hash.includes('access_token')) {
+            handleOAuthCallback();
+        }
+    </script>
+</body>
+</html>

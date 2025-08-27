@@ -1,1 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TWSS - Protected Content</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* General Body and Layout */
+        body {
+            font-family: 'Amazon Ember', 'Helvetica Neue', Roboto, Arial, sans-serif;
+            background-color: #f3f3f3;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        /* Authentication Container and Form */
+        #auth-container, #image-container {
+            background-color: #fff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 450px;
+            margin: 1rem;
+        }
+
+        #auth-container h2 {
+            margin-bottom: 2rem;
+            color: #232f3e;
+            font-size: 1.8rem;
+        }
+
+        #auth-form input {
+            width: 100%;
+            padding: 0.85rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        #auth-form input:focus {
+            outline: none;
+            border-color: #f7a800;
+        }
+
+        #auth-form button {
+            width: 100%;
+            padding: 0.9rem;
+            background-color: #f7a800;
+            color: #232f3e;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        #auth-form button:hover {
+            background-color: #e69500;
+        }
+
+        #auth-form button:active {
+            transform: scale(0.99);
+        }
+
+        .auth-status {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+        
+        .auth-status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .auth-status.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        /* Protected Image Container */
+        #image-container {
+            display: none; /* Hidden by default */
+            padding: 2rem;
+        }
+
+        #image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        #image-container h2 {
+            margin-bottom: 1.5rem;
+            color: #232f3e;
+        }
+
+        #image-container p {
+            font-size: 1rem;
+            color: #777;
+            margin-top: 1rem;
+        }
+        
+        /* Logout Button */
+        #logout-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 2rem;
+            font-weight: bold;
+            display: none;
+        }
+        
+        #logout-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* General styles for links and text */
+        a {
+            color: #17a2b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #117a8b;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Authentication and Signup Form -->
+    <div id="auth-container">
+        <div id="auth-form">
+            <h2>Login or Sign Up</h2>
+            <input type="email" id="user-email" placeholder="Email" required>
+            <input type="password" id="user-password" placeholder="Password" required>
+            <button id="login-button" onclick="login()">Login</button>
+            <div class="auth-status" id="auth-status"></div>
+            <p style="margin-top: 1rem;">
+                Don't have an account? <a href="#" id="signup-link" onclick="signupUser()">Sign Up</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Container for the protected image -->
+    <div id="image-container">
+        <h2>Protected Content</h2>
+        <img id="protected-image" src="" alt="Protected Image">
+        <p>This image is only visible to logged-in users with a valid daily pass.</p>
+    </div>
+    
+    <!-- Logout button -->
+    <button id="logout-btn" onclick="logout()">Logout</button>
+
+    <script>
+        // Supabase Client Initialization
+        // Use your provided Supabase URL and Anon Key.
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://fzwvxesrtdilljgrntpw.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'
+        );
+
+        // UI Elements
+        const authContainer = document.getElementById('auth-container');
+        const imageContainer = document.getElementById('image-container');
+        const authStatusDiv = document.getElementById('auth-status');
+        const logoutBtn = document.getElementById('logout-btn');
+        const protectedImage = document.getElementById('protected-image');
+        
+        // Image URL (your provided image)
+        const imageUrl = "https://placehold.co/1920x1080/000000/FFFFFF?text=Protected+Image"; // This is a placeholder for your image
+
+        // Database Table Names (match your Supabase setup)
+        const USERS_TABLE = 'users_login';
+        const ACCESS_TABLE = 'paid_access';
+
+        // Initial check on page load to see if the user is already logged in
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAccessStatus();
+        });
+
+        // Function to check if the user has a valid access entry
+        async function checkAccessStatus() {
+            const userEmail = localStorage.getItem('userEmail');
+            if (!userEmail) {
+                showAuthUI();
+                return;
+            }
+
+            const hasAccess = await hasPaidAccess(userEmail);
+            if (hasAccess) {
+                showImageUI();
+            } else {
+                // Access has expired or record was deleted, prompt for re-login
+                localStorage.removeItem('userEmail');
+                showAuthUI();
+                showStatus('Your daily access has expired. Please log in again.', 'error');
+            }
+        }
+
+        // Check if the user's email exists in the paid_access table
+        async function hasPaidAccess(email) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from(ACCESS_TABLE)
+                    .select('uid')
+                    .eq('uid', email);
+
+                if (error) {
+                    console.error('Error checking paid access:', error);
+                    return false;
+                }
+                return data.length > 0;
+            } catch (err) {
+                console.error('Unexpected error during access check:', err);
+                return false;
+            }
+        }
+
+        // Handle user login
+        async function login() {
+            const email = document.getElementById('user-email').value;
+            const password = document.getElementById('user-password').value;
+
+            showStatus('Logging in...', 'info');
+
+            try {
+                // 1. Authenticate user against the users_login table
+                const { data, error: loginError } = await supabaseClient
+                    .from(USERS_TABLE)
+                    .select('email')
+                    .eq('email', email)
+                    .eq('password', password); // This is highly insecure and should be replaced with hashed passwords
+
+                if (loginError || data.length === 0) {
+                    showStatus("❌ Invalid email or password.", 'error');
+                    return;
+                }
+
+                // 2. Insert record into paid_access table to grant temporary access
+                const { error: accessError } = await supabaseClient
+                    .from(ACCESS_TABLE)
+                    .insert([{ uid: email, password: password }]);
+
+                if (accessError) {
+                    showStatus("❌ Failed to grant access. Please try again.", 'error');
+                    console.error('Paid access insertion error:', accessError);
+                    return;
+                }
+
+                // 3. Store login status in local storage and update UI
+                localStorage.setItem('userEmail', email);
+                showStatus("✅ Login successful! You now have access.", 'success');
+                setTimeout(showImageUI, 1500);
+
+            } catch (err) {
+                console.error('Unexpected login error:', err);
+                showStatus("❌ An unexpected error occurred.", 'error');
+            }
+        }
+
+        // Handle user signup
+        async function signupUser() {
+            const email = document.getElementById('user-email').value;
+            const password = document.getElementById('user-password').value;
+
+            showStatus('Creating account...', 'info');
+
+            try {
+                // 1. Insert into users_login table
+                const { error: signupError } = await supabaseClient
+                    .from(USERS_TABLE)
+                    .insert([{ email: email, password: password }]);
+
+                if (signupError) {
+                    showStatus("❌ " + signupError.message, 'error');
+                    return;
+                }
+
+                // 2. Insert into paid_access table immediately after signup
+                const { error: accessError } = await supabaseClient
+                    .from(ACCESS_TABLE)
+                    .insert([{ uid: email, password: password }]);
+
+                if (accessError) {
+                    showStatus("❌ Account created, but access grant failed. Try logging in.", 'error');
+                    console.error('Paid access insertion error:', accessError);
+                    return;
+                }
+
+                // 3. Store login status and update UI
+                localStorage.setItem('userEmail', email);
+                showStatus("✅ Account created and access granted!", 'success');
+                setTimeout(showImageUI, 1500);
+
+            } catch (err) {
+                console.error('Unexpected signup error:', err);
+                showStatus("❌ An unexpected error occurred.", 'error');
+            }
+        }
+
+        // Handle user logout
+        function logout() {
+            localStorage.removeItem('userEmail');
+            showAuthUI();
+            showStatus('You have been logged out successfully.', 'info');
+        }
+
+        // UI state management functions
+        function showAuthUI() {
+            authContainer.style.display = 'block';
+            imageContainer.style.display = 'none';
+            logoutBtn.style.display = 'none';
+        }
+
+        function showImageUI() {
+            authContainer.style.display = 'none';
+            imageContainer.style.display = 'block';
+            logoutBtn.style.display = 'block';
+            protectedImage.src = "uploaded:image_48827f.png-5eb5acdc-5f02-4034-bb1b-b817f5e214f6";
+        }
+
+        function showStatus(message, type) {
+            authStatusDiv.textContent = message;
+            authStatusDiv.className = `auth-status ${type}`;
+        }
+    </script>
+
+</body>
+</html>
 

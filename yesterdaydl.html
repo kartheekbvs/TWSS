@@ -144,6 +144,21 @@
         a:hover {
             color: #117a8b;
         }
+        .download-btn {
+    display: inline-block;
+    background-color: #17a2b8;
+    color: #fff;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    margin-top: 1rem;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.download-btn:hover {
+    background-color: #117a8b;
+}
 
     </style>
 </head>
@@ -168,6 +183,9 @@
         <h2>Protected Content</h2>
         <img id="protected-image" src="" alt="Protected Image">
         <p>This image is only visible to logged-in users with a valid daily pass.</p>
+        <a href="/Screenshot 2025-08-27 005537.png" download class="download-btn">
+    Download Image
+</a>
     </div>
     
     <!-- Logout button -->
@@ -190,7 +208,7 @@
         const protectedImage = document.getElementById('protected-image');
         
         // Image URL (your provided image)
-        const imageUrl = "/Screenshot 2025-08-27 005537.png"; // This is a placeholder for your image
+        const imageUrl = "https://placehold.co/1920x1080/000000/FFFFFF?text=Protected+Image"; // This is a placeholder for your image
 
         // Database Table Names (match your Supabase setup)
         const USERS_TABLE = 'users_login';
@@ -339,7 +357,7 @@
             authContainer.style.display = 'none';
             imageContainer.style.display = 'block';
             logoutBtn.style.display = 'block';
-            protectedImage.src = "uploaded:image_48827f.png-5eb5acdc-5f02-4034-bb1b-b817f5e214f6";
+            protectedImage.src = "/Screenshot 2025-08-27 005537.png";
         }
 
         function showStatus(message, type) {

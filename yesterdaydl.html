@@ -1,200 +1,127 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TWSS - Protected Content</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta charset="utf-8" />
+  <title>TWSS — Yesterday Download</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f3f3f3;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-    }
-    #auth-container, #image-container {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-      max-width: 450px;
-      width: 90%;
-      margin: 1rem;
-    }
-    #auth-container h2 { margin-bottom: 1.5rem; }
-    #auth-form input {
-      width: 100%;
-      padding: 0.8rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    #auth-form button {
-      width: 100%;
-      padding: 0.9rem;
-      background: #f7a800;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .auth-status { margin-top: 1rem; font-weight: bold; }
-    .auth-status.error { color: red; }
-    .auth-status.success { color: green; }
-    #logout-btn {
-      margin-top: 1rem;
-      padding: 0.7rem 1.2rem;
-      background: #dc3545;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      display: none;
-    }
-    .download-btn {
-      display: inline-block;
-      background: #17a2b8;
-      color: #fff;
-      border-radius: 8px;
-      padding: 0.75rem 1.5rem;
-      margin-top: 1rem;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .download-btn:hover { background: #117a8b; }
+    body{font-family:Arial,Helvetica,sans-serif;background:#f3f3f3;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+    #card{background:#fff;padding:2rem;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,0.08);max-width:520px;width:92%;text-align:center}
+    #status{font-weight:600;margin-bottom:1rem}
+    .error{color:#c82333}
+    .success{color:#155724}
+    img{max-width:100%;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
+    .download-btn{display:inline-block;background:#17a2b8;color:#fff;padding:.8rem 1.3rem;border-radius:8px;text-decoration:none;margin-top:1rem}
   </style>
 </head>
 <body>
-  <div id="auth-container">
-    <div id="auth-form">
-      <h2>Login</h2>
-      <input type="email" id="user-email" placeholder="Email" required>
-      <input type="password" id="user-password" placeholder="Password" required>
-      <button id="login-button" onclick="login()">Login</button>
-      <div class="auth-status" id="auth-status"></div>
+  <div id="card">
+    <div id="status">Checking link...</div>
+
+    <div id="content" style="display:none">
+      <h2>Protected Content — Yesterday</h2>
+      <img id="protected-image" src="/Screenshot 2025-08-27 005537.png" alt="Protected">
+      <div>
+        <!-- Change this href to the actual file you want downloadable -->
+        <a id="downloadLink" class="download-btn" href="/downloads/yesterday.pdf" download>Download Now</a>
+      </div>
     </div>
   </div>
 
-  <div id="image-container" style="display:none;">
-    <h2>Protected Content</h2>
-    <img id="protected-image" src="/Screenshot 2025-08-27 005537.png" alt="Protected" />
-    <!-- ✅ Download button -->
-    <a href="/downloads/yesterday.pdf" class="download-btn" download>Download Now</a>
-  </div>
+<script>
+(async function(){
+  const SUPABASE_URL = "https://fzwvxesrtdilljgrntpw.supabase.co";
+  const SUPABASE_ANON = "eyJhbGci...KRTqA5U";
+  const ACCESS_TABLE = "paid_access";
+  const USERS_TABLE = "users_login";
 
-  <button id="logout-btn" onclick="logout()">Logout</button>
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  <script>
-    // Supabase Init
-    const { createClient } = supabase;
-    const supabaseClient = createClient(
-      "https://fzwvxesrtdilljgrntpw.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U"
-    );
+  const statusDiv = document.getElementById('status');
+  const contentDiv = document.getElementById('content');
 
-    const authContainer = document.getElementById("auth-container");
-    const imageContainer = document.getElementById("image-container");
-    const authStatusDiv = document.getElementById("auth-status");
-    const logoutBtn = document.getElementById("logout-btn");
+  const params = new URLSearchParams(window.location.search);
+  const uid = params.get('uid');
+  const pass = params.get('pass');
 
-    const USERS_TABLE = "users_login";
-    const ACCESS_TABLE = "paid_access";
+  if (!uid || !pass) {
+    statusDiv.textContent = "❌ Missing uid or pass in URL.";
+    statusDiv.className = "error";
+    return;
+  }
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      const params = new URLSearchParams(window.location.search);
-      const uid = params.get("uid");
-      const pass = params.get("pass");
+  try {
+    // 1) find paid_access entry (limit 1)
+    const { data, error } = await supabaseClient
+      .from(ACCESS_TABLE)
+      .select("id, uid, password, used")
+      .eq("uid", uid)
+      .eq("password", pass)
+      .limit(1);
 
-      if (uid && pass) {
-        document.getElementById("user-email").value = uid;
-        document.getElementById("user-password").value = pass;
-        await login(true);
-      } else {
-        showStatus("❌ Direct access not allowed", "error");
-      }
-    });
-
-    async function login(auto=false) {
-      const email = document.getElementById("user-email").value;
-      const password = document.getElementById("user-password").value;
-
-      try {
-        // 1. Check if access exists & not used
-        const { data, error } = await supabaseClient
-          .from(ACCESS_TABLE)
-          .select("uid, password, used")
-          .eq("uid", email)
-          .eq("password", password);
-
-        if (error || data.length === 0) {
-          showStatus("❌ Invalid or expired link", "error");
-          return;
-        }
-
-        if (data[0].used === true) {
-          showStatus("❌ This link has already been used", "error");
-          return;
-        }
-
-        // 2. Mark as used
-        await supabaseClient
-          .from(ACCESS_TABLE)
-          .update({ used: true })
-          .eq("uid", email)
-          .eq("password", password);
-
-        // 3. Insert user if not in users_login
-        await supabaseClient.from(USERS_TABLE).upsert([{ email, password }]);
-
-        // 4. Grant access
-        localStorage.setItem("userEmail", email);
-        showStatus("✅ Access granted!", "success");
-        setTimeout(showImageUI, 1000);
-
-      } catch (err) {
-        console.error(err);
-        showStatus("❌ Unexpected error", "error");
-      }
+    if (error) {
+      console.error("DB read error:", error);
+      statusDiv.textContent = "❌ Error checking link. Try again later.";
+      statusDiv.className = "error";
+      return;
     }
 
-    function logout() {
-      localStorage.removeItem("userEmail");
-      authContainer.style.display = "block";
-      imageContainer.style.display = "none";
-      logoutBtn.style.display = "none";
+    if (!data || data.length === 0) {
+      statusDiv.textContent = "❌ Invalid or expired link.";
+      statusDiv.className = "error";
+      return;
     }
 
-    function showImageUI() {
-      authContainer.style.display = "none";
-      imageContainer.style.display = "block";
-      logoutBtn.style.display = "block";
+    const access = data[0];
+    if (access.used) {
+      statusDiv.textContent = "❌ This link has already been used.";
+      statusDiv.className = "error";
+      return;
     }
 
-    function showStatus(message, type) {
-      authStatusDiv.textContent = message;
-      authStatusDiv.className = `auth-status ${type}`;
+    // 2) mark as used (atomic-ish: update by id)
+    const { error: updateErr } = await supabaseClient
+      .from(ACCESS_TABLE)
+      .update({ used: true, used_at: new Date().toISOString() })
+      .eq("id", access.id);
+
+    if (updateErr) {
+      console.error("DB update error:", updateErr);
+      statusDiv.textContent = "❌ Could not mark link as used. Try again.";
+      statusDiv.className = "error";
+      return;
     }
-  </script>
-    <script>
-        // Remove alert calls for better user experience
-        document.onkeydown = function(e) {
-            if (
-                e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S') ||
-                e.key === 'F12' ||
-                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i'))
-            ) {
-                // console.log("Developer tools or source view attempt detected.");
-                return false; // Prevent default action for these keys
-            }
-        };
-        
-        document.addEventListener('contextmenu', event => {
-            event.preventDefault(); // Prevent right-click context menu
-        });
-            </script>
+
+    // 3) upsert user in users_login (so you have the user record)
+    const { error: upsertErr } = await supabaseClient
+      .from(USERS_TABLE)
+      .upsert([{ email: uid, password: pass }], { onConflict: 'email' });
+
+    if (upsertErr) {
+      console.warn("Upsert user warning:", upsertErr);
+      // not fatal: continue to allow download
+    }
+
+    // 4) success — show content and remove query from URL
+    statusDiv.textContent = "✅ Access granted — your download is ready!";
+    statusDiv.className = "success";
+    contentDiv.style.display = "block";
+
+    // remove query params from address bar (so credentials not visible)
+    try {
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    } catch (err) {
+      // if replaceState fails, ignore
+    }
+
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    statusDiv.textContent = "❌ Unexpected error. Try again later.";
+    statusDiv.className = "error";
+  }
+})();
+</script>
 </body>
 </html>

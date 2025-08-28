@@ -163,37 +163,26 @@
     </style>
 </head>
 <body>
-
-    <!-- Authentication and Signup Form -->
-    <div id="auth-container">
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <div id="auth-container" style="display:none;">
         <div id="auth-form">
-            <h2>Login or Sign Up</h2>
+            <h2>Login</h2>
             <input type="email" id="user-email" placeholder="Email" required>
             <input type="password" id="user-password" placeholder="Password" required>
             <button id="login-button" onclick="login()">Login</button>
             <div class="auth-status" id="auth-status"></div>
-            <p style="margin-top: 1rem;">
-                Don't have an account? <a href="#" id="signup-link" onclick="signupUser()">Sign Up</a>
-            </p>
         </div>
     </div>
 
-    <!-- Container for the protected image -->
-    <div id="image-container">
+    <div id="image-container" style="display:none;">
         <h2>Protected Content</h2>
-        <img id="protected-image" src="" alt="Protected Image">
-        <p>This image is only visible to logged-in users with a valid daily pass.</p>
-        <a href="/Screenshot 2025-08-27 005537.png" download class="download-btn">
-    Download Image
-</a>
+        <img id="protected-image" src="" alt="Protected Image" />
     </div>
-    
-    <!-- Logout button -->
-    <button id="logout-btn" onclick="logout()">Logout</button>
+
+    <button id="logout-btn" style="display:none;" onclick="logout()">Logout</button>
 
     <script>
         // Supabase Client Initialization
-        // Use your provided Supabase URL and Anon Key.
         const { createClient } = supabase;
         const supabaseClient = createClient(
             'https://fzwvxesrtdilljgrntpw.supabase.co',
@@ -206,151 +195,82 @@
         const authStatusDiv = document.getElementById('auth-status');
         const logoutBtn = document.getElementById('logout-btn');
         const protectedImage = document.getElementById('protected-image');
-        
-        // Image URL (your provided image)
-        const imageUrl = "https://placehold.co/1920x1080/000000/FFFFFF?text=Protected+Image"; // This is a placeholder for your image
 
-        // Database Table Names (match your Supabase setup)
         const USERS_TABLE = 'users_login';
         const ACCESS_TABLE = 'paid_access';
 
-        // Initial check on page load to see if the user is already logged in
-        document.addEventListener('DOMContentLoaded', async () => {
-            await checkAccessStatus();
+        document.addEventListener("DOMContentLoaded", async () => {
+            const params = new URLSearchParams(window.location.search);
+            const uid = params.get("uid");
+            const pass = params.get("pass");
+
+            if (uid && pass) {
+                // Autofill & trigger login/signup
+                document.getElementById("user-email").value = uid;
+                document.getElementById("user-password").value = pass;
+
+                // Try login directly
+                await login(true);  // auto mode
+            } else {
+                // If URL has no params, block access
+                showStatus("❌ Direct access not allowed. Use the special link.", "error");
+                authContainer.style.display = "none"; // hide login form
+            }
         });
 
-        // Function to check if the user has a valid access entry
-        async function checkAccessStatus() {
-            const userEmail = localStorage.getItem('userEmail');
-            if (!userEmail) {
-                showAuthUI();
+        async function login(auto=false) {
+            const email = document.getElementById("user-email").value;
+            const password = document.getElementById("user-password").value;
+
+            if (!email || !password) {
+                showStatus("Please enter email & password.", "error");
                 return;
             }
 
-            const hasAccess = await hasPaidAccess(userEmail);
-            if (hasAccess) {
-                showImageUI();
-            } else {
-                // Access has expired or record was deleted, prompt for re-login
-                localStorage.removeItem('userEmail');
-                showAuthUI();
-                showStatus('Your daily access has expired. Please log in again.', 'error');
-            }
-        }
-
-        // Check if the user's email exists in the paid_access table
-        async function hasPaidAccess(email) {
             try {
+                // Check if user exists
                 const { data, error } = await supabaseClient
-                    .from(ACCESS_TABLE)
-                    .select('uid')
-                    .eq('uid', email);
-
-                if (error) {
-                    console.error('Error checking paid access:', error);
-                    return false;
-                }
-                return data.length > 0;
-            } catch (err) {
-                console.error('Unexpected error during access check:', err);
-                return false;
-            }
-        }
-
-        // Handle user login
-        async function login() {
-            const email = document.getElementById('user-email').value;
-            const password = document.getElementById('user-password').value;
-
-            showStatus('Logging in...', 'info');
-
-            try {
-                // 1. Authenticate user against the users_login table
-                const { data, error: loginError } = await supabaseClient
                     .from(USERS_TABLE)
                     .select('email')
                     .eq('email', email)
-                    .eq('password', password); // This is highly insecure and should be replaced with hashed passwords
+                    .eq('password', password);
 
-                if (loginError || data.length === 0) {
-                    showStatus("❌ Invalid email or password.", 'error');
+                if (error) {
+                    console.error(error);
+                    showStatus("❌ Error connecting to DB.", "error");
                     return;
                 }
 
-                // 2. Insert record into paid_access table to grant temporary access
-                const { error: accessError } = await supabaseClient
-                    .from(ACCESS_TABLE)
-                    .insert([{ uid: email, password: password }]);
-
-                if (accessError) {
-                    showStatus("❌ Failed to grant access. Please try again.", 'error');
-                    console.error('Paid access insertion error:', accessError);
-                    return;
+                if (data.length === 0) {
+                    // Not found -> auto-insert if URL provided
+                    if (auto) {
+                        await supabaseClient.from(USERS_TABLE).insert([{ email, password }]);
+                    } else {
+                        showStatus("❌ Invalid email/password", "error");
+                        return;
+                    }
                 }
 
-                // 3. Store login status in local storage and update UI
-                localStorage.setItem('userEmail', email);
-                showStatus("✅ Login successful! You now have access.", 'success');
-                setTimeout(showImageUI, 1500);
+                // Insert paid_access
+                await supabaseClient.from(ACCESS_TABLE).insert([{ uid: email, password }]);
+
+                // Save session
+                localStorage.setItem("userEmail", email);
+                showStatus("✅ Access granted!", "success");
+                setTimeout(showImageUI, 1000);
 
             } catch (err) {
-                console.error('Unexpected login error:', err);
-                showStatus("❌ An unexpected error occurred.", 'error');
+                console.error(err);
+                showStatus("❌ Unexpected error", "error");
             }
         }
 
-        // Handle user signup
-        async function signupUser() {
-            const email = document.getElementById('user-email').value;
-            const password = document.getElementById('user-password').value;
-
-            showStatus('Creating account...', 'info');
-
-            try {
-                // 1. Insert into users_login table
-                const { error: signupError } = await supabaseClient
-                    .from(USERS_TABLE)
-                    .insert([{ email: email, password: password }]);
-
-                if (signupError) {
-                    showStatus("❌ " + signupError.message, 'error');
-                    return;
-                }
-
-                // 2. Insert into paid_access table immediately after signup
-                const { error: accessError } = await supabaseClient
-                    .from(ACCESS_TABLE)
-                    .insert([{ uid: email, password: password }]);
-
-                if (accessError) {
-                    showStatus("❌ Account created, but access grant failed. Try logging in.", 'error');
-                    console.error('Paid access insertion error:', accessError);
-                    return;
-                }
-
-                // 3. Store login status and update UI
-                localStorage.setItem('userEmail', email);
-                showStatus("✅ Account created and access granted!", 'success');
-                setTimeout(showImageUI, 1500);
-
-            } catch (err) {
-                console.error('Unexpected signup error:', err);
-                showStatus("❌ An unexpected error occurred.", 'error');
-            }
-        }
-
-        // Handle user logout
         function logout() {
-            localStorage.removeItem('userEmail');
-            showAuthUI();
-            showStatus('You have been logged out successfully.', 'info');
-        }
-
-        // UI state management functions
-        function showAuthUI() {
-            authContainer.style.display = 'block';
-            imageContainer.style.display = 'none';
-            logoutBtn.style.display = 'none';
+            localStorage.removeItem("userEmail");
+            showStatus("Logged out.", "info");
+            authContainer.style.display = "none";
+            imageContainer.style.display = "none";
+            logoutBtn.style.display = "none";
         }
 
         function showImageUI() {

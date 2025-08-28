@@ -1,1 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TWSS - Protected Content</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* General Body and Layout */
+        body {
+            font-family: 'Amazon Ember', 'Helvetica Neue', Roboto, Arial, sans-serif;
+            background-color: #f3f3f3;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        /* Authentication Container and Form */
+        #auth-container, #image-container {
+            background-color: #fff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 450px;
+            margin: 1rem;
+        }
+
+        #auth-container h2 {
+            margin-bottom: 2rem;
+            color: #232f3e;
+            font-size: 1.8rem;
+        }
+
+        #auth-form input {
+            width: 100%;
+            padding: 0.85rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        #auth-form input:focus {
+            outline: none;
+            border-color: #f7a800;
+        }
+
+        #auth-form button {
+            width: 100%;
+            padding: 0.9rem;
+            background-color: #f7a800;
+            color: #232f3e;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        #auth-form button:hover {
+            background-color: #e69500;
+        }
+
+        #auth-form button:active {
+            transform: scale(0.99);
+        }
+
+        .auth-status {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+        
+        .auth-status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .auth-status.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        /* Protected Image Container */
+        #image-container {
+            display: none; /* Hidden by default */
+            padding: 2rem;
+        }
+
+        #image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        #image-container h2 {
+            margin-bottom: 1.5rem;
+            color: #232f3e;
+        }
+
+        #image-container p {
+            font-size: 1rem;
+            color: #777;
+            margin-top: 1rem;
+        }
+        
+        /* Logout Button */
+        #logout-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 2rem;
+            font-weight: bold;
+            display: none;
+        }
+        
+        #logout-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* General styles for links and text */
+        a {
+            color: #17a2b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #117a8b;
+        }
+        .download-btn {
+    display: inline-block;
+    background-color: #17a2b8;
+    color: #fff;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    margin-top: 1rem;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.download-btn:hover {
+    background-color: #117a8b;
+}
+
+    </style>
+</head>
+<body>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <div id="auth-container" style="display:none;">
+        <div id="auth-form">
+            <h2>Login</h2>
+            <input type="email" id="user-email" placeholder="Email" required>
+            <input type="password" id="user-password" placeholder="Password" required>
+            <button id="login-button" onclick="login()">Login</button>
+            <div class="auth-status" id="auth-status"></div>
+        </div>
+    </div>
+
+    <div id="image-container" style="display:none;">
+        <h2>Protected Content</h2>
+        <img id="protected-image" src="" alt="Protected Image" />
+    </div>
+
+    <button id="logout-btn" style="display:none;" onclick="logout()">Logout</button>
+
+    <script>
+        // Supabase Client Initialization
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://fzwvxesrtdilljgrntpw.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'
+        );
+
+        // UI Elements
+        const authContainer = document.getElementById('auth-container');
+        const imageContainer = document.getElementById('image-container');
+        const authStatusDiv = document.getElementById('auth-status');
+        const logoutBtn = document.getElementById('logout-btn');
+        const protectedImage = document.getElementById('protected-image');
+
+        const USERS_TABLE = 'users_login';
+        const ACCESS_TABLE = 'paid_access';
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const params = new URLSearchParams(window.location.search);
+            const uid = params.get("uid");
+            const pass = params.get("pass");
+
+            if (uid && pass) {
+                // Autofill & trigger login/signup
+                document.getElementById("user-email").value = uid;
+                document.getElementById("user-password").value = pass;
+
+                // Try login directly
+                await login(true);  // auto mode
+            } else {
+                // If URL has no params, block access
+                showStatus("❌ Direct access not allowed. Use the special link.", "error");
+                authContainer.style.display = "none"; // hide login form
+            }
+        });
+
+        async function login(auto=false) {
+            const email = document.getElementById("user-email").value;
+            const password = document.getElementById("user-password").value;
+
+            if (!email || !password) {
+                showStatus("Please enter email & password.", "error");
+                return;
+            }
+
+            try {
+                // Check if user exists
+                const { data, error } = await supabaseClient
+                    .from(USERS_TABLE)
+                    .select('email')
+                    .eq('email', email)
+                    .eq('password', password);
+
+                if (error) {
+                    console.error(error);
+                    showStatus("❌ Error connecting to DB.", "error");
+                    return;
+                }
+
+                if (data.length === 0) {
+                    // Not found -> auto-insert if URL provided
+                    if (auto) {
+                        await supabaseClient.from(USERS_TABLE).insert([{ email, password }]);
+                    } else {
+                        showStatus("❌ Invalid email/password", "error");
+                        return;
+                    }
+                }
+
+                // Insert paid_access
+                await supabaseClient.from(ACCESS_TABLE).insert([{ uid: email, password }]);
+
+                // Save session
+                localStorage.setItem("userEmail", email);
+                showStatus("✅ Access granted!", "success");
+                setTimeout(showImageUI, 1000);
+
+            } catch (err) {
+                console.error(err);
+                showStatus("❌ Unexpected error", "error");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("userEmail");
+            showStatus("Logged out.", "info");
+            authContainer.style.display = "none";
+            imageContainer.style.display = "none";
+            logoutBtn.style.display = "none";
+        }
+
+        function showImageUI() {
+            authContainer.style.display = 'none';
+            imageContainer.style.display = 'block';
+            logoutBtn.style.display = 'block';
+            protectedImage.src = "/Screenshot 2025-08-27 005537.png";
+        }
+
+        function showStatus(message, type) {
+            authStatusDiv.textContent = message;
+            authStatusDiv.className = `auth-status ${type}`;
+        }
+    </script>
+     <script>
+        // Remove alert calls for better user experience
+        document.onkeydown = function(e) {
+            if (
+                e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S') ||
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i'))
+            ) {
+                // console.log("Developer tools or source view attempt detected.");
+                return false; // Prevent default action for these keys
+            }
+        };
+        
+        document.addEventListener('contextmenu', event => {
+            event.preventDefault(); // Prevent right-click context menu
+        });
+            </script>
+</body>
+</html>
 

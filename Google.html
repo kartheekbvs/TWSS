@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google OAuth Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <h2>Login with </h2>
+<div id="g_id_onload"
+     data-client_id="1234567890-xxxx.apps.googleusercontent.com"
+     data-login_uri="https://twss.netlify.app/Google"
+     data-auto_prompt="false">
+</div>
+
+
+
+
+
+  
+  <div class="g_id_signin" 
+       data-type="standard"
+       data-shape="rectangular"
+       data-theme="outline"
+       data-text="signin_with"
+       data-size="large"
+       data-logo_alignment="left">
+  </div>
+
+  <div id="dashboard"></div>
+
+  <script>
+    function handleCredentialResponse(response) {
+      // response.credential is the ID token
+      const data = jwt_decode(response.credential);
+      document.getElementById("dashboard").innerHTML = `
+        <h3>Welcome ${data.name}!</h3>
+        <p>Email: ${data.email}</p>
+        <img src="${data.picture}" width="100"/>
+      `;
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+</body>
+</html>

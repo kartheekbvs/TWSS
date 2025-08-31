@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>TWSS — Yesterday Download</title>
+  <title>TWSS — Duty Leave Download</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <style>
@@ -16,11 +16,15 @@
 </head>
 <body>
   <div id="card">
-    <div id="status">Checking link...</div>
+    <div id="status">Checking your duty leave link...</div>
 
     <div id="content" style="display:none">
-      <h2>Protected Content — Yesterday</h2>
-      <a id="downloadLink" class="download-btn" href="/Screenshot 2025-08-27 005537.png" download>Download Now</a>
+      <h2>✅ Your Duty Leave</h2>
+      <p>You can download your approved duty leave form below.  
+         This link will expire after use.  
+         If you need another, please <a href="https://twss-awe.pages.dev/courses#downloads">buy again</a>.
+      </p>
+      <a id="downloadLink" class="download-btn" href="Screenshot 2025-08-27 005537.png" download>Download Duty Leave</a>
     </div>
   </div>
 
@@ -38,36 +42,59 @@ const SUPABASE_URL = "https://fzwvxesrtdilljgrntpw.supabase.co"; const SUPABASE_
   const pass = params.get('pass');
 
   if (!uid || !pass) {
-    statusDiv.textContent = "❌ Missing uid or pass in URL.";
+    statusDiv.textContent = "❌ Invalid link. Missing credentials.";
     statusDiv.className = "error";
     return;
   }
 
-  // ✅ Directly show content
-  statusDiv.textContent = "✅ Access granted — your download is ready!";
-  statusDiv.className = "success";
-  contentDiv.style.display = "block";
-
-  // Cleanup on page load (so if they refresh, entry is removed)
   try {
-    await supabaseClient.from(ACCESS_TABLE).delete().eq("uid", uid).eq("password", pass);
-    await supabaseClient.from(USERS_TABLE).delete().eq("email", uid);
-  } catch (err) {
-    console.error("Auto delete error:", err);
-  }
+    // Check if token exists
+    const { data, error } = await supabaseClient
+      .from(ACCESS_TABLE)
+      .select("id, uid, password")
+      .eq("uid", uid)
+      .eq("password", pass)
+      .limit(1);
 
-  // Also cleanup when they click download
-  const downloadBtn = document.getElementById('downloadLink');
-  downloadBtn.addEventListener('click', async (e) => {
-    // delete again just in case
-    try {
-      await supabaseClient.from(ACCESS_TABLE).delete().eq("uid", uid).eq("password", pass);
-      await supabaseClient.from(USERS_TABLE).delete().eq("email", uid);
-    } catch (err) {
-      console.error("Delete error:", err);
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      statusDiv.textContent = "❌ This link has already been used or is invalid.";
+      statusDiv.className = "error";
+      return;
     }
-    // let the file download
-  });
+
+    const access = data[0];
+
+    // Show content
+    statusDiv.textContent = "✅ Access granted — you may download your duty leave.";
+    statusDiv.className = "success";
+    contentDiv.style.display = "block";
+
+    // Function to delete token
+    async function deleteToken() {
+      try {
+        await supabaseClient.from(ACCESS_TABLE).delete().eq("id", access.id);
+        await supabaseClient.from(USERS_TABLE).delete().eq("email", uid);
+      } catch (err) {
+        console.error("Delete error:", err);
+      }
+    }
+
+    // Delete immediately on load
+    await deleteToken();
+
+    // Delete again when they click download
+    const downloadBtn = document.getElementById('downloadLink');
+    downloadBtn.addEventListener('click', async () => {
+      await deleteToken();
+    });
+
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    statusDiv.textContent = "❌ Unexpected system error. Try again later.";
+    statusDiv.className = "error";
+  }
 })();
 </script>
 </body>

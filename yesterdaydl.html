@@ -20,11 +20,11 @@
 
     <div id="content" style="display:none">
       <h2>✅ Your Duty Leave</h2>
-      <p>You can download your approved duty leave form below.  
-         This link will expire after use.  
+      <p>You can download your approved duty leave form below.<br>
+         This link will expire after one use.<br>
          If you need another, please <a href="https://twss-awe.pages.dev/courses#downloads">buy again</a>.
       </p>
-      <a id="downloadLink" class="download-btn" href="Screenshot 2025-08-27 005537.png" download>Download Duty Leave</a>
+      <a id="downloadLink" class="download-btn" href="/Screenshot 2025-08-27 005537.png" download>Download Duty Leave</a>
     </div>
   </div>
 
@@ -48,10 +48,10 @@ const SUPABASE_URL = "https://fzwvxesrtdilljgrntpw.supabase.co"; const SUPABASE_
   }
 
   try {
-    // Check if token exists
+    // Check if token exists and not used
     const { data, error } = await supabaseClient
       .from(ACCESS_TABLE)
-      .select("id, uid, password")
+      .select("id, uid, password, used")
       .eq("uid", uid)
       .eq("password", pass)
       .limit(1);
@@ -66,53 +66,38 @@ const SUPABASE_URL = "https://fzwvxesrtdilljgrntpw.supabase.co"; const SUPABASE_
 
     const access = data[0];
 
+    if (access.used) {
+      statusDiv.textContent = "❌ This link has already been used.";
+      statusDiv.className = "error";
+      return;
+    }
+
     // Show content
     statusDiv.textContent = "✅ Access granted — you may download your duty leave.";
     statusDiv.className = "success";
     contentDiv.style.display = "block";
 
-    // Function to delete token
-    async function deleteToken() {
+    // On download click → mark as used + delete user
+    const downloadBtn = document.getElementById('downloadLink');
+    downloadBtn.addEventListener('click', async () => {
       try {
-        await supabaseClient.from(ACCESS_TABLE).delete().eq("id", access.id);
+        await supabaseClient.from(ACCESS_TABLE).update({
+          used: true,
+          used_at: new Date().toISOString()
+        }).eq("id", access.id);
+
         await supabaseClient.from(USERS_TABLE).delete().eq("email", uid);
       } catch (err) {
         console.error("Delete error:", err);
       }
-    }
-
-    // Delete immediately on load
-    await deleteToken();
-
-    // Delete again when they click download
-    const downloadBtn = document.getElementById('downloadLink');
-    downloadBtn.addEventListener('click', async () => {
-      await deleteToken();
     });
 
   } catch (err) {
     console.error("Unexpected error:", err);
-    statusDiv.textContent = "❌ Unexpected system error. Try again later.";
+    statusDiv.textContent = "⚠️ Temporary error. Please refresh.";
     statusDiv.className = "error";
   }
 })();
-</script>
-      <script>
-// Remove alert calls for better user experience
-document.onkeydown = function(e) {
-    if (
-        e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S') ||
-        e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i'))
-    ) {
-        // console.log("Developer tools or source view attempt detected.");
-        return false; // Prevent default action for these keys
-    }
-};
-
-document.addEventListener('contextmenu', event => {
-    event.preventDefault(); // Prevent right-click context menu
-});
 </script>
 </body>
 </html>

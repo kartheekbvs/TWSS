@@ -21,7 +21,7 @@
     <div id="content" style="display:none">
       <h2>✅ Your Duty Leave</h2>
       <p>You can download your approved duty leave form below.<br>
-         This link will expire after one use.<br>
+         This link will expire immediately after download.<br>
          If you need another, please <a href="https://twss-awe.pages.dev/courses#downloads">buy again</a>.
       </p>
       <a id="downloadLink" class="download-btn" href="/Screenshot 2025-08-27 005537.png" download>Download Duty Leave</a>
@@ -29,7 +29,6 @@
   </div>
 
 <script>
-(async function(){
 const SUPABASE_URL = "https://fzwvxesrtdilljgrntpw.supabase.co"; const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U"; const ACCESS_TABLE = "paid_access"; const USERS_TABLE = "users_login";
 
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -42,13 +41,13 @@ const SUPABASE_URL = "https://fzwvxesrtdilljgrntpw.supabase.co"; const SUPABASE_
   const pass = params.get('pass');
 
   if (!uid || !pass) {
-    statusDiv.textContent = "❌ Invalid link. Missing credentials.";
+    statusDiv.textContent = "❌ Invalid or missing link.";
     statusDiv.className = "error";
     return;
   }
 
   try {
-    // Check if token exists and not used
+    // 1. Check if token exists and not used
     const { data, error } = await supabaseClient
       .from(ACCESS_TABLE)
       .select("id, uid, password, used")
@@ -59,34 +58,36 @@ const SUPABASE_URL = "https://fzwvxesrtdilljgrntpw.supabase.co"; const SUPABASE_
     if (error) throw error;
 
     if (!data || data.length === 0) {
-      statusDiv.textContent = "❌ This link has already been used or is invalid.";
+      statusDiv.textContent = "❌ This link has expired or is invalid.";
       statusDiv.className = "error";
       return;
     }
 
     const access = data[0];
-
     if (access.used) {
       statusDiv.textContent = "❌ This link has already been used.";
       statusDiv.className = "error";
       return;
     }
 
-    // Show content
+    // 2. Show download button
     statusDiv.textContent = "✅ Access granted — you may download your duty leave.";
     statusDiv.className = "success";
     contentDiv.style.display = "block";
 
-    // On download click → mark as used + delete user
+    // 3. Handle download click
     const downloadBtn = document.getElementById('downloadLink');
-    downloadBtn.addEventListener('click', async () => {
+    downloadBtn.addEventListener('click', async (e) => {
       try {
-        await supabaseClient.from(ACCESS_TABLE).update({
-          used: true,
-          used_at: new Date().toISOString()
-        }).eq("id", access.id);
+        // Mark token as used
+        await supabaseClient.from(ACCESS_TABLE)
+          .update({ used: true, used_at: new Date().toISOString() })
+          .eq("id", access.id);
 
+        // Delete from users_login for cleanup
         await supabaseClient.from(USERS_TABLE).delete().eq("email", uid);
+
+        // ✅ After download, if they refresh → it shows expired
       } catch (err) {
         console.error("Delete error:", err);
       }
@@ -94,7 +95,7 @@ const SUPABASE_URL = "https://fzwvxesrtdilljgrntpw.supabase.co"; const SUPABASE_
 
   } catch (err) {
     console.error("Unexpected error:", err);
-    statusDiv.textContent = "⚠️ Temporary error. Please refresh.";
+    statusDiv.textContent = "⚠️ Temporary system error. Please refresh.";
     statusDiv.className = "error";
   }
 })();

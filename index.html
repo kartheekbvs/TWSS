@@ -42,7 +42,7 @@
     </div>
 
     <script>
-        const redirectURL = "https:/twss-awe.pages.dev"; // Replace with your desired URL
+        const redirectURL = "https://twss-awe.pages.dev"; // Replace with your desired URL
         const redirectMinutes = 1; // Set the number of minutes before redirection
 
         const countdownElement = document.getElementById("countdown");
@@ -57,7 +57,7 @@
                 window.location.href = redirectURL;
             } else {
                 remainingSeconds--;
-                setTimeout(updateCountdown, 1000); // Update every second
+                setTimeout(updateCountdown, 1); // Update every second
             }
         }
 
@@ -65,3 +65,4 @@
     </script>
 </body>
 </html>
+

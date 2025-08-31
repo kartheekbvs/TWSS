@@ -30,12 +30,11 @@
   </div>
 
 <script>
+<script>
 (async function(){
-  const SUPABASE_URL = "https://fzwvxesrtdilljgrntpw.supabase.co";
-  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U";
+const SUPABASE_URL = "https://fzwvxesrtdilljgrntpw.supabase.co"; const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U"; 
   const ACCESS_TABLE = "paid_access";
   const USERS_TABLE = "users_login";
-
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
   const statusDiv = document.getElementById('status');
@@ -52,7 +51,7 @@
   }
 
   try {
-    // 1) find paid_access entry (limit 1)
+    // 1) find paid_access entry
     const { data, error } = await supabaseClient
       .from(ACCESS_TABLE)
       .select("id, uid, password, used")
@@ -61,8 +60,7 @@
       .limit(1);
 
     if (error) {
-      console.error("DB read error:", error);
-      statusDiv.textContent = "❌ Error checking link. Try again later.";
+      statusDiv.textContent = "❌ Error checking link.";
       statusDiv.className = "error";
       return;
     }
@@ -80,73 +78,55 @@
       return;
     }
 
-    // 2) mark as used (atomic-ish: update by id)
-    const { error: updateErr } = await supabaseClient
+    // 2) mark as used
+    await supabaseClient
       .from(ACCESS_TABLE)
       .update({ used: true, used_at: new Date().toISOString() })
       .eq("id", access.id);
 
-    if (updateErr) {
-      console.error("DB update error:", updateErr);
-      statusDiv.textContent = "❌ Could not mark link as used. Try again.";
-      statusDiv.className = "error";
-      return;
-    }
-
-    // 3) upsert user in users_login (so you have the user record)
-    const { error: upsertErr } = await supabaseClient
+    // 3) upsert user
+    await supabaseClient
       .from(USERS_TABLE)
       .upsert([{ email: uid, password: pass }], { onConflict: 'email' });
 
-    if (upsertErr) {
-      console.warn("Upsert user warning:", upsertErr);
-      // not fatal: continue to allow download
-    }
-
-    // 4) success — show content and remove query from URL
+    // 4) success — show content
     statusDiv.textContent = "✅ Access granted — your download is ready!";
     statusDiv.className = "success";
     contentDiv.style.display = "block";
 
-    // remove query params from address bar (so credentials not visible)
+    // remove query params
     try {
       const cleanUrl = window.location.origin + window.location.pathname;
       window.history.replaceState({}, document.title, cleanUrl);
-    } catch (err) {
-      // if replaceState fails, ignore
-    }
+    } catch (err) {}
+
+    // 5) Add click handler *inside success*
+    const downloadBtn = document.getElementById('downloadLink');
+    downloadBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      try {
+        // Delete from paid_access
+        await supabaseClient.from(ACCESS_TABLE).delete().eq('id', access.id);
+
+        // Delete from users_login
+        await supabaseClient.from(USERS_TABLE).delete().eq('email', uid);
+
+        // trigger real download
+        window.location.href = downloadBtn.href;
+      } catch (err) {
+        console.error("Delete error:", err);
+        alert("❌ Could not complete deletion. Try again.");
+      }
+    });
 
   } catch (err) {
-    console.error("Unexpected error:", err);
-    statusDiv.textContent = "❌ Unexpected error. Try again later.";
+    statusDiv.textContent = "❌ Unexpected error.";
     statusDiv.className = "error";
   }
 })();
-  // 5) When user clicks Download, delete from DB
-const downloadBtn = document.getElementById('downloadLink');
-downloadBtn.addEventListener('click', async (e) => {
-  e.preventDefault(); // stop immediate download
+</script>
 
-  try {
-    // Delete from paid_access
-    await supabaseClient
-      .from(ACCESS_TABLE)
-      .delete()
-      .eq('id', access.id);
-
-    // Delete from users_login
-    await supabaseClient
-      .from(USERS_TABLE)
-      .delete()
-      .eq('email', uid);
-
-    // Now trigger the real download
-    window.location.href = downloadBtn.href;
-  } catch (err) {
-    console.error("Delete error:", err);
-    alert("❌ Could not complete deletion. Try again.");
-  }
-});
 
 </script>
 </body>

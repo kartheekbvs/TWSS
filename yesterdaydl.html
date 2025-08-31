@@ -11,7 +11,6 @@
     #status{font-weight:600;margin-bottom:1rem}
     .error{color:#c82333}
     .success{color:#155724}
-    img{max-width:100%;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
     .download-btn{display:inline-block;background:#17a2b8;color:#fff;padding:.8rem 1.3rem;border-radius:8px;text-decoration:none;margin-top:1rem}
   </style>
 </head>
@@ -21,16 +20,15 @@
 
     <div id="content" style="display:none">
       <h2>Protected Content — Yesterday</h2>
-      <img id="protected-image" src="/Screenshot 2025-08-27 005537.png" alt="Protected">
-      <div>
-        <!-- Change this href to the actual file you want downloadable -->
-        <a id="downloadLink" class="download-btn" href="/downloads/yesterday.pdf" download>Download Now</a>
-      </div>
+      <a id="downloadLink" class="download-btn" href="/Screenshot 2025-08-27 005537.png" download>Download Now</a>
     </div>
   </div>
-  <script>
+
+<script>
 (async function(){
-  const SUPABASE_URL = "https://fzwvxesrtdilljgrntpw.supabase.co"; const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U"; const ACCESS_TABLE = "paid_access"; const USERS_TABLE = "users_login";
+const SUPABASE_URL = "https://fzwvxesrtdilljgrntpw.supabase.co"; const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U"; const ACCESS_TABLE = "paid_access"; const USERS_TABLE = "users_login";
+
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
   const statusDiv = document.getElementById('status');
   const contentDiv = document.getElementById('content');
@@ -45,82 +43,32 @@
     return;
   }
 
+  // ✅ Directly show content
+  statusDiv.textContent = "✅ Access granted — your download is ready!";
+  statusDiv.className = "success";
+  contentDiv.style.display = "block";
+
+  // Cleanup on page load (so if they refresh, entry is removed)
   try {
-    // 1) find paid_access entry
-    const { data, error } = await supabaseClient
-      .from(ACCESS_TABLE)
-      .select("id, uid, password, used")
-      .eq("uid", uid)
-      .eq("password", pass)
-      .limit(1);
-
-    if (error) {
-      statusDiv.textContent = "❌ Error checking link.";
-      statusDiv.className = "error";
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      statusDiv.textContent = "❌ Invalid or expired link.";
-      statusDiv.className = "error";
-      return;
-    }
-
-    const access = data[0];
-    if (access.used) {
-      statusDiv.textContent = "❌ This link has already been used.";
-      statusDiv.className = "error";
-      return;
-    }
-
-    // 2) mark as used
-    await supabaseClient
-      .from(ACCESS_TABLE)
-      .update({ used: true, used_at: new Date().toISOString() })
-      .eq("id", access.id);
-
-    // 3) upsert user
-    await supabaseClient
-      .from(USERS_TABLE)
-      .upsert([{ email: uid, password: pass }], { onConflict: 'email' });
-
-    // 4) success — show content
-    statusDiv.textContent = "✅ Access granted — your download is ready!";
-    statusDiv.className = "success";
-    contentDiv.style.display = "block";
-
-    // remove query params
-    try {
-      const cleanUrl = window.location.origin + window.location.pathname;
-      window.history.replaceState({}, document.title, cleanUrl);
-    } catch (err) {}
-
-    // 5) Add click handler *inside success*
-    const downloadBtn = document.getElementById('downloadLink');
-    downloadBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-
-      try {
-        // Delete from paid_access
-        await supabaseClient.from(ACCESS_TABLE).delete().eq('id', access.id);
-
-        // Delete from users_login
-        await supabaseClient.from(USERS_TABLE).delete().eq('email', uid);
-
-        // trigger real download
-        window.location.href = downloadBtn.href;
-      } catch (err) {
-        console.error("Delete error:", err);
-        alert("❌ Could not complete deletion. Try again.");
-      }
-    });
-
+    await supabaseClient.from(ACCESS_TABLE).delete().eq("uid", uid).eq("password", pass);
+    await supabaseClient.from(USERS_TABLE).delete().eq("email", uid);
   } catch (err) {
-    statusDiv.textContent = "❌ Unexpected error.";
-    statusDiv.className = "error";
+    console.error("Auto delete error:", err);
   }
+
+  // Also cleanup when they click download
+  const downloadBtn = document.getElementById('downloadLink');
+  downloadBtn.addEventListener('click', async (e) => {
+    // delete again just in case
+    try {
+      await supabaseClient.from(ACCESS_TABLE).delete().eq("uid", uid).eq("password", pass);
+      await supabaseClient.from(USERS_TABLE).delete().eq("email", uid);
+    } catch (err) {
+      console.error("Delete error:", err);
+    }
+    // let the file download
+  });
 })();
 </script>
-
 </body>
 </html>

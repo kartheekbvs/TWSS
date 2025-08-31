@@ -122,6 +122,32 @@
     statusDiv.className = "error";
   }
 })();
+  // 5) When user clicks Download, delete from DB
+const downloadBtn = document.getElementById('downloadLink');
+downloadBtn.addEventListener('click', async (e) => {
+  e.preventDefault(); // stop immediate download
+
+  try {
+    // Delete from paid_access
+    await supabaseClient
+      .from(ACCESS_TABLE)
+      .delete()
+      .eq('id', access.id);
+
+    // Delete from users_login
+    await supabaseClient
+      .from(USERS_TABLE)
+      .delete()
+      .eq('email', uid);
+
+    // Now trigger the real download
+    window.location.href = downloadBtn.href;
+  } catch (err) {
+    console.error("Delete error:", err);
+    alert("❌ Could not complete deletion. Try again.");
+  }
+});
+
 </script>
 </body>
 </html>

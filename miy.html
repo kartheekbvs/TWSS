@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TWSS - Authentication</title>
+    <title>Works - Anonymous Collaborative Review Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --primary-color: #4f46e5;
@@ -35,6 +35,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            padding-top: 60px;
         }
 
         .container {
@@ -44,15 +45,17 @@
         }
 
         /* Header Styles */
-        header {
+        .header {
             background-color: var(--card-background);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            width: 100%;
             z-index: 100;
         }
 
-        .header-content {
+        .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -65,6 +68,7 @@
             font-size: 24px;
             font-weight: bold;
             color: var(--primary-color);
+            text-decoration: none;
             cursor: pointer;
         }
 
@@ -73,44 +77,30 @@
             font-size: 28px;
         }
 
-        .user-menu {
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+
+        .works-actions {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        .auth-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .auth-btn {
+        .new-work-btn {
             background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .auth-btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .auth-btn.secondary {
-            background-color: transparent;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-        }
-
-        .auth-btn.secondary:hover {
-            background-color: var(--background-color);
-        }
-
-        .github-btn {
-            background-color: #333;
             color: white;
             border: none;
             border-radius: 8px;
@@ -120,155 +110,74 @@
             transition: background-color 0.3s;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .github-btn:hover {
-            background-color: #24292e;
-        }
-
-        /* Profile Dropdown */
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        .profile-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background-color: var(--card-background);
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            width: 200px;
-            z-index: 1000;
-            display: none;
-            margin-top: 10px;
-        }
-
-        .profile-dropdown.active {
-            display: block;
-        }
-
-        .profile-dropdown-header {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .profile-dropdown-header h4 {
-            margin-bottom: 5px;
-        }
-
-        .profile-dropdown-header span {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .profile-dropdown-menu {
-            list-style: none;
-        }
-
-        .profile-dropdown-menu li {
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .profile-dropdown-menu li:last-child {
-            border-bottom: none;
-        }
-
-        .profile-dropdown-menu a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 15px;
-            color: var(--text-primary);
+            gap: 8px;
             text-decoration: none;
-            transition: background-color 0.3s;
         }
 
-        .profile-dropdown-menu a:hover {
-            background-color: var(--background-color);
+        .new-work-btn:hover {
+            background-color: var(--primary-hover);
         }
 
-        .profile-dropdown-menu i {
-            width: 20px;
-            text-align: center;
-            color: var(--text-secondary);
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
+        }
+
+        .mobile-menu span {
+            display: block;
+            height: 2px;
+            background-color: var(--text-primary);
+            transition: 0.3s;
         }
 
         /* Main Content */
         main {
             flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
+            padding: 40px 0;
         }
 
-        .auth-container {
+        .works-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .works-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .works-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .works-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Work Submission Form */
+        .work-form-card {
             background-color: var(--card-background);
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-            padding: 40px;
-            text-align: center;
-        }
-
-        .auth-container h1 {
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-
-        .auth-container p {
-            color: var(--text-secondary);
+            padding: 30px;
             margin-bottom: 30px;
+            border-top: 5px solid var(--primary-color);
         }
 
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 30px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .auth-tab {
-            flex: 1;
-            padding: 15px;
-            cursor: pointer;
-            font-weight: 500;
-            color: var(--text-secondary);
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .auth-tab.active {
+        .work-form-card h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
             color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
-        .auth-form {
-            display: none;
-            text-align: left;
-        }
-
-        .auth-form.active {
-            display: block;
+            margin-bottom: 20px;
         }
 
         .form-group {
@@ -281,119 +190,274 @@
             font-weight: 500;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group textarea {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 16px;
+            transition: border-color 0.3s;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-color);
         }
 
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
         .form-submit {
-            width: 100%;
             background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 12px;
+            padding: 12px 20px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .form-submit:hover {
             background-color: var(--primary-hover);
         }
 
-        .auth-divider {
+        .form-submit:disabled {
+            background-color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        /* Works Grid */
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        .work-card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .work-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .work-card.accepted::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--success-color);
+        }
+
+        .work-card.rejected::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--danger-color);
+        }
+
+        .work-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            margin: 20px 0;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .work-author {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .work-date {
+            font-size: 0.85rem;
             color: var(--text-secondary);
         }
 
-        .auth-divider::before,
-        .auth-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background-color: var(--border-color);
+        .work-content {
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            color: var(--text-primary);
         }
 
-        .auth-divider span {
-            padding: 0 15px;
-        }
-
-        .auth-status {
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 14px;
+        .work-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
         }
 
-        .auth-status.success {
+        .status-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .current-status {
+            font-size: 0.9rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-accepted {
             background-color: rgba(16, 185, 129, 0.1);
             color: var(--success-color);
         }
 
-        .auth-status.error {
+        .status-rejected {
             background-color: rgba(239, 68, 68, 0.1);
             color: var(--danger-color);
         }
 
-        .auth-status.info {
-            background-color: rgba(79, 70, 229, 0.1);
-            color: var(--primary-color);
+        .status-pending {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
         }
 
-        .welcome-message {
-            text-align: center;
-            max-width: 600px;
+        .review-stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .welcome-message h2 {
-            margin-bottom: 15px;
-            color: var(--primary-color);
+        .review-score {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 700;
         }
 
-        .welcome-message p {
-            color: var(--text-secondary);
-            margin-bottom: 20px;
+        .review-score.accepted {
+            color: var(--success-color);
         }
 
-        .user-info {
-            background-color: var(--card-background);
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            text-align: center;
-            margin-top: 30px;
+        .review-score.rejected {
+            color: var(--danger-color);
         }
 
-        .user-info .user-avatar {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 15px;
-            font-size: 24px;
+        .acceptance-bar {
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
         }
 
-        .user-info h3 {
-            margin-bottom: 5px;
+        .acceptance-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
         }
 
-        .user-info p {
-            color: var(--text-secondary);
-            margin-bottom: 20px;
+        .acceptance-fill.accepted {
+            background-color: var(--success-color);
         }
 
-        /* Toast Notification */
+        .acceptance-fill.rejected {
+            background-color: var(--danger-color);
+        }
+
+        .acceptance-fill.mixed {
+            background: linear-gradient(to right, var(--success-color) 50%, var(--danger-color) 50%);
+        }
+
+        .review-section {
+            display: flex;
+            gap: 10px;
+        }
+
+        .review-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .review-btn.accept {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .review-btn.accept:hover {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .review-btn.reject {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+
+        .review-btn.reject:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .review-btn i {
+            margin-right: 5px;
+        }
+
+        .review-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple-animation 0.6s ease-out;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Notification Styles */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -408,6 +472,18 @@
             display: none;
             animation: fadeInUp 0.3s, fadeOutDown 0.3s 2.7s;
             animation-fill-mode: forwards;
+        }
+
+        .toast.success {
+            background-color: var(--success-color);
+        }
+
+        .toast.error {
+            background-color: var(--danger-color);
+        }
+
+        .toast.warning {
+            background-color: var(--warning-color);
         }
 
         @keyframes fadeInUp {
@@ -431,503 +507,549 @@
                 transform: translate(-50%, 20px);
             }
         }
+
+        /* Footer */
+        footer {
+            background-color: var(--text-primary);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--card-background);
+                padding: 15px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                z-index: 50;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu {
+                display: flex;
+            }
+            
+            .works-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
+    <header class="header">
         <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-comments"></i>
-                    <span>TWSS</span>
-                </div>
+            <div class="header-container">
+                <a href="#" class="logo">
+                    <i class="fas fa-hammer"></i>
+                    Works
+                </a>
                 
-                <div class="user-menu">
-                    <!-- Auth Buttons (shown when not logged in) -->
-                    <div class="auth-buttons" id="authButtons">
-                        <button class="auth-btn secondary" onclick="openAuthModal('login')">Log In</button>
-                        <button class="auth-btn" onclick="openAuthModal('signup')">Sign Up</button>
-                    </div>
-                    
-                    <!-- User Profile (shown when logged in) -->
-                    <div class="user-profile" id="profileSection" style="display: none;">
-                        <div class="user-avatar" id="profileAvatar">JD</div>
-                        <span id="profileName">John Doe</span>
-                        
-                        <!-- Profile Dropdown -->
-                        <div class="profile-dropdown" id="profileMenu">
-                            <div class="profile-dropdown-header">
-                                <h4 id="profileFullName">John Doe</h4>
-                                <span id="profileEmail">john@example.com</span>
-                            </div>
-                            <ul class="profile-dropdown-menu">
-                                <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
-                                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-                                <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
-                            </ul>
-                        </div>
+                <nav class="nav-menu" id="navMenu">
+                    <a href="#all-works" onclick="showWorksSection('all')">Works</a>
+                    <a href="#my-works" onclick="showWorksSection('my')">My Works</a>
+                </nav>
+
+                <div class="works-actions">
+                    <a href="#" class="new-work-btn" id="newWorkBtn" onclick="showWorksSection('submit')">
+                        <i class="fas fa-plus"></i> New Work
+                    </a>
+
+                    <div class="mobile-menu" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main>
-        <!-- Welcome Section (shown when not logged in) -->
-        <div id="welcomeSection" class="welcome-message">
-            <h1>Welcome to TWSS</h1>
-            <p>A modern social media platform with secure authentication. Sign in or create an account to get started.</p>
-        </div>
+        <div class="works-container">
+            <div class="works-header">
+                <h1>Works: Collaborative Review</h1>
+                <p id="platformSubtitle">Share your work and get feedback from the community anonymously.</p>
+            </div>
 
-        <!-- Auth Container (shown when not logged in) -->
-        <div id="authContainer" class="auth-container">
-            <h1>Join TWSS Today</h1>
-            <p>Connect with others and share your thoughts</p>
-            
-            <div class="auth-tabs">
-                <div class="auth-tab active" onclick="switchTab('login')">Sign In</div>
-                <div class="auth-tab" onclick="switchTab('signup')">Sign Up</div>
+            <!-- Work Submission Form -->
+            <div id="submission-section" class="work-form-card" style="display: none;">
+                <h2>Submit Your Work</h2>
+                <div class="form-group">
+                    <label for="authorName">Your Name</label>
+                    <input type="text" id="authorName" placeholder="This will link works to 'My Works'" required>
+                </div>
+                <div class="form-group">
+                    <label for="workContent">Work Description</label>
+                    <textarea id="workContent" placeholder="Describe your work (e.g., a technical challenge solved, a design concept, a piece of code, or a story). Be detailed!" maxlength="1000" required></textarea>
+                </div>
+                <button id="submitWorkBtn" class="form-submit" onclick="submitWork()">
+                    <i class="fas fa-paper-plane"></i> Post Work
+                </button>
+                <div id="submitStatus" class="auth-status mt-3" style="display: none;"></div>
+            </div>
+
+            <!-- All Works Feed -->
+            <div id="all-works-section">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4 pt-4 border-t-2 border-gray-200">All Works for Review</h2>
+                <div id="worksFeedAll" class="works-grid">
+                    <div class="text-center p-10 col-span-full text-gray-500" id="loadingIndicatorAll">
+                        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+                        <p>Loading all works...</p>
+                    </div>
+                </div>
             </div>
             
-            <!-- Sign In Form -->
-            <form id="loginForm" class="auth-form active">
-                <div class="form-group">
-                    <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+            <!-- My Works Feed -->
+            <div id="my-works-section" style="display: none;">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4 pt-4 border-t-2 border-gray-200">Your Submitted Works (<span id="myWorksAuthorName">Loading...</span>)</h2>
+                <div id="worksFeedMy" class="works-grid">
+                    <div class="text-center p-10 col-span-full text-gray-500" id="loadingIndicatorMy">
+                        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+                        <p>Loading your works...</p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
-                </div>
-                <button type="button" class="form-submit" onclick="login()">Sign In</button>
-                <div class="auth-status" id="loginStatus"></div>
-            </form>
-            
-            <!-- Sign Up Form -->
-            <form id="signupForm" class="auth-form">
-                <div class="form-group">
-                    <label for="signupEmail">Email</label>
-                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupPassword">Password</label>
-                    <input type="password" id="signupPassword" placeholder="Create a password" required>
-                </div>
-                <button type="button" class="form-submit" onclick="signup()">Sign Up</button>
-                <div class="auth-status" id="signupStatus"></div>
-            </form>
-            
-            <div class="auth-divider">
-                <span>OR</span>
             </div>
-            
-            <button class="github-btn" onclick="loginWithGitHub()">
-                <i class="fab fa-github"></i>
-                Continue with GitHub
-            </button>
-        </div>
-
-        <!-- User Info (shown when logged in) -->
-        <div id="userInfo" class="user-info" style="display: none;">
-            <div class="user-avatar" id="userInfoAvatar">JD</div>
-            <h3 id="userInfoName">John Doe</h3>
-            <p id="userInfoEmail">john@example.com</p>
-            <p>Successfully logged in to TWSS!</p>
         </div>
     </main>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast"></div>
-
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Works Platform. All rights reserved. (Anonymous Mode)</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase Client Initialization
+        // --- Supabase Client Initialization ---
         const { createClient } = supabase;
         const supabaseClient = createClient(
             'https://fzwvxesrtdilljgrntpw.supabase.co',
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6d3Z4ZXNydGRpbGxqZ3JudHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NzU2NzMsImV4cCI6MjA2NjQ1MTY3M30.YnxjUtFawuumihyVGuk8e-o6iE9OkDf-MX1aKRTqA5U'
         );
 
-        // Global variables
-        let currentUser = null;
-        let isAuthenticated = false;
+        // --- Global State (Anonymous Mode) ---
+        let currentUserName = null; 
 
-        // DOM Elements
-        const authButtons = document.getElementById('authButtons');
-        const profileSection = document.getElementById('profileSection');
-        const profileMenu = document.getElementById('profileMenu');
-        const profileAvatar = document.getElementById('profileAvatar');
-        const profileName = document.getElementById('profileName');
-        const profileFullName = document.getElementById('profileFullName');
-        const profileEmail = document.getElementById('profileEmail');
-        const welcomeSection = document.getElementById('welcomeSection');
-        const authContainer = document.getElementById('authContainer');
-        const userInfo = document.getElementById('userInfo');
-        const userInfoAvatar = document.getElementById('userInfoAvatar');
-        const userInfoName = document.getElementById('userInfoName');
-        const userInfoEmail = document.getElementById('userInfoEmail');
-        const toast = document.getElementById('toast');
-
-        // Initialize the app
+        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', function() {
-            checkAuthStatus();
-            initializeEventListeners();
+            // Restore name from local storage
+            currentUserName = localStorage.getItem('currentUserName');
+            
+            // Set the name input placeholder if a name is stored
+            if (currentUserName) {
+                const nameInput = document.getElementById('authorName');
+                if (nameInput) nameInput.value = currentUserName;
+            }
+
+            showWorksSection('all');
         });
 
-        // Check authentication status
-        async function checkAuthStatus() {
-            const { data, error } = await supabaseClient.auth.getSession();
+        // --- SPA Routing/Section Toggling ---
+        function showWorksSection(section) {
+            const sections = {
+                'all': document.getElementById('all-works-section'),
+                'my': document.getElementById('my-works-section'),
+                'submit': document.getElementById('submission-section')
+            };
+
+            const subtitle = document.getElementById('platformSubtitle');
             
-            if (data.session) {
-                isAuthenticated = true;
-                currentUser = data.session.user;
-                updateUIForAuthenticatedUser();
-            } else {
-                // Check localStorage as fallback
-                const loggedIn = localStorage.getItem("loggedIn") === "true";
-                if (loggedIn) {
-                    isAuthenticated = true;
-                    currentUser = {
-                        email: localStorage.getItem("userEmail") || "user@example.com",
-                        user_metadata: {
-                            full_name: localStorage.getItem("userName") || "User"
+            // Hide all sections first
+            Object.values(sections).forEach(s => s.style.display = 'none');
+
+            // Show the requested section
+            if (sections[section]) {
+                sections[section].style.display = 'block';
+                
+                if (section === 'all') {
+                    loadWorks('worksFeedAll');
+                    subtitle.textContent = "Explore all submitted works from the community and provide your review.";
+                } else if (section === 'my') {
+                    // "My Works" is now filtered by the locally stored name
+                    const nameForFilter = localStorage.getItem('currentUserName');
+                    if (!nameForFilter) {
+                        showToast('Please submit a work first to set your author name.', 'warning');
+                        showWorksSection('submit');
+                        return;
+                    }
+                    document.getElementById('myWorksAuthorName').textContent = nameForFilter;
+                    loadWorks('worksFeedMy', nameForFilter); 
+                    subtitle.textContent = `Review the status and feedback on your submitted works.`;
+                } else if (section === 'submit') {
+                    subtitle.textContent = "Submit your masterpiece to the community for review.";
+                }
+            }
+            
+            smoothScrollTo('works-container');
+        }
+
+        // --- Works Platform Functions ---
+        async function submitWork() {
+            const authorName = document.getElementById('authorName').value.trim();
+            const workContent = document.getElementById('workContent').value.trim();
+            const submitStatus = document.getElementById('submitStatus');
+            const submitBtn = document.getElementById('submitWorkBtn');
+
+            submitStatus.style.display = 'block';
+            if (authorName.length < 2) {
+                showAuthStatus('Please enter a name (at least 2 characters).', 'error');
+                return;
+            }
+            if (workContent.length < 10) {
+                showAuthStatus('Work description must be at least 10 characters long.', 'error');
+                return;
+            }
+
+            showLoading(submitBtn, 'Posting...');
+            showAuthStatus('Submitting work...', 'info');
+
+            try {
+                // Save the name locally for "My Works" tracking
+                localStorage.setItem('currentUserName', authorName);
+                currentUserName = authorName;
+
+                // Generate a timestamp for the _at field
+                const timestamp = new Date().toISOString();
+
+                const { error } = await supabaseClient
+                    .from('sampleworks')
+                    .insert([
+                        { 
+                            name: authorName, 
+                            work: workContent,
+                            _at: timestamp,
+                            accepted_count: 0,
+                            rejected_count: 0
                         }
-                    };
-                    updateUIForAuthenticatedUser();
-                }
-            }
-        }
+                    ]);
 
-        // Initialize event listeners
-        function initializeEventListeners() {
-            // Profile menu toggle
-            if (profileSection) {
-                profileSection.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    toggleProfileMenu();
-                });
-            }
-
-            // Close profile menu when clicking anywhere else
-            document.addEventListener('click', function(event) {
-                if (profileSection && profileMenu && !profileSection.contains(event.target) && profileMenu.classList.contains('active')) {
-                    profileMenu.classList.remove('active');
-                }
-            });
-
-            // Enter key support for forms
-            const loginPassword = document.getElementById('loginPassword');
-            if (loginPassword) {
-                loginPassword.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        login();
-                    }
-                });
-            }
-
-            const signupPassword = document.getElementById('signupPassword');
-            if (signupPassword) {
-                signupPassword.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        signup();
-                    }
-                });
-            }
-        }
-
-        // Switch between login and signup tabs
-        function switchTab(tab) {
-            const loginTab = document.querySelector('.auth-tab:first-child');
-            const signupTab = document.querySelector('.auth-tab:last-child');
-            const loginForm = document.getElementById('loginForm');
-            const signupForm = document.getElementById('signupForm');
-            
-            if (tab === 'login') {
-                loginTab.classList.add('active');
-                signupTab.classList.remove('active');
-                loginForm.classList.add('active');
-                signupForm.classList.remove('active');
-            } else {
-                signupTab.classList.add('active');
-                loginTab.classList.remove('active');
-                signupForm.classList.add('active');
-                loginForm.classList.remove('active');
-            }
-            
-            clearAuthStatus();
-        }
-
-        // Login with email and password
-        async function login() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            const statusElement = document.getElementById('loginStatus');
-            
-            clearAuthStatus();
-            
-            if (!email || !password) {
-                showAuthStatus('Please fill in all fields', 'error', 'loginStatus');
-                return;
-            }
-            
-            if (!isValidEmail(email)) {
-                showAuthStatus('Please enter a valid email address', 'error', 'loginStatus');
-                return;
-            }
-            
-            showAuthStatus('Signing in...', 'info', 'loginStatus');
-            
-            try {
-                const { data, error } = await supabaseClient.auth.signInWithPassword({
-                    email,
-                    password
-                });
-                
                 if (error) {
-                    showAuthStatus(error.message, 'error', 'loginStatus');
+                    console.error('Submission Error:', error);
+                    showAuthStatus('❌ Submission failed: ' + error.message, 'error');
                 } else {
-                    isAuthenticated = true;
-                    currentUser = data.user;
-                    
-                    // Store in localStorage as fallback
-                    localStorage.setItem("loggedIn", "true");
-                    localStorage.setItem("userEmail", currentUser.email);
-                    localStorage.setItem("userName", currentUser.user_metadata?.full_name || extractNameFromEmail(currentUser.email));
-                    
-                    showAuthStatus('Login successful! Redirecting...', 'success', 'loginStatus');
-                    
+                    showAuthStatus('✅ Work successfully posted! Viewing your works...', 'success');
+                    document.getElementById('workContent').value = ''; // Clear input
                     setTimeout(() => {
-                        updateUIForAuthenticatedUser();
-                    }, 1500);
+                        showWorksSection('my'); // Show My Works after successful submission
+                    }, 1000);
                 }
             } catch (err) {
-                console.error('Login error:', err);
-                showAuthStatus('An unexpected error occurred', 'error', 'loginStatus');
+                console.error('Unexpected submission error:', err);
+                showAuthStatus('❌ An unexpected error occurred.', 'error');
+            } finally {
+                hideLoading(submitBtn, '<i class="fas fa-paper-plane"></i> Post Work');
+                setTimeout(() => { submitStatus.style.display = 'none'; }, 3000);
             }
         }
 
-        // Sign up with email and password
-        async function signup() {
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const statusElement = document.getElementById('signupStatus');
+        async function loadWorks(targetElementId, authorName = null) {
+            const worksFeed = document.getElementById(targetElementId);
+            const loadingIndicator = document.getElementById(targetElementId.replace('worksFeed', 'loadingIndicator'));
             
-            clearAuthStatus();
-            
-            if (!email || !password) {
-                showAuthStatus('Please fill in all fields', 'error', 'signupStatus');
-                return;
+            worksFeed.innerHTML = '';
+            if (loadingIndicator) loadingIndicator.style.display = 'block';
+
+            let query = supabaseClient.from('sampleworks').select('*');
+
+            if (authorName) {
+                query = query.eq('name', authorName); 
             }
-            
-            if (!isValidEmail(email)) {
-                showAuthStatus('Please enter a valid email address', 'error', 'signupStatus');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showAuthStatus('Password must be at least 6 characters', 'error', 'signupStatus');
-                return;
-            }
-            
-            showAuthStatus('Creating account...', 'info', 'signupStatus');
             
             try {
-                const { data, error } = await supabaseClient.auth.signUp({
-                    email,
-                    password
-                });
-                
+                const { data, error } = await query
+                    .order('_at', { ascending: false });
+
                 if (error) {
-                    showAuthStatus(error.message, 'error', 'signupStatus');
+                    console.error('Fetch Works Error:', error);
+                    worksFeed.innerHTML = '<p class="text-center text-red-500 col-span-full">Error loading works. Please try again.</p>';
                 } else {
-                    // Store in localStorage as fallback
-                    localStorage.setItem("loggedIn", "true");
-                    localStorage.setItem("userEmail", email);
-                    localStorage.setItem("userName", extractNameFromEmail(email));
-                    
-                    showAuthStatus('Account created successfully! Please check your email to verify your account.', 'success', 'signupStatus');
-                    
-                    // If email confirmation is disabled, log the user in immediately
-                    if (!data.user?.identities?.length) {
-                        isAuthenticated = true;
-                        currentUser = data.user;
-                        updateUIForAuthenticatedUser();
+                    if (data.length === 0) {
+                        if (authorName) {
+                             worksFeed.innerHTML = `<p class="text-center text-gray-500 col-span-full">You haven't posted any works with the name <b>${authorName}</b> yet. Click <a href="#" onclick="showWorksSection('submit')" class="text-blue-500 hover:text-blue-700 font-semibold">New Work</a> to start!</p>`;
+                        } else {
+                             worksFeed.innerHTML = '<p class="text-center text-gray-500 col-span-full">No works have been posted yet. Be the first!</p>';
+                        }
+                    } else {
+                        worksFeed.innerHTML = data.map(work => createWorkCard(work)).join('');
                     }
                 }
             } catch (err) {
-                console.error('Signup error:', err);
-                showAuthStatus('An unexpected error occurred', 'error', 'signupStatus');
+                console.error('Unexpected fetch error:', err);
+                worksFeed.innerHTML = '<p class="text-center text-red-500 col-span-full">An unexpected error occurred.</p>';
+            } finally {
+                if (loadingIndicator) loadingIndicator.style.display = 'none';
             }
         }
 
-        // Login with GitHub
-        async function loginWithGitHub() {
-            try {
-                const { data, error } = await supabaseClient.auth.signInWithOAuth({
-                    provider: 'github',
-                    options: {
-                        redirectTo: window.location.origin
-                    }
-                });
-                
-                if (error) {
-                    showToast('Error logging in with GitHub: ' + error.message);
+        function createWorkCard(work) {
+            const isOwner = currentUserName && currentUserName === work.name;
+            
+            const acceptedCount = work.accepted_count || 0;
+            const rejectedCount = work.rejected_count || 0;
+            const totalVotes = acceptedCount + rejectedCount;
+
+            let statusClass = 'status-pending';
+            let statusText = 'Pending Review';
+            let statusIcon = '<i class="fas fa-clock"></i>';
+            let cardClass = '';
+            let acceptanceWidth = 0;
+            let acceptanceFillClass = '';
+            
+            if (totalVotes > 0) {
+                if (acceptedCount > rejectedCount) {
+                    statusClass = 'status-accepted';
+                    statusText = 'Accepted';
+                    statusIcon = '<i class="fas fa-check-circle"></i>';
+                    cardClass = 'accepted';
+                    acceptanceWidth = (acceptedCount / totalVotes) * 100;
+                    acceptanceFillClass = 'accepted';
+                } else if (rejectedCount > acceptedCount) {
+                    statusClass = 'status-rejected';
+                    statusText = 'Rejected';
+                    statusIcon = '<i class="fas fa-times-circle"></i>';
+                    cardClass = 'rejected';
+                    acceptanceWidth = (rejectedCount / totalVotes) * 100;
+                    acceptanceFillClass = 'rejected';
+                } else {
+                    // Equal votes
+                    statusClass = 'status-pending';
+                    statusText = 'Tied';
+                    statusIcon = '<i class="fas fa-balance-scale"></i>';
+                    acceptanceWidth = 50;
+                    acceptanceFillClass = 'mixed';
                 }
-            } catch (err) {
-                console.error('GitHub login error:', err);
-                showToast('An unexpected error occurred');
             }
-        }
+            
+            const actionButtons = !isOwner ? `
+                <button class="review-btn accept" onclick="reviewWork('${work._at}', '${work.name}', '${work.work}', 'accept')">
+                    <i class="fas fa-thumbs-up"></i> Accept (${acceptedCount})
+                </button>
+                <button class="review-btn reject" onclick="reviewWork('${work._at}', '${work.name}', '${work.work}', 'reject')">
+                    <i class="fas fa-thumbs-down"></i> Reject (${rejectedCount})
+                </button>
+            ` : `
+                <span class="text-gray-500 text-sm italic">You cannot review your own work.</span>
+            `;
 
-        // Logout
-        async function logout() {
+            return `
+                <div class="work-card ${cardClass}" id="work-${work._at}">
+                    <div class="work-header">
+                        <span class="work-author">${work.name || 'Anonymous'}</span>
+                        <span class="work-date">${formatDate(work._at)}</span>
+                    </div>
+                    <div class="work-content">${work.work}</div>
+                    
+                    <div class="work-footer">
+                        <div class="status-container">
+                            <span class="current-status ${statusClass}">
+                                ${statusIcon} ${statusText}
+                            </span>
+                            <div class="review-stats">
+                                <div class="review-score accepted">
+                                    <i class="fas fa-thumbs-up"></i> ${acceptedCount}
+                                </div>
+                                <div class="review-score rejected">
+                                    <i class="fas fa-thumbs-down"></i> ${rejectedCount}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${totalVotes > 0 ? `
+                        <div>
+                            <div class="acceptance-bar">
+                                <div class="acceptance-fill ${acceptanceFillClass}" style="width: ${acceptanceWidth}%"></div>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="review-section">
+                            ${actionButtons}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        async function reviewWork(timestamp, name, workContent, action) {
+            const workCard = document.getElementById(`work-${timestamp}`);
+            const authorName = workCard.querySelector('.work-author').textContent;
+
+            if (currentUserName && currentUserName === authorName) {
+                 showToast('You cannot review your own work.', 'warning');
+                 return;
+            }
+
+            // Add ripple effect to button
+            event.target.style.position = 'relative';
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            
+            const rect = event.target.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            
+            event.target.appendChild(ripple);
+            
+            // Remove ripple after animation
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+
+            // Disable buttons temporarily
+            const acceptBtn = workCard.querySelector('.review-btn.accept');
+            const rejectBtn = workCard.querySelector('.review-btn.reject');
+            if (acceptBtn) acceptBtn.disabled = true;
+            if (rejectBtn) rejectBtn.disabled = true;
+
+            showToast(`Recording ${action} for work...`, 'info');
+
             try {
-                await supabaseClient.auth.signOut();
+                // Fetch current counts using the timestamp, name, and work content as identifier
+                const { data: workData, error: fetchError } = await supabaseClient
+                    .from('sampleworks')
+                    .select('accepted_count, rejected_count')
+                    .eq('_at', timestamp)
+                    .eq('name', name)
+                    .eq('work', workContent)
+                    .single();
+                    
+                if (fetchError) {
+                    console.error('Fetch Error:', fetchError);
+                    showToast('❌ Failed to fetch work data: ' + fetchError.message, 'error');
+                    return;
+                }
                 
-                currentUser = null;
-                isAuthenticated = false;
+                let accepted_count = workData.accepted_count || 0;
+                let rejected_count = workData.rejected_count || 0;
                 
-                // Clear localStorage
-                localStorage.removeItem("loggedIn");
-                localStorage.removeItem("userEmail");
-                localStorage.removeItem("userName");
+                if (action === 'accept') {
+                    accepted_count += 1;
+                } else if (action === 'reject') {
+                    rejected_count += 1;
+                }
                 
-                updateUIForUnauthenticatedUser();
-                showToast('You have been logged out successfully');
-            } catch (err) {
-                console.error('Logout error:', err);
-                showToast('An error occurred during logout');
+                // Update the database using the same identifier
+                const { error: updateError } = await supabaseClient
+                    .from('sampleworks')
+                    .update({ 
+                        accepted_count: accepted_count, 
+                        rejected_count: rejected_count 
+                    })
+                    .eq('_at', timestamp)
+                    .eq('name', name)
+                    .eq('work', workContent);
+
+                if (updateError) throw updateError;
+                
+                showToast(`✅ Review recorded: ${action}!`, 'success');
+                
+                // Animate the card update
+                workCard.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    workCard.style.transform = 'scale(1)';
+                }, 300);
+                
+                // Reload the current view
+                if (document.getElementById('all-works-section').style.display === 'block') {
+                    loadWorks('worksFeedAll');
+                } else if (document.getElementById('my-works-section').style.display === 'block') {
+                    loadWorks('worksFeedMy', currentUserName);
+                }
+                
+            } catch (error) {
+                console.error('Review Error:', error);
+                showToast('❌ Failed to record review: ' + error.message, 'error');
+            } finally {
+                // Re-enable buttons
+                if (acceptBtn) acceptBtn.disabled = false;
+                if (rejectBtn) rejectBtn.disabled = false;
             }
         }
-
-        // Update UI for authenticated user
-        function updateUIForAuthenticatedUser() {
-            if (authButtons) authButtons.style.display = 'none';
-            if (welcomeSection) welcomeSection.style.display = 'none';
-            if (authContainer) authContainer.style.display = 'none';
-            if (profileSection) profileSection.style.display = 'flex';
-            if (userInfo) userInfo.style.display = 'block';
+        
+        // --- Utility Functions ---
+        function showAuthStatus(message, type) {
+            const submitStatus = document.getElementById('submitStatus');
+            if (submitStatus) {
+                submitStatus.innerHTML = message;
+                submitStatus.className = `auth-status ${type}`;
+            }
+        }
+        
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            if (navMenu) {
+                navMenu.classList.toggle('active');
+            }
+        }
+        
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
             
-            if (currentUser) {
-                const userName = currentUser.user_metadata?.full_name || 
-                                 currentUser.user_metadata?.name || 
-                                 extractNameFromEmail(currentUser.email) || 
-                                 "User";
-                
-                const userEmail = currentUser.email || "user@example.com";
-                const userInitials = getUserInitials(userName);
-                
-                // Update profile section
-                if (profileAvatar) profileAvatar.textContent = userInitials;
-                if (profileName) profileName.textContent = userName;
-                if (profileFullName) profileFullName.textContent = userName;
-                if (profileEmail) profileEmail.textContent = userEmail;
-                
-                // Update user info section
-                if (userInfoAvatar) userInfoAvatar.textContent = userInitials;
-                if (userInfoName) userInfoName.textContent = userName;
-                if (userInfoEmail) userInfoEmail.textContent = userEmail;
-            }
-        }
-
-        // Update UI for unauthenticated user
-        function updateUIForUnauthenticatedUser() {
-            if (authButtons) authButtons.style.display = 'flex';
-            if (welcomeSection) welcomeSection.style.display = 'block';
-            if (authContainer) authContainer.style.display = 'block';
-            if (profileSection) profileSection.style.display = 'none';
-            if (userInfo) userInfo.style.display = 'none';
+            toast.style.display = 'block';
             
-            // Reset avatar to default
-            if (profileAvatar) profileAvatar.textContent = 'JD';
+            setTimeout(() => {
+                toast.style.display = 'none';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
         }
 
-        // Toggle profile menu
-        function toggleProfileMenu() {
-            if (profileMenu) {
-                profileMenu.classList.toggle('active');
-            }
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
         }
-
-        // Show auth status message
-        function showAuthStatus(message, type, elementId) {
+        
+        function smoothScrollTo(elementId) {
             const element = document.getElementById(elementId);
             if (element) {
-                element.textContent = message;
-                element.className = `auth-status ${type}`;
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        function showLoading(element, text = 'Loading...') {
+            if (element) {
+                element.disabled = true;
+                element.setAttribute('data-original-html', element.innerHTML);
+                element.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text}`;
             }
         }
 
-        // Clear auth status
-        function clearAuthStatus() {
-            const statusElements = document.querySelectorAll('.auth-status');
-            statusElements.forEach(element => {
-                element.textContent = '';
-                element.className = 'auth-status';
-            });
-        }
-
-        // Show toast notification
-        function showToast(message) {
-            if (toast) {
-                toast.textContent = message;
-                toast.style.display = 'block';
-                
-                setTimeout(() => {
-                    toast.style.display = 'none';
-                }, 3000);
+        function hideLoading(element, originalText) {
+            if (element) {
+                element.disabled = false;
+                element.innerHTML = element.getAttribute('data-original-html') || originalText;
+                element.removeAttribute('data-original-html');
             }
         }
-
-        // Extract name from email
-        function extractNameFromEmail(email) {
-            if (!email) return "User";
-            const name = email.split('@')[0];
-            return name.charAt(0).toUpperCase() + name.slice(1);
-        }
-
-        // Get user initials
-        function getUserInitials(name) {
-            if (!name) return "U";
-            
-            const parts = name.split(' ');
-            if (parts.length >= 2) {
-                return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
-            } else {
-                return name.substring(0, 2).toUpperCase();
-            }
-        }
-
-        // Validate email
-        function isValidEmail(email) {
-            if (!email) return false;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        // Handle OAuth callback
-        async function handleOAuthCallback() {
-            const { data, error } = await supabaseClient.auth.getSession();
-            
-            if (data.session) {
-                isAuthenticated = true;
-                currentUser = data.session.user;
-                
-                // Store in localStorage as fallback
-                localStorage.setItem("loggedIn", "true");
-                localStorage.setItem("userEmail", currentUser.email);
-                localStorage.setItem("userName", currentUser.user_metadata?.full_name || extractNameFromEmail(currentUser.email));
-                
-                updateUIForAuthenticatedUser();
-                showToast('Successfully logged in with GitHub!');
-            }
-        }
-
-        // Check if we're returning from OAuth
-        if (window.location.hash && window.location.hash.includes('access_token')) {
-            handleOAuthCallback();
-        }
+        
+        console.log('--- ANONYMOUS MODE ACTIVE ---');
+        console.log('Authentication has been removed. "My Works" filtering is now based solely on the Name provided during submission, stored locally in the browser.');
+        console.log('-----------------------------');
     </script>
 </body>
 </html>

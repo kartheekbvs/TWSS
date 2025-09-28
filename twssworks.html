@@ -7,65 +7,92 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Base Styles (Simplified TWSS theme using Tailwind color equivalents) */
         :root {
-            --primary-color: #f7a01d; /* Tailwind amber-500 equivalent */
-            --secondary-color: #232f3e; /* Tailwind gray-900 equivalent */
-            --text-color: #333;
-            --light-text-color: #fff;
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary-color: #6366f1;
+            --background-color: #f9fafb;
+            --card-background: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding-top: 60px; /* Space for fixed header */
-            background-color: #f3f4f6; /* Tailwind gray-100 */
-            color: var(--text-color);
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px;
         }
 
-        /* Header */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
         .header {
+            background-color: var(--card-background);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: var(--secondary-color);
-            color: var(--light-text-color);
-            z-index: 1000;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 100;
         }
 
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+            padding: 15px 0;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--light-text-color);
-            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-
-        .nav-menu a, .auth-btn {
-            color: var(--light-text-color);
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
             text-decoration: none;
-            padding: 8px 15px;
-            transition: background-color 0.2s;
-            border-radius: 4px;
+            cursor: pointer;
         }
 
-        .nav-menu a:hover, .auth-btn:hover {
-            background-color: #37475a;
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
         }
-        
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+
         .works-actions {
             display: flex;
             align-items: center;
@@ -74,199 +101,50 @@
 
         .new-work-btn {
             background-color: var(--primary-color);
-            color: var(--secondary-color);
-            font-weight: 600;
-            padding: 8px 15px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            text-decoration: none;
-            transition: background-color 0.2s;
-        }
-        
-        .new-work-btn:hover {
-            background-color: #e5941c;
-        }
-
-        /* Utility styles for Works section */
-        .works-container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-        
-        .works-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-        
-        .work-card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            border: 1px solid #e5e7eb;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .work-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
-        }
-
-        .work-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px dashed #e5e7eb;
-        }
-
-        .work-author {
-            font-weight: 600;
-            color: var(--secondary-color);
-        }
-
-        .work-date {
-            font-size: 0.85rem;
-            color: #6b7280;
-        }
-
-        .work-content {
-            margin-bottom: 15px;
-            white-space: pre-wrap; /* Preserve formatting and wrap text */
-            line-height: 1.6;
-            color: #4b5563;
-        }
-        
-        .review-section {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #f3f4f6;
-        }
-
-        .review-btn {
-            display: flex;
-            align-items: center;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.2s;
-            border: 1px solid transparent;
-        }
-
-        .review-btn.accept {
-            background-color: #34d399; /* Tailwind emerald-400 */
-            color: #065f46; /* Tailwind emerald-900 */
-        }
-        .review-btn.accept:hover { background-color: #10b981; }
-
-        .review-btn.reject {
-            background-color: #f87171; /* Tailwind red-400 */
-            color: #7f1d1d; /* Tailwind red-900 */
-        }
-        .review-btn.reject:hover { background-color: #ef4444; }
-        
-        .review-btn i {
-            margin-right: 5px;
-        }
-
-        .current-status {
-            font-size: 0.9rem;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-
-        .status-accepted {
-            background-color: #ecfdf5; /* Tailwind emerald-50 */
-            color: #059669; /* Tailwind emerald-600 */
-            border: 1px solid #a7f3d0;
-        }
-
-        .status-rejected {
-            background-color: #fef2f2; /* Tailwind red-50 */
-            color: #ef4444; /* Tailwind red-500 */
-            border: 1px solid #fecaca;
-        }
-        
-        .status-pending {
-            background-color: #fffbeb; /* Tailwind amber-50 */
-            color: #f59e0b; /* Tailwind amber-500 */
-            border: 1px solid #fcd34d;
-        }
-
-        /* Work Submission Form */
-        .work-form-card {
-            background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            border-top: 5px solid var(--primary-color);
-        }
-
-        .work-form-card h2 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--secondary-color);
-            margin-bottom: 20px;
-        }
-        
-        #authorName, #workContent {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        #workContent {
-            min-height: 150px;
-            resize: vertical;
-        }
-        
-        #authorName:focus, #workContent:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(247, 160, 29, 0.2);
-        }
-
-        #submitWorkBtn {
-            margin-top: 15px;
-            padding: 12px 25px;
-            background-color: var(--primary-color);
-            color: var(--secondary-color);
+            color: white;
             border: none;
             border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
             cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s, transform 0.1s;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
         }
 
-        #submitWorkBtn:hover {
-            background-color: #e5941c;
-            transform: translateY(-1px);
+        .new-work-btn:hover {
+            background-color: var(--primary-hover);
         }
-        
-        #submitWorkBtn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            transform: none;
+
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
         }
-        
-        /* Notification Styles */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-20px); } }
+
+        .mobile-menu span {
+            display: block;
+            height: 2px;
+            background-color: var(--text-primary);
+            transition: 0.3s;
+        }
+
+        /* Main Content */
+        main {
+            flex-grow: 1;
+            padding: 40px 0;
+        }
+
+        .works-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
         .works-header {
             text-align: center;
@@ -276,25 +154,368 @@
         .works-header h1 {
             font-size: 2.5rem;
             font-weight: 800;
-            color: var(--secondary-color);
+            color: var(--primary-color);
             margin-bottom: 10px;
         }
 
         .works-header p {
             font-size: 1.1rem;
-            color: #6b7280;
+            color: var(--text-secondary);
         }
-        
+
+        /* Work Submission Form */
+        .work-form-card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .work-form-card h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-submit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .form-submit:disabled {
+            background-color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        /* Works Grid */
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        .work-card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .work-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .work-card.accepted::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--success-color);
+        }
+
+        .work-card.rejected::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--danger-color);
+        }
+
+        .work-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .work-author {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .work-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .work-content {
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .work-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .status-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .current-status {
+            font-size: 0.9rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-accepted {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-rejected {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .status-pending {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+
+        .review-stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .review-score {
             display: flex;
             align-items: center;
             gap: 5px;
             font-weight: 700;
         }
-        
-        .review-score.accepted { color: #059669; }
-        .review-score.rejected { color: #dc2626; }
-        
+
+        .review-score.accepted {
+            color: var(--success-color);
+        }
+
+        .review-score.rejected {
+            color: var(--danger-color);
+        }
+
+        .acceptance-bar {
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .acceptance-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .acceptance-fill.accepted {
+            background-color: var(--success-color);
+        }
+
+        .acceptance-fill.rejected {
+            background-color: var(--danger-color);
+        }
+
+        .acceptance-fill.mixed {
+            background: linear-gradient(to right, var(--success-color) 50%, var(--danger-color) 50%);
+        }
+
+        .review-section {
+            display: flex;
+            gap: 10px;
+        }
+
+        .review-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .review-btn.accept {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .review-btn.accept:hover {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .review-btn.reject {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+
+        .review-btn.reject:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .review-btn i {
+            margin-right: 5px;
+        }
+
+        .review-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple-animation 0.6s ease-out;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Notification Styles */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--text-primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 3000;
+            display: none;
+            animation: fadeInUp 0.3s, fadeOutDown 0.3s 2.7s;
+            animation-fill-mode: forwards;
+        }
+
+        .toast.success {
+            background-color: var(--success-color);
+        }
+
+        .toast.error {
+            background-color: var(--danger-color);
+        }
+
+        .toast.warning {
+            background-color: var(--warning-color);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        @keyframes fadeOutDown {
+            from {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+            to {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--text-primary);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
         /* Mobile Adjustments */
         @media (max-width: 768px) {
             .nav-menu {
@@ -304,100 +525,105 @@
                 top: 60px;
                 left: 0;
                 width: 100%;
-                background: var(--secondary-color);
-                padding: 10px 0;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                background: var(--card-background);
+                padding: 15px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                z-index: 50;
             }
+            
             .nav-menu.active {
                 display: flex;
             }
+            
             .mobile-menu {
-                display: block;
-                cursor: pointer;
+                display: flex;
             }
-            .mobile-menu span {
-                display: block;
-                width: 25px;
-                height: 3px;
-                background-color: var(--light-text-color);
-                margin: 5px 0;
-                transition: 0.4s;
+            
+            .works-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <div class="header-container">
-            <a href="#" class="logo">
-                <i class="fas fa-hammer"></i>
-                Works
-            </a>
-            
-            <nav class="nav-menu">
-                <a href="#all-works" onclick="showWorksSection('all')">Works</a>
-                <a href="#my-works" onclick="showWorksSection('my')">My Works</a>
-            </nav>
-
-            <div class="works-actions">
-                <!-- + New Work button is now always visible -->
-                <a href="#" class="new-work-btn" id="newWorkBtn" onclick="showWorksSection('submit')">
-                    <i class="fas fa-plus"></i> New Work
+        <div class="container">
+            <div class="header-container">
+                <a href="#" class="logo">
+                    <i class="fas fa-hammer"></i>
+                    Works
                 </a>
+                
+                <nav class="nav-menu" id="navMenu">
+                    <a href="#all-works" onclick="showWorksSection('all')">Works</a>
+                    <a href="#my-works" onclick="showWorksSection('my')">My Works</a>
+                </nav>
 
-                <div class="mobile-menu" onclick="toggleMobileMenu()">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <div class="works-actions">
+                    <a href="#" class="new-work-btn" id="newWorkBtn" onclick="showWorksSection('submit')">
+                        <i class="fas fa-plus"></i> New Work
+                    </a>
+
+                    <div class="mobile-menu" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content for the Works Platform (SPA Sections) -->
-    <section id="works-platform" class="works-container min-h-screen">
-        <div class="works-header">
-            <h1>Works: Collaborative Review</h1>
-            <p id="platformSubtitle">Share your work and get feedback from the community anonymously.</p>
-        </div>
+    <main>
+        <div class="works-container">
+            <div class="works-header">
+                <h1>Works: Collaborative Review</h1>
+                <p id="platformSubtitle">Share your work and get feedback from the community anonymously.</p>
+            </div>
 
-        <!-- 1. Work Submission Form -->
-        <div id="submission-section" class="work-form-card" style="display: none;">
-            <h2>Submit Your Work</h2>
-            <input type="text" id="authorName" placeholder="Your Name (This will link works to 'My Works')" required>
-            <textarea id="workContent" placeholder="Describe your work (e.g., a technical challenge solved, a design concept, a piece of code, or a story). Be detailed!" maxlength="1000" required></textarea>
-            <button id="submitWorkBtn" onclick="submitWork()">
-                <i class="fas fa-paper-plane"></i> Post Work
-            </button>
-            <div id="submitStatus" class="auth-status mt-3" style="display: none;"></div>
-        </div>
+            <!-- Work Submission Form -->
+            <div id="submission-section" class="work-form-card" style="display: none;">
+                <h2>Submit Your Work</h2>
+                <div class="form-group">
+                    <label for="authorName">Your Name</label>
+                    <input type="text" id="authorName" placeholder="This will link works to 'My Works'" required>
+                </div>
+                <div class="form-group">
+                    <label for="workContent">Work Description</label>
+                    <textarea id="workContent" placeholder="Describe your work (e.g., a technical challenge solved, a design concept, a piece of code, or a story). Be detailed!" maxlength="1000" required></textarea>
+                </div>
+                <button id="submitWorkBtn" class="form-submit" onclick="submitWork()">
+                    <i class="fas fa-paper-plane"></i> Post Work
+                </button>
+                <div id="submitStatus" class="auth-status mt-3" style="display: none;"></div>
+            </div>
 
-        <!-- 2. All Works Feed -->
-        <div id="all-works-section">
-            <h2 class="text-2xl font-bold text-gray-700 mb-4 pt-4 border-t-2 border-gray-200">All Works for Review</h2>
-            <div id="worksFeedAll" class="works-grid">
-                <div class="text-center p-10 col-span-full text-gray-500" id="loadingIndicatorAll">
-                    <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
-                    <p>Loading all works...</p>
+            <!-- All Works Feed -->
+            <div id="all-works-section">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4 pt-4 border-t-2 border-gray-200">All Works for Review</h2>
+                <div id="worksFeedAll" class="works-grid">
+                    <div class="text-center p-10 col-span-full text-gray-500" id="loadingIndicatorAll">
+                        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+                        <p>Loading all works...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- My Works Feed -->
+            <div id="my-works-section" style="display: none;">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4 pt-4 border-t-2 border-gray-200">Your Submitted Works (<span id="myWorksAuthorName">Loading...</span>)</h2>
+                <div id="worksFeedMy" class="works-grid">
+                    <div class="text-center p-10 col-span-full text-gray-500" id="loadingIndicatorMy">
+                        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+                        <p>Loading your works...</p>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <!-- 3. My Works Feed -->
-        <div id="my-works-section" style="display: none;">
-            <h2 class="text-2xl font-bold text-gray-700 mb-4 pt-4 border-t-2 border-gray-200">Your Submitted Works (<span id="myWorksAuthorName">Loading...</span>)</h2>
-            <div id="worksFeedMy" class="works-grid">
-                <div class="text-center p-10 col-span-full text-gray-500" id="loadingIndicatorMy">
-                    <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
-                    <p>Loading your works...</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    </main>
 
-    <!-- Footer (Simplified for a single page) -->
-    <footer class="bg-gray-800 text-white p-6 mt-10">
-        <div class="max-w-7xl mx-auto text-center">
+    <footer>
+        <div class="container">
             <p>&copy; 2024 Works Platform. All rights reserved. (Anonymous Mode)</p>
         </div>
     </footer>
@@ -412,7 +638,6 @@
         );
 
         // --- Global State (Anonymous Mode) ---
-        // We use the last successfully submitted name as the local session identifier.
         let currentUserName = null; 
 
         // --- Initialization ---
@@ -426,12 +651,10 @@
                 if (nameInput) nameInput.value = currentUserName;
             }
 
-            initializeMobileMenu();
             showWorksSection('all');
         });
 
         // --- SPA Routing/Section Toggling ---
-
         function showWorksSection(section) {
             const sections = {
                 'all': document.getElementById('all-works-section'),
@@ -455,7 +678,7 @@
                     // "My Works" is now filtered by the locally stored name
                     const nameForFilter = localStorage.getItem('currentUserName');
                     if (!nameForFilter) {
-                        showNotification('Please submit a work first to set your author name.', 'warning');
+                        showToast('Please submit a work first to set your author name.', 'warning');
                         showWorksSection('submit');
                         return;
                     }
@@ -467,12 +690,10 @@
                 }
             }
             
-            smoothScrollTo('works-platform');
+            smoothScrollTo('works-container');
         }
 
         // --- Works Platform Functions ---
-
-        // 1. Submit Work
         async function submitWork() {
             const authorName = document.getElementById('authorName').value.trim();
             const workContent = document.getElementById('workContent').value.trim();
@@ -497,7 +718,6 @@
                 localStorage.setItem('currentUserName', authorName);
                 currentUserName = authorName;
 
-                // --- FIX: Removed missing columns (accepted_count, rejected_count) from INSERT ---
                 const { error } = await supabaseClient
                     .from('sampleworks')
                     .insert([
@@ -505,8 +725,6 @@
                             name: authorName, 
                             work: workContent,
                             created_at: new Date().toISOString()
-                            // Note: accepted_count & rejected_count are omitted to avoid DB error. 
-                            // Please add these columns to your Supabase table!
                         }
                     ]);
 
@@ -529,7 +747,6 @@
             }
         }
 
-        // 2. Load Works (Generalized)
         async function loadWorks(targetElementId, authorName = null) {
             const worksFeed = document.getElementById(targetElementId);
             const loadingIndicator = document.getElementById(targetElementId.replace('worksFeed', 'loadingIndicator'));
@@ -540,12 +757,10 @@
             let query = supabaseClient.from('sampleworks').select('*');
 
             if (authorName) {
-                // Filter for My Works based on the Name column
                 query = query.eq('name', authorName); 
             }
             
             try {
-                // Fetch works, sorted by creation date descending
                 const { data, error } = await query
                     .order('created_at', { ascending: false });
 
@@ -571,78 +786,134 @@
             }
         }
 
-        // 3. Create Work Card HTML
         function createWorkCard(work) {
             const isOwner = currentUserName && currentUserName === work.name;
             
-            // Use safe defaults in case the columns are missing in the DB
             const acceptedCount = work.accepted_count || 0;
             const rejectedCount = work.rejected_count || 0;
+            const totalVotes = acceptedCount + rejectedCount;
 
             let statusClass = 'status-pending';
             let statusText = 'Pending Review';
-            let totalVotes = acceptedCount + rejectedCount;
+            let statusIcon = '<i class="fas fa-clock"></i>';
+            let cardClass = '';
+            let acceptanceWidth = 0;
+            let acceptanceFillClass = '';
             
             if (totalVotes > 0) {
                 if (acceptedCount > rejectedCount) {
                     statusClass = 'status-accepted';
                     statusText = 'Accepted';
+                    statusIcon = '<i class="fas fa-check-circle"></i>';
+                    cardClass = 'accepted';
+                    acceptanceWidth = (acceptedCount / totalVotes) * 100;
+                    acceptanceFillClass = 'accepted';
                 } else if (rejectedCount > acceptedCount) {
                     statusClass = 'status-rejected';
                     statusText = 'Rejected';
+                    statusIcon = '<i class="fas fa-times-circle"></i>';
+                    cardClass = 'rejected';
+                    acceptanceWidth = (rejectedCount / totalVotes) * 100;
+                    acceptanceFillClass = 'rejected';
+                } else {
+                    // Equal votes
+                    statusClass = 'status-pending';
+                    statusText = 'Tied';
+                    statusIcon = '<i class="fas fa-balance-scale"></i>';
+                    acceptanceWidth = 50;
+                    acceptanceFillClass = 'mixed';
                 }
             }
             
-            // In anonymous mode, only show vote buttons if the user is NOT the owner (based on name)
             const actionButtons = !isOwner ? `
                 <button class="review-btn accept" onclick="reviewWork('${work.id}', 'accept')">
-                    <i class="fas fa-check"></i> Accept (${acceptedCount})
+                    <i class="fas fa-thumbs-up"></i> Accept (${acceptedCount})
                 </button>
                 <button class="review-btn reject" onclick="reviewWork('${work.id}', 'reject')">
-                    <i class="fas fa-times"></i> Reject (${rejectedCount})
+                    <i class="fas fa-thumbs-down"></i> Reject (${rejectedCount})
                 </button>
             ` : `
                 <span class="text-gray-500 text-sm italic">You cannot review your own work.</span>
             `;
 
             return `
-                <div class="work-card" id="work-${work.id}">
+                <div class="work-card ${cardClass}" id="work-${work.id}">
                     <div class="work-header">
                         <span class="work-author">${work.name || 'Anonymous'}</span>
                         <span class="work-date">${formatDate(work.created_at)}</span>
                     </div>
                     <div class="work-content">${work.work}</div>
                     
-                    <div class="flex items-center justify-between">
-                        <span class="current-status ${statusClass}">${statusText}</span>
-                        <div class="review-score ${statusClass === 'status-rejected' ? 'rejected' : 'accepted'}">
-                            <i class="fas fa-thumbs-up"></i> ${acceptedCount}
-                            <i class="fas fa-thumbs-down ml-3"></i> ${rejectedCount}
+                    <div class="work-footer">
+                        <div class="status-container">
+                            <span class="current-status ${statusClass}">
+                                ${statusIcon} ${statusText}
+                            </span>
+                            <div class="review-stats">
+                                <div class="review-score accepted">
+                                    <i class="fas fa-thumbs-up"></i> ${acceptedCount}
+                                </div>
+                                <div class="review-score rejected">
+                                    <i class="fas fa-thumbs-down"></i> ${rejectedCount}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="review-section">
-                        ${actionButtons}
+                        
+                        ${totalVotes > 0 ? `
+                        <div>
+                            <div class="acceptance-bar">
+                                <div class="acceptance-fill ${acceptanceFillClass}" style="width: ${acceptanceWidth}%"></div>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="review-section">
+                            ${actionButtons}
+                        </div>
                     </div>
                 </div>
             `;
         }
         
-        // 4. Accept/Reject Work Logic
         async function reviewWork(workId, action) {
-            // Check for self-review based on local name state
             const workCard = document.getElementById(`work-${workId}`);
             const authorName = workCard.querySelector('.work-author').textContent;
 
             if (currentUserName && currentUserName === authorName) {
-                 showNotification('You cannot review your own work.', 'warning');
+                 showToast('You cannot review your own work.', 'warning');
                  return;
             }
 
-            showNotification(`Recording ${action} for work ID ${workId}...`, 'info');
+            // Add ripple effect to button
+            event.target.style.position = 'relative';
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            
+            const rect = event.target.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            
+            event.target.appendChild(ripple);
+            
+            // Remove ripple after animation
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+
+            // Disable buttons temporarily
+            const acceptBtn = workCard.querySelector('.review-btn.accept');
+            const rejectBtn = workCard.querySelector('.review-btn.reject');
+            if (acceptBtn) acceptBtn.disabled = true;
+            if (rejectBtn) rejectBtn.disabled = true;
+
+            showToast(`Recording ${action} for work...`, 'info');
 
             try {
-                // Fetch current counts
                 const { data: workData, error: fetchError } = await supabaseClient
                     .from('sampleworks')
                     .select('accepted_count, rejected_count')
@@ -650,9 +921,8 @@
                     .single();
                     
                 if (fetchError) {
-                    // Check for the error related to missing columns
                     if (fetchError.code === 'PGRST204' || fetchError.message.includes('accepted_count')) {
-                         showNotification('❌ **Review Failed:** Database missing columns. Please add `accepted_count` (INT, default 0) and `rejected_count` (INT, default 0) to your `sampleworks` table.', 'error');
+                         showToast('❌ Review Failed: Database missing columns. Please add `accepted_count` and `rejected_count` to your table.', 'error');
                          return;
                     }
                     throw fetchError;
@@ -661,14 +931,12 @@
                 let accepted_count = workData.accepted_count || 0;
                 let rejected_count = workData.rejected_count || 0;
                 
-                // Increment the relevant counter
                 if (action === 'accept') {
                     accepted_count += 1;
                 } else if (action === 'reject') {
                     rejected_count += 1;
                 }
                 
-                // Update the database
                 const { error: updateError } = await supabaseClient
                     .from('sampleworks')
                     .update({ 
@@ -679,7 +947,14 @@
 
                 if (updateError) throw updateError;
                 
-                showNotification(`✅ Review recorded: ${action}!`, 'success');
+                showToast(`✅ Review recorded: ${action}!`, 'success');
+                
+                // Animate the card update
+                workCard.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    workCard.style.transform = 'scale(1)';
+                }, 300);
+                
                 // Reload the current view
                 if (document.getElementById('all-works-section').style.display === 'block') {
                     loadWorks('worksFeedAll');
@@ -689,12 +964,15 @@
                 
             } catch (error) {
                 console.error('Review Error:', error);
-                showNotification('❌ Failed to record review: ' + error.message, 'error');
+                showToast('❌ Failed to record review: ' + error.message, 'error');
+            } finally {
+                // Re-enable buttons
+                if (acceptBtn) acceptBtn.disabled = false;
+                if (rejectBtn) rejectBtn.disabled = false;
             }
         }
         
         // --- Utility Functions ---
-
         function showAuthStatus(message, type) {
             const submitStatus = document.getElementById('submitStatus');
             if (submitStatus) {
@@ -704,82 +982,26 @@
         }
         
         function toggleMobileMenu() {
-            const mobileMenu = document.querySelector('.mobile-menu');
-            const navMenu = document.querySelector('.nav-menu');
-            
-            if (mobileMenu && navMenu) {
+            const navMenu = document.getElementById('navMenu');
+            if (navMenu) {
                 navMenu.classList.toggle('active');
-                mobileMenu.classList.toggle('active');
             }
         }
         
-        function initializeMobileMenu() {}
-        
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = `
-                <i class="fas fa-${getNotificationIcon(type)}"></i>
-                <span>${message}</span>
-                <i class="fas fa-times notification-close" onclick="closeNotification(this)"></i>
-            `;
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
             
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${getNotificationColor(type)};
-                color: white;
-                padding: 15px 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                z-index: 9999;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                max-width: 90%;
-                animation: fadeIn 0.3s ease-out;
-            `;
-            
-            document.body.appendChild(notification);
+            toast.style.display = 'block';
             
             setTimeout(() => {
-                if (notification.parentNode) {
-                    closeNotification(notification.querySelector('.notification-close'));
-                }
-            }, 5000);
-        }
-
-        function getNotificationIcon(type) {
-            switch (type) {
-                case 'success': return 'check-circle';
-                case 'error': return 'exclamation-circle';
-                case 'warning': return 'exclamation-triangle';
-                case 'info': return 'info-circle';
-                default: return 'info-circle';
-            }
-        }
-
-        function getNotificationColor(type) {
-            switch (type) {
-                case 'success': return '#059669'; /* Emerald-600 */
-                case 'error': return '#dc2626'; /* Red-600 */
-                case 'warning': return '#f59e0b'; /* Amber-500 */
-                case 'info': return '#2563eb'; /* Blue-600 */
-                default: return '#2563eb';
-            }
-        }
-
-        function closeNotification(element) {
-            const notification = element.closest('.notification');
-            if (notification) {
-                notification.style.animation = 'fadeOut 0.3s ease-out';
+                toast.style.display = 'none';
                 setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
+                    document.body.removeChild(toast);
                 }, 300);
-            }
+            }, 3000);
         }
 
         function formatDate(dateString) {

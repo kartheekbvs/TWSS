@@ -6,6 +6,8 @@
     <title>TWSS - Technical Work for Software and Solutions</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=MS+Gothic&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -13,10 +15,11 @@
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'MS Gothic', 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
-            color: #222;
-            background-color: #f5f5f5;
+            color: #000;
+            background-color: #008080;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><rect width="20" height="20" fill="%23008080"/><path d="M0 0L20 20M20 0L0 20" stroke="%2300a0a0" stroke-width="0.5"/></svg>');
         }
 
         .container {
@@ -27,83 +30,86 @@
 
         header {
             text-align: center;
-            margin-bottom: 50px;
-            background: white;
-            padding: 50px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            background: #c0c0c0;
+            padding: 20px;
+            border: 2px outset #c0c0c0;
+            box-shadow: 1px 1px 0 #000, -1px -1px 0 #dfdfdf, 1px -1px 0 #000, -1px 1px 0 #dfdfdf;
         }
 
         .site-title {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #111;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #000080;
             margin-bottom: 5px;
-            letter-spacing: -1px;
+            text-shadow: 1px 1px 0 #fff;
         }
 
         .site-subtitle {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 30px;
-            font-weight: 300;
+            font-size: 1rem;
+            color: #000080;
+            margin-bottom: 15px;
         }
 
         .page-title {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 20px;
-            letter-spacing: -0.5px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #000080;
+            margin-bottom: 15px;
+            text-decoration: underline;
         }
 
         .nav-menu {
             display: flex;
             justify-content: center;
-            gap: 40px;
-            margin-top: 30px;
+            gap: 15px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
 
         .nav-link {
-            color: #444;
+            color: #000;
             text-decoration: none;
-            font-size: 1rem;
-            padding: 12px 24px;
-            border-radius: 30px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            background: #f0f0f0;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            border: 1px outset #c0c0c0;
+            background: #c0c0c0;
+            transition: all 0.1s;
+            font-weight: bold;
         }
 
         .nav-link:hover {
-            background-color: #333;
-            color: white;
+            border: 1px inset #c0c0c0;
+            background: #c0c0c0;
+        }
+
+        .nav-link:active {
+            border: 1px inset #c0c0c0;
+            background: #a0a0a0;
         }
 
         .content-section {
-            background: white;
-            border-radius: 8px;
-            padding: 40px;
-            margin-bottom: 40px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 1px 1px 0 #000, -1px -1px 0 #dfdfdf, 1px -1px 0 #000, -1px 1px 0 #dfdfdf;
         }
 
         .section-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #222;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 15px;
-            letter-spacing: -0.5px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #000080;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px groove #c0c0c0;
         }
 
         .intro-text {
-            font-size: 1.1rem;
-            color: #555;
-            line-height: 1.7;
-            margin-bottom: 40px;
+            font-size: 1rem;
+            color: #000;
+            line-height: 1.5;
+            margin-bottom: 30px;
             text-align: center;
             max-width: 800px;
             margin-left: auto;
@@ -113,111 +119,130 @@
         .course-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-top: 40px;
+            gap: 20px;
+            margin-top: 20px;
         }
 
         .course-item {
             text-align: center;
-            transition: all 0.3s ease;
-            padding: 30px 20px;
-            border-radius: 8px;
+            transition: all 0.1s;
+            padding: 15px;
+            border: 2px outset #c0c0c0;
+            background: #c0c0c0;
+            box-shadow: 1px 1px 0 #000, -1px -1px 0 #dfdfdf, 1px -1px 0 #000, -1px 1px 0 #dfdfdf;
         }
 
         .course-item:hover {
-            transform: translateY(-5px);
+            border: 2px inset #c0c0c0;
+        }
+
+        .course-item:active {
+            border: 2px inset #c0c0c0;
+            background: #a0a0a0;
         }
 
         .course-icon {
-            font-size: 3.5rem;
-            color: #333;
-            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: #000080;
+            margin-bottom: 15px;
             display: block;
         }
 
         .course-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #111;
-            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #000080;
+            margin-bottom: 10px;
         }
 
         .course-description {
-            color: #666;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            min-height: 80px;
+            color: #000;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            min-height: 70px;
         }
 
         .course-link {
             display: inline-block;
-            color: white;
+            color: #fff;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: bold;
             font-size: 0.9rem;
-            padding: 10px 20px;
-            border-radius: 30px;
-            transition: all 0.3s ease;
-            background: #333;
+            padding: 8px 16px;
+            border: 1px outset #000080;
+            background: #000080;
+            transition: all 0.1s;
         }
 
         .course-link:hover {
-            background: #111;
+            border: 1px inset #000080;
+            background: #000080;
+        }
+
+        .course-link:active {
+            border: 1px inset #000080;
+            background: #ff8c00;
         }
 
         .stats-banner {
-            background: linear-gradient(135deg, #444, #222);
-            color: white;
-            padding: 40px;
-            border-radius: 8px;
-            margin-bottom: 40px;
+            background: #000080;
+            color: #fff;
+            padding: 20px;
+            border: 2px outset #c0c0c0;
+            margin-bottom: 30px;
             text-align: center;
+            box-shadow: 1px 1px 0 #000, -1px -1px 0 #dfdfdf, 1px -1px 0 #000, -1px 1px 0 #dfdfdf;
         }
 
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
+            gap: 20px;
+            margin-top: 20px;
         }
 
         .stat-item {
             text-align: center;
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+            padding: 10px;
+            color: #000080;
+            box-shadow: 1px 1px 0 #000, -1px -1px 0 #dfdfdf, 1px -1px 0 #000, -1px 1px 0 #dfdfdf;
         }
 
         .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-size: 2rem;
+            font-weight: bold;
             display: block;
             margin-bottom: 5px;
+            color: #ff8c00;
         }
 
         .stat-label {
-            font-size: 1rem;
-            opacity: 0.9;
-            font-weight: 300;
+            font-size: 0.9rem;
+            font-weight: bold;
         }
 
         footer {
             text-align: center;
-            margin-top: 50px;
-            padding: 40px 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 30px;
+            padding: 20px;
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+            box-shadow: 1px 1px 0 #000, -1px -1px 0 #dfdfdf, 1px -1px 0 #000, -1px 1px 0 #dfdfdf;
         }
 
         .footer-text {
-            color: #666;
-            font-size: 0.95rem;
-            line-height: 1.8;
+            color: #000080;
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         .footer-link {
-            color: #333;
+            color: #000080;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: bold;
         }
 
         .footer-link:hover {
@@ -226,13 +251,13 @@
 
         @media (max-width: 768px) {
             .site-title {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
             
             .nav-menu {
                 flex-direction: column;
                 align-items: center;
-                gap: 15px;
+                gap: 10px;
             }
             
             .container {
@@ -240,47 +265,164 @@
             }
             
             .content-section {
-                padding: 25px;
+                padding: 15px;
             }
             
             .course-grid {
                 grid-template-columns: 1fr;
-                gap: 30px;
+                gap: 15px;
             }
         }
 
         .highlight-badge {
             display: inline-block;
-            background: #333;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
+            background: #ff8c00;
+            color: #fff;
+            padding: 3px 10px;
+            border: 1px outset #ff8c00;
             font-size: 0.8rem;
-            font-weight: 500;
-            margin-bottom: 15px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            box-shadow: 1px 1px 0 #000, -1px -1px 0 #ffb366, 1px -1px 0 #000, -1px 1px 0 #ffb366;
         }
 
         .skills-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 15px;
+            gap: 5px;
+            margin-top: 10px;
             justify-content: center;
         }
 
         .skill-tag {
-            background: #f0f0f0;
-            color: #555;
-            padding: 5px 12px;
-            border-radius: 20px;
+            background: #c0c0c0;
+            color: #000;
+            padding: 3px 8px;
+            border: 1px outset #c0c0c0;
             font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: bold;
+            box-shadow: 1px 1px 0 #000, -1px -1px 0 #dfdfdf, 1px -1px 0 #000, -1px 1px 0 #dfdfdf;
+        }
+
+        .skill-tag:hover {
+            border: 1px inset #c0c0c0;
+        }
+
+        .window-title-bar {
+            background: linear-gradient(to right, #000080, #1084d0);
+            color: white;
+            padding: 3px 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 2px;
+        }
+
+        .window-control {
+            width: 14px;
+            height: 14px;
+            background: #c0c0c0;
+            border: 1px outset #c0c0c0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .window-control:hover {
+            background: #a0a0a0;
+        }
+
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: #c0c0c0;
+            border-top: 1px solid #fff;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            z-index: 1000;
+            box-shadow: 0 -1px 0 #000, 0 1px 0 #dfdfdf;
+        }
+
+        .start-button {
+            background: linear-gradient(to right, #000080, #1084d0);
+            color: white;
+            border: 1px outset #c0c0c0;
+            padding: 3px 8px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .start-button:hover {
+            border: 1px inset #c0c0c0;
+        }
+
+        .start-button:active {
+            border: 1px inset #c0c0c0;
+            background: linear-gradient(to right, #000080, #1084d0);
+        }
+
+        .taskbar-apps {
+            display: flex;
+            margin-left: 10px;
+            gap: 5px;
+        }
+
+        .taskbar-app {
+            background: #c0c0c0;
+            border: 1px outset #c0c0c0;
+            padding: 3px 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .taskbar-app:hover {
+            border: 1px inset #c0c0c0;
+        }
+
+        .taskbar-clock {
+            margin-left: auto;
+            background: #c0c0c0;
+            border: 1px inset #c0c0c0;
+            padding: 3px 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #000;
+        }
+
+        body {
+            padding-bottom: 40px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <div class="window-title-bar">
+                <span>Learning Modules - TWSS</span>
+                <div class="window-controls">
+                    <div class="window-control">_</div>
+                    <div class="window-control">□</div>
+                    <div class="window-control">×</div>
+                </div>
+            </div>
             <h1 class="site-title">TWSS</h1>
             <p class="site-subtitle">Technical Work for Software and Solutions</p>
             <h2 class="page-title">Learning Modules</h2>
@@ -312,12 +454,20 @@
         </div>
 
         <div class="content-section" id="ml-section">
+            <div class="window-title-bar">
+                <span>Machine Learning & AI</span>
+                <div class="window-controls">
+                    <div class="window-control">_</div>
+                    <div class="window-control">□</div>
+                    <div class="window-control">×</div>
+                </div>
+            </div>
             <h2 class="section-title">Machine Learning & AI</h2>
             <p class="intro-text">
                 Advanced machine learning simulation covering AI algorithms, data science methodologies, and practical applications in real-world scenarios.
             </p>
             <div class="course-grid">
-                <div class="course-item">
+                <div class="course-item" data-course-id="ml-fundamentals">
                     <div class="highlight-badge">Advanced Level</div>
                     <i class="fas fa-brain course-icon"></i>
                     <h3 class="course-title">Machine Learning Fundamentals</h3>
@@ -333,7 +483,7 @@
                     <a href="/ml.html" class="course-link">Start Learning</a>
                 </div>
 
-                <div class="course-item">
+                <div class="course-item" data-course-id="deep-learning">
                     <div class="highlight-badge">Expert Level</div>
                     <i class="fas fa-network-wired course-icon"></i>
                     <h3 class="course-title">Deep Learning & Neural Networks</h3>
@@ -352,12 +502,20 @@
         </div>
 
         <div class="content-section">
+            <div class="window-title-bar">
+                <span>Database Management Systems</span>
+                <div class="window-controls">
+                    <div class="window-control">_</div>
+                    <div class="window-control">□</div>
+                    <div class="window-control">×</div>
+                </div>
+            </div>
             <h2 class="section-title">Database Management Systems</h2>
             <p class="intro-text">
                 Comprehensive database management course covering SQL, Python integration, NoSQL systems, and enterprise data solutions.
             </p>
             <div class="course-grid">
-                <div class="course-item">
+                <div class="course-item" data-course-id="sql-databases">
                     <div class="highlight-badge">Foundation</div>
                     <i class="fas fa-database course-icon"></i>
                     <h3 class="course-title">SQL & Relational Databases</h3>
@@ -373,7 +531,7 @@
                     <a href="/dbms.html" class="course-link">Start Learning</a>
                 </div>
 
-                <div class="course-item">
+                <div class="course-item" data-course-id="nosql-bigdata">
                     <div class="highlight-badge">Advanced</div>
                     <i class="fas fa-cloud-database course-icon"></i>
                     <h3 class="course-title">NoSQL & Big Data Systems</h3>
@@ -392,12 +550,20 @@
         </div>
 
         <div class="content-section" id="c-section">
+            <div class="window-title-bar">
+                <span>C Programming</span>
+                <div class="window-controls">
+                    <div class="window-control">_</div>
+                    <div class="window-control">□</div>
+                    <div class="window-control">×</div>
+                </div>
+            </div>
             <h2 class="section-title">C Programming</h2>
             <p class="intro-text">
                 System programming fundamentals with C language covering memory management, data structures, and low-level programming concepts.
             </p>
             <div class="course-grid">
-                <div class="course-item">
+                <div class="course-item" data-course-id="python">
                     <div class="highlight-badge">Foundation</div>
                     <i class="fab fa-python course-icon"></i>
                     <h3 class="course-title">PYTHON</h3>
@@ -413,7 +579,7 @@
                     <a href="pythontut.html" class="course-link">Start Learning</a>
                 </div>
                 
-                <div class="course-item">
+                <div class="course-item" data-course-id="azure">
                     <div class="highlight-badge">Foundation</div>
                     <i class="fab fa-microsoft course-icon"></i>
                     <h3 class="course-title">AZURE</h3>
@@ -428,7 +594,7 @@
                     <a href="/Azure.html" class="course-link">Start Learning</a>
                 </div>
 
-                <div class="course-item">
+                <div class="course-item" data-course-id="advanced-c">
                     <div class="highlight-badge">Advanced</div>
                     <i class="fas fa-microchip course-icon"></i>
                     <h3 class="course-title">Advanced C & System Programming</h3>
@@ -447,12 +613,20 @@
         </div>
 
         <div class="content-section" id="cpp-section">
+            <div class="window-title-bar">
+                <span>C++ Programming</span>
+                <div class="window-controls">
+                    <div class="window-control">_</div>
+                    <div class="window-control">□</div>
+                    <div class="window-control">×</div>
+                </div>
+            </div>
             <h2 class="section-title">C++ Programming</h2>
             <p class="intro-text">
                 Object-oriented programming with C++ covering advanced concepts, STL, templates, and modern C++ features for enterprise development.
             </p>
             <div class="course-grid">
-                <div class="course-item">
+                <div class="course-item" data-course-id="cpp-oop">
                     <div class="highlight-badge">Intermediate</div>
                     <i class="fas fa-cube course-icon"></i>
                     <h3 class="course-title">Object-Oriented Programming with C++</h3>
@@ -468,7 +642,7 @@
                     <a href="/cpp.html" class="course-link">Start Learning</a>
                 </div>
 
-                <div class="course-item">
+                <div class="course-item" data-course-id="dsa">
                     <div class="highlight-badge">Advanced</div>
                     <i class="fas fa-sitemap course-icon"></i>
                     <h3 class="course-title">DSA</h3>
@@ -487,6 +661,14 @@
         </div>
 
         <footer>
+            <div class="window-title-bar">
+                <span>About TWSS</span>
+                <div class="window-controls">
+                    <div class="window-control">_</div>
+                    <div class="window-control">□</div>
+                    <div class="window-control">×</div>
+                </div>
+            </div>
             <p class="footer-text">
                 <strong>TWSS - Technical Work for Software and Solutions</strong><br>
                 Visit our main platform at <a href="https://twss.netlify.app" class="footer-link">twss.netlify.app</a><br>
@@ -495,7 +677,107 @@
         </footer>
     </div>
 
+    <div class="taskbar">
+        <div class="start-button">
+            <span>Start</span>
+        </div>
+        <div class="taskbar-apps">
+            <div class="taskbar-app">ML</div>
+            <div class="taskbar-app">DBMS</div>
+            <div class="taskbar-app">C</div>
+            <div class="taskbar-app">C++</div>
+        </div>
+        <div class="taskbar-clock" id="clock">00:00</div>
+    </div>
+
     <script>
+        // Course tracking and recommendation system (hidden from users)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize course data from localStorage or create new
+            let courseData = JSON.parse(localStorage.getItem('twssCourseData')) || {};
+            
+            // Get all course items
+            const courseItems = document.querySelectorAll('.course-item');
+            
+            // Update each course item with stored data
+            courseItems.forEach(item => {
+                const courseId = item.dataset.courseId;
+                
+                // Initialize course data if not exists
+                if (!courseData[courseId]) {
+                    courseData[courseId] = {
+                        clicks: 0,
+                        timeSpent: 0 // in minutes
+                    };
+                }
+                
+                // Add click event listener
+                const courseLink = item.querySelector('.course-link');
+                if (courseLink) {
+                    courseLink.addEventListener('click', function(e) {
+                        // Increment click count
+                        courseData[courseId].clicks++;
+                        
+                        // Save to localStorage
+                        localStorage.setItem('twssCourseData', JSON.stringify(courseData));
+                        
+                        // Simulate time spent (in a real app, this would be tracked on the course page)
+                        // For demo purposes, we'll add a random time between 5-15 minutes
+                        const additionalTime = Math.floor(Math.random() * 11) + 5;
+                        courseData[courseId].timeSpent += additionalTime;
+                        
+                        // Save updated data
+                        localStorage.setItem('twssCourseData', JSON.stringify(courseData));
+                        
+                        // Continue with navigation
+                        // Note: In a real application, you might want to track actual time spent
+                    });
+                }
+            });
+            
+            // Function to sort courses by engagement score
+            function sortCoursesByEngagement() {
+                const sections = document.querySelectorAll('.content-section');
+                
+                sections.forEach(section => {
+                    const courseGrid = section.querySelector('.course-grid');
+                    if (!courseGrid) return;
+                    
+                    // Get all course items in this section
+                    const courses = Array.from(courseGrid.querySelectorAll('.course-item'));
+                    
+                    // Sort courses by engagement score (clicks + timeSpent)
+                    courses.sort((a, b) => {
+                        const aId = a.dataset.courseId;
+                        const bId = b.dataset.courseId;
+                        
+                        const aScore = (courseData[aId]?.clicks || 0) + (courseData[aId]?.timeSpent || 0);
+                        const bScore = (courseData[bId]?.clicks || 0) + (courseData[bId]?.timeSpent || 0);
+                        
+                        return bScore - aScore; // Descending order
+                    });
+                    
+                    // Clear the grid and re-append sorted courses
+                    courseGrid.innerHTML = '';
+                    courses.forEach(course => {
+                        courseGrid.appendChild(course);
+                    });
+                });
+            }
+            
+            // Initial sort
+            sortCoursesByEngagement();
+            
+            // Update UI every 10 seconds to show real-time changes
+            setInterval(() => {
+                // Refresh course data from localStorage
+                courseData = JSON.parse(localStorage.getItem('twssCourseData')) || {};
+                
+                // Re-sort courses
+                sortCoursesByEngagement();
+            }, 10000);
+        });
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -510,45 +792,56 @@
             });
         });
 
-        // Add subtle animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+        // Clock functionality
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}`;
+        }
+        
+        updateClock();
+        setInterval(updateClock, 60000); // Update every minute
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+        // Window controls functionality (visual only)
+        document.querySelectorAll('.window-control').forEach(control => {
+            control.addEventListener('click', function() {
+                if (this.textContent === '×') {
+                    this.closest('.content-section, header, footer').style.display = 'none';
                 }
             });
-        }, observerOptions);
+        });
 
-        // Observe all content sections
-        document.querySelectorAll('.content-section').forEach(section => {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(section);
+        // Start button functionality (visual only)
+        document.querySelector('.start-button').addEventListener('click', function() {
+            alert('Start menu would open here');
+        });
+
+        // Taskbar app functionality (visual only)
+        document.querySelectorAll('.taskbar-app').forEach(app => {
+            app.addEventListener('click', function() {
+                const sectionId = this.textContent.toLowerCase() + '-section';
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Remove alert calls for better user experience
+        document.onkeydown = function(e) {
+            if (
+                e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S') ||
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i'))
+            ) {
+                return false; // Prevent default action for these keys
+            }
+        };
+
+        document.addEventListener('contextmenu', event => {
+            event.preventDefault(); // Prevent right-click context menu
         });
     </script>
-    <script>
-// Remove alert calls for better user experience
-document.onkeydown = function(e) {
-    if (
-        e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S') ||
-        e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i'))
-    ) {
-        // console.log("Developer tools or source view attempt detected.");
-        return false; // Prevent default action for these keys
-    }
-};
-
-document.addEventListener('contextmenu', event => {
-    event.preventDefault(); // Prevent right-click context menu
-});
-</script>
 </body>
 </html>

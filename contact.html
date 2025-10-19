@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact - Kartheek BVS</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  color: #fff;
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+  background-attachment: fixed;
+}
+
+/* Navigation */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  z-index: 1000;
+}
+.nav-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+.logo a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+.nav-links a {
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.nav-links a:hover {
+  color: #fff;
+}
+
+/* Contact Section */
+section {
+  padding: 8rem 2rem 4rem;
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+h2 {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+}
+.contact-info {
+  margin-bottom: 3rem;
+  color: rgba(255,255,255,0.8);
+}
+.contact-info p {
+  font-size: 1.2rem;
+  margin: 0.8rem 0;
+}
+.contact-info i {
+  margin-right: 10px;
+  color: #00bcd4;
+}
+
+/* Contact Form */
+form {
+  text-align: left;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(15px);
+  padding: 2rem;
+  border-radius: 15px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: rgba(255,255,255,0.8);
+  font-weight: 600;
+}
+input, textarea {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+}
+input:focus, textarea:focus {
+  border-color: rgba(255,255,255,0.4);
+  outline: none;
+}
+button {
+  display: block;
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  padding: 1rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  border: 2px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.4);
+  transform: translateY(-3px);
+}
+
+/* Footer */
+footer {
+  margin-top: 4rem;
+  padding: 2rem;
+  text-align: center;
+  color: rgba(255,255,255,0.6);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-content">
+    <div class="logo"><a href="/">Kartheek BVS</a></div>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#projects">Projects</a></li>
+      <li><a href="/#skills">Skills</a></li>
+      <li><a href="/#education">Education</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section>
+  <h2>Contact Me</h2>
+  <div class="contact-info">
+    <p><i class="fas fa-envelope"></i> <a href="mailto:bvskartheek83@gmail.com" style="color:#fff;">bvskartheek83@gmail.com</a></p>
+    <p><i class="fas fa-phone"></i> +91 8639316512</p>
+  </div>
+
+  <form onsubmit="showMessage(event)">
+    <label for="name">Name</label>
+    <input type="text" id="name" placeholder="Enter your name" required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="Enter your email" required>
+
+    <label for="message">Message</label>
+    <textarea id="message" placeholder="Write your message here..." required></textarea>
+
+    <button type="submit">Send Message</button>
+  </form>
+  <div id="msg" style="margin-top:20px;color:#00ff99;font-weight:600;display:none;">Message Sent Successfully!</div>
+</section>
+
+<footer>
+  © 2025 Kartheek BVS | twss-awe.pages.dev
+</footer>
+
+<script>
+function showMessage(e) {
+  e.preventDefault();
+  document.getElementById('msg').style.display = 'block';
+  setTimeout(() => document.getElementById('msg').style.display = 'none', 4000);
+  e.target.reset();
+}
+</script>
+</body>
+</html>

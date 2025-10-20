@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Fundamentals | Comprehensive College Resource</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Styles for Scrolling and Layout */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8;
+            scroll-behavior: smooth;
+        }
+
+        .sidebar-item {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            background-color: #e0f2fe; /* Light Blue 50 */
+            color: #0369a1; /* Sky Blue 700 */
+        }
+
+        /* Responsive Layout: Sidebar on Desktop, Content-only on Mobile */
+        @media (min-width: 1024px) {
+            #sidebar {
+                width: 280px;
+                flex-shrink: 0;
+                height: 100vh;
+                position: fixed;
+                overflow-y: auto;
+            }
+            #main-content-wrapper {
+                margin-left: 280px; /* Offset the main content by sidebar width */
+            }
+        }
+
+        /* Styling for Code Blocks */
+        pre {
+            background-color: #1f2937; /* Dark Gray */
+            color: #f3f4f6; /* Light Gray */
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        
+        .code-example {
+            position: relative;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            line-height: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Header Section -->
+    <header class="sticky top-0 z-50 bg-white shadow-lg p-4 lg:p-6 flex justify-between items-center border-b border-blue-100">
+        <!-- Logo and Title -->
+        <div class="flex items-center space-x-3">
+            <div class="text-4xl text-sky-600 font-extrabold tracking-tight">
+                <span class="text-blue-900">4</span><span class="text-sky-500">Y</span>
+            </div>
+            <h1 class="text-xl md:text-2xl font-bold text-blue-900">
+                DSA Fundamentals & College Life
+            </h1>
+        </div>
+        <!-- "4 Mongs" Indicator -->
+        <div class="flex space-x-2 text-3xl md:text-4xl" title="Representing 4 Core Languages / 4 Years">
+            <span class="transform hover:scale-110 transition duration-300">🎓</span>
+            <span class="transform hover:scale-110 transition duration-300">💡</span>
+            <span class="transform hover:scale-110 transition duration-300">💻</span>
+            <span class="transform hover:scale-110 transition duration-300">🚀</span>
+        </div>
+        <!-- Mobile Menu Button (Hidden on large screens) -->
+        <button id="menu-toggle" class="lg:hidden p-2 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+        </button>
+    </header>
+
+    <!-- Main Application Container -->
+    <div class="flex flex-col lg:flex-row min-h-screen">
+
+        <!-- Sidebar (Left Indexing) -->
+        <nav id="sidebar" class="bg-white border-r border-blue-100 p-4 shadow-xl lg:shadow-none transition-transform duration-300 ease-in-out transform -translate-x-full lg:translate-x-0 absolute lg:relative w-64 lg:w-72 h-full z-40">
+            <div class="text-lg font-semibold text-blue-700 mb-4 pb-2 border-b border-blue-200">
+                DSA Learning Path Index
+            </div>
+            <ul id="sidebar-list" class="space-y-1 text-sm font-medium text-gray-700">
+                <li class="sidebar-item active" data-target="introduction">Introduction</li>
+                <li class="sidebar-item" data-target="recommendation">Language Choice (C++)</li>
+
+                <li class="pt-3 font-bold text-blue-800">Basic Programming Constructs</li>
+                <li class="sidebar-item" data-target="datatypes">1. Core Data Types & Variables</li>
+                <li class="sidebar-item" data-target="functions">2. Functions & Methods</li>
+                <li class="sidebar-item" data-target="arrays">3. Arrays (Fixed Size)</li>
+                <li class="sidebar-item" data-target="vectors">4. Vectors & Dynamic Arrays</li>
+                <li class="sidebar-item" data-target="strings">5. Strings & Text Handling</li>
+                <li class="sidebar-item" data-target="recursion">6. Recursion & Iteration</li>
+                <li class="sidebar-item" data-target="control-flow">7. Control Flow (Conditions & Loops)</li>
+                <li class="sidebar-item" data-target="oop-basics">8. Classes & Objects (OOP Basics)</li>
+                
+                <li class="pt-3 font-bold text-blue-800">Data Structures & Algorithms</li>
+                <li class="sidebar-item" data-target="complexity">9. Time & Space Complexity</li>
+                <li class="sidebar-item" data-target="stacks-queues">10. Stacks & Queues (Linear ADTs)</li>
+                <li class="sidebar-item" data-target="linked-lists">11. Linked Lists (Theory & Use)</li>
+                <li class="sidebar-item" data-target="trees">12. Trees (Hierarchical DSA)</li>
+                <li class="sidebar-item" data-target="graphs">13. Graphs (Networks)</li>
+                <li class="sidebar-item" data-target="dsa-sheet">14. DSA Practice Sheet</li>
+                
+                <li class="pt-3 font-bold text-blue-800">Further Learning</li>
+                <li class="sidebar-item" data-target="learn-more">Courses & Resources</li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area (Right) -->
+        <main id="main-content-wrapper" class="flex-grow p-4 md:p-12 lg:p-16 bg-gray-50">
+            
+            <section id="introduction" class="mb-16 p-8 bg-white rounded-2xl shadow-xl border-t-8 border-sky-500">
+                <h2 class="text-4xl font-black text-blue-900 mb-4 tracking-tight">
+                    Welcome to Your Comprehensive DSA Journey
+                </h2>
+                <p class="text-xl text-gray-700 leading-relaxed border-l-4 border-sky-300 pl-4 py-1">
+                    This platform provides a complete foundational guide to programming concepts and Data Structures and Algorithms (DSA). We cover everything from the basic syntax of C, C++, Java, and Python to complex structures, ensuring you have the knowledge for a successful four years of college and career.
+                </p>
+            </section>
+
+            <section id="recommendation" class="mb-16 p-8 bg-blue-50 rounded-2xl shadow-lg border-t-4 border-blue-500">
+                <h2 class="text-3xl font-extrabold text-blue-900 mb-4">
+                    Recommended Language: C++
+                </h2>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    For serious DSA practice and competitive programming, **C++ is highly recommended**. It offers direct **memory control** and superior **speed**, which is crucial for performance-intensive algorithms. Mastering C++ first gives you an unparalleled understanding of efficiency.
+                </p>
+                <div class="mt-6 p-4 rounded-xl bg-blue-100 text-blue-800 font-medium border border-blue-200">
+                    Strategy: Use **C++** as your primary implementation language, and use Java/Python for quick prototyping or comparing syntax.
+                </div>
+            </section>
+
+            <!-- --- 1. Core Data Types & Variables (Expanded) --- -->
+            <section id="datatypes" class="mb-16 p-8 bg-white rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">1. Core Data Types & Variables</h2>
+                <p class="text-gray-600 mb-8">
+                    A **Data Type** specifies the type of data a variable can store and its memory size. A **Variable** is a named storage location that holds a value of a specific type.
+                </p>
+
+                <div class="p-6 bg-gray-50 rounded-xl shadow-inner mb-8">
+                    <h3 class="text-2xl font-semibold text-blue-800 mb-3">Primitive Data Types</h3>
+                    <ul class="list-disc list-inside ml-4 text-gray-700 space-y-2">
+                        <li>**Integers:** `int` (C/C++/Java), holds whole numbers (e.g., 10, -5).</li>
+                        <li>**Floating Point:** `float`, `double` (C/C++/Java), holds decimals (e.g., 3.14).</li>
+                        <li>**Characters:** `char` (C/C++/Java), holds a single character (e.g., 'A').</li>
+                        <li>**Boolean:** `bool` (C++/Python), `boolean` (Java), holds `True` or `False` values.</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- C -->
+                    <div class="code-example border-l-4 border-blue-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">C Language: Declaration</h3>
+                        <pre><code>// Syntax: datatype variableName = initialValue;
+int age = 25;
+float pi = 3.14;
+char grade = 'A';
+
+printf("Age: %d, Pi: %f\n", age, pi);</code></pre>
+                        <button class="copy-button bg-blue-500 text-white hover:bg-blue-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- C++ -->
+                    <div class="code-example border-l-4 border-sky-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">C++ Language (Recommended): `auto`</h3>
+                        <pre><code>// Modern C++ often uses 'auto' for convenience.
+int score {100};
+double price = 19.99;
+auto name = "Gemini"; // auto deduces the type
+
+std::cout << "Score: " << score << ", Name: " << name << std::endl;</code></pre>
+                        <button class="copy-button bg-sky-500 text-white hover:bg-sky-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- Java -->
+                    <div class="code-example border-l-4 border-red-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Java Language: Strong Typing</h3>
+                        <pre><code>// Variables must be explicitly typed.
+int count = 50;
+double temperature = 98.6;
+boolean isActive = true;
+
+System.out.println("Count: " + count + ", Active: " + isActive);</code></pre>
+                        <button class="copy-button bg-red-500 text-white hover:bg-red-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- Python -->
+                    <div class="code-example border-l-4 border-green-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Python Language: Dynamic Typing</h3>
+                        <pre><code># No explicit type declaration; types are inferred.
+user_age = 30         # int
+is_logged_in = True   # bool
+company = "Google"    # str
+
+print(f"Age: {user_age}, Logged in: {is_logged_in}")</code></pre>
+                        <button class="copy-button bg-green-500 text-white hover:bg-green-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- --- 2. Functions and Methods --- -->
+            <section id="functions" class="mb-16 p-8 bg-white rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">2. Functions & Methods</h2>
+                <p class="text-gray-600 mb-8">
+                    Functions/Methods encapsulate logic, promoting **reusability** and **modularity**.
+                </p>
+
+                <div class="space-y-8">
+                    <!-- C -->
+                    <div class="code-example border-l-4 border-blue-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">C Language: Standalone Functions</h3>
+                        <pre><code>// Example
+int add(int a, int b) {
+    // Function definition
+    return a + b;
+}
+
+// Call: int result = add(5, 3);</code></pre>
+                        <button class="copy-button bg-blue-500 text-white hover:bg-blue-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- C++ -->
+                    <div class="code-example border-l-4 border-sky-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">C++ Language: Methods in Classes</h3>
+                        <pre><code>// Example usage (Method inside a class)
+class Calculator {
+public:
+    double multiply(double x, double y) {
+        return x * y;
+    }
+};
+
+// Call: Calculator c; double product = c.multiply(4.0, 2.5);</code></pre>
+                        <button class="copy-button bg-sky-500 text-white hover:bg-sky-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- Java -->
+                    <div class="code-example border-l-4 border-red-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Java Language: Methods (Always in a Class)</h3>
+                        <pre><code>// Example
+public static String greet(String name) {
+    return "Hello, " + name + "!";
+}
+
+// Call: String greeting = greet("Jane");</code></pre>
+                        <button class="copy-button bg-red-500 text-white hover:bg-red-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- Python -->
+                    <div class="code-example border-l-4 border-green-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Python Language: `def` Keyword</h3>
+                        <pre><code># Example
+def power(base, exp):
+    return base ** exp
+
+# Call: result = power(2, 4)</code></pre>
+                        <button class="copy-button bg-green-500 text-white hover:bg-green-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- --- 3. Arrays (Fixed Size) --- -->
+            <section id="arrays" class="mb-16 p-8 bg-white rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">3. Arrays (Fixed Size)</h2>
+                <p class="text-gray-600 mb-8">
+                    Arrays are collections of items of the same data type stored at contiguous memory locations. Accessing an element by index is an $\mathcal{O}(1)$ operation.
+                </p>
+
+                <div class="space-y-8">
+                    <!-- C -->
+                    <div class="code-example border-l-4 border-blue-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">C Language: Fixed Allocation</h3>
+                        <pre><code>// Example
+int numbers[5] = {10, 20, 30, 40, 50};
+numbers[2] = 35; // Change the value at index 2
+
+printf("Third element: %d\n", numbers[2]);</code></pre>
+                        <button class="copy-button bg-blue-500 text-white hover:bg-blue-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- C++ -->
+                    <div class="code-example border-l-4 border-sky-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">C++ Language: C-style vs. `std::array`</h3>
+                        <pre><code>// Example (C-Style Array)
+int scores[] = {80, 95, 78};
+scores[0] = 85;
+
+// Modern C++ uses std::array for type safety and fixed size.
+
+std::cout << "First score: " << scores[0] << std::endl;</code></pre>
+                        <button class="copy-button bg-sky-500 text-white hover:bg-sky-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- Java -->
+                    <div class="code-example border-l-4 border-red-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Java Language: Fixed Size, Bounds Checked</h3>
+                        <pre><code>// Example
+String[] days = new String[7];
+days[0] = "Sunday";
+// Accessing index outside 0-6 range throws ArrayIndexOutOfBoundsException.
+
+System.out.println("Day 1: " + days[0]);</code></pre>
+                        <button class="copy-button bg-red-500 text-white hover:bg-red-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- Python -->
+                    <div class="code-example border-l-4 border-green-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Python Language: `array` module for fixed types</h3>
+                        <pre><code># The built-in list is dynamic. For true arrays of fixed type:
+# import array as arr
+# a = arr.array('i', [1, 2, 3]) # 'i' for signed int
+
+print("Python prefers dynamic lists (see Section 4).")</code></pre>
+                        <button class="copy-button bg-green-500 text-white hover:bg-green-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- --- 4. Vectors and Dynamic Arrays --- -->
+            <section id="vectors" class="mb-16 p-8 bg-white rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">4. Vectors & Dynamic Arrays (Resizable)</h2>
+                <p class="text-gray-600 mb-8">
+                    These collections automatically resize themselves when full, offering flexible storage. Resizing is handled automatically, hiding the complex memory management.
+                </p>
+
+                <div class="space-y-8">
+                    <!-- C -->
+                    <div class="code-example border-l-4 border-blue-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">C Language: Manual `realloc`</h3>
+                        <pre><code>// Dynamic arrays in C require manual allocation/deallocation (malloc/free)
+// and resizing using realloc(). This is advanced C programming.</code></pre>
+                        <button class="copy-button bg-blue-500 text-white hover:bg-blue-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- C++ -->
+                    <div class="code-example border-l-4 border-sky-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">C++ Language: `std::vector` (Standard)</h3>
+                        <pre><code>// #include <vector>
+std::vector<int> numbers;
+numbers.push_back(10); // Amortized O(1) time
+numbers.insert(numbers.begin(), 5); // O(N) time for insert
+
+std::cout << "First element: " << numbers[0] << std::endl;</code></pre>
+                        <button class="copy-button bg-sky-500 text-white hover:bg-sky-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- Java -->
+                    <div class="code-example border-l-4 border-red-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Java Language: `ArrayList` (Object-Oriented)</h3>
+                        <pre><code>// import java.util.ArrayList;
+ArrayList<String> names = new ArrayList<String>();
+names.add("Alice"); // Automatically handles resizing
+names.set(0, "Alicia");
+
+System.out.println("Current size: " + names.size());</code></pre>
+                        <button class="copy-button bg-red-500 text-white hover:bg-red-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- Python -->
+                    <div class="code-example border-l-4 border-green-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Python Language: The `list` (Native)</h3>
+                        <pre><code># Python's built-in list is the dynamic array equivalent
+my_data = [1, 2, 3]
+my_data.append(4)
+my_data.pop(0) # Remove by index (O(N) operation)
+
+print(f"Data: {my_data}")</code></pre>
+                        <button class="copy-button bg-green-500 text-white hover:bg-green-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- --- 5. Strings and Text Handling --- -->
+            <section id="strings" class="mb-16 p-8 bg-white rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">5. Strings & Text Handling</h2>
+                <p class="text-gray-600 mb-8">
+                    A **String** is a sequence of characters. In C/C++, strings are typically arrays of characters; in Java/Python, they are immutable objects designed for easy manipulation.
+                </p>
+
+                <div class="space-y-8">
+                    <!-- C -->
+                    <div class="code-example border-l-4 border-blue-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">C Language: Null-Terminated Character Array</h3>
+                        <pre><code>// Example
+char str1[] = "Hello"; // 6 bytes: H, e, l, l, o, \0
+char str2[20];
+strcat(str2, str1); // Concatenate strings
+
+printf("String: %s\n", str2);</code></pre>
+                        <button class="copy-button bg-blue-500 text-white hover:bg-blue-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- C++ -->
+                    <div class="code-example border-l-4 border-sky-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">C++ Language: `std::string` (Recommended)</h3>
+                        <pre><code>// Example
+std::string first = "Data";
+std::string last = "Structure";
+std::string full = first + " " + last; // Easy Concatenation
+
+std::cout << "Full string: " << full << std::endl;</code></pre>
+                        <button class="copy-button bg-sky-500 text-white hover:bg-sky-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- Java -->
+                    <div class="code-example border-l-4 border-red-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Java Language: Immutable Strings</h3>
+                        <pre><code>// Example
+String s1 = "Algorithm";
+// To modify, you must create a new String or use StringBuilder.
+String upper = s1.toUpperCase(); 
+
+System.out.println("Uppercase: " + upper);</code></pre>
+                        <button class="copy-button bg-red-500 text-white hover:bg-red-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <!-- Python -->
+                    <div class="code-example border-l-4 border-green-500 pl-4">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Python Language: Simple & Powerful</h3>
+                        <pre><code># Example
+text = "College DSA"
+slice = text[8:]      # Slicing is powerful
+length = len(text)
+
+print(f"Slice: {slice}")</code></pre>
+                        <button class="copy-button bg-green-500 text-white hover:bg-green-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- --- 6. Recursion and Iteration --- -->
+            <section id="recursion" class="mb-16 p-8 bg-white rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">6. Recursion & Iteration</h2>
+                <p class="text-gray-600 mb-8">
+                    **Iteration** uses loops (for, while) to repeat tasks. **Recursion** is a technique where a function calls itself to solve smaller instances of the same problem.
+                </p>
+
+                <div class="p-6 bg-blue-50 rounded-xl shadow-inner">
+                    <h3 class="text-2xl font-semibold text-blue-800 mb-4">Recursive Example: Factorial</h3>
+                    <p class="text-gray-700 mb-4">
+                        All recursive functions must have a **Base Case** to prevent infinite calls (Stack Overflow).
+                    </p>
+                    
+                    <div class="code-example border-l-4 border-sky-500 pl-4">
+                        <h4 class="text-xl font-medium text-gray-700 mb-2">C++ (Recursive Factorial)</h4>
+                        <pre><code>int factorial(int n) {
+    // Base Case: stops recursion
+    if (n <= 1) {
+        return 1;
+    }
+    // Recursive Step: self-call
+    return n * factorial(n - 1);
+}</code></pre>
+                        <button class="copy-button bg-sky-500 text-white hover:bg-sky-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- --- 7. Control Flow (Conditions & Loops) --- -->
+            <section id="control-flow" class="mb-16 p-8 bg-white rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">7. Control Flow (Conditions & Loops)</h2>
+                <p class="text-gray-600 mb-8">
+                    Control flow structures dictate the order in which statements are executed.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm border-l-4 border-red-500">
+                        <h3 class="text-xl font-semibold text-red-800 mb-3">Conditional Statements (If/Else)</h3>
+                        <div class="code-example">
+                            <h4 class="text-lg font-medium text-gray-700 mb-1">Java Example</h4>
+                            <pre><code>int x = 10;
+if (x > 5) {
+    System.out.println("Greater");
+} else {
+    System.out.println("Less");
+}</code></pre>
+                            <button class="copy-button bg-red-500 text-white hover:bg-red-600" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm border-l-4 border-green-500">
+                        <h3 class="text-xl font-semibold text-green-800 mb-3">Looping Constructs (For/While)</h3>
+                        <div class="code-example">
+                            <h4 class="text-lg font-medium text-gray-700 mb-1">Python Example</h4>
+                            <pre><code># For loop (Iterating over a range/sequence)
+for i in range(3): 
+    print(i) # Prints 0, 1, 2
+
+# While loop (Condition-based)
+count = 0
+while count < 3:
+    count += 1</code></pre>
+                            <button class="copy-button bg-green-500 text-white hover:bg-green-600" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- --- 8. Classes & Objects (OOP Basics) --- -->
+            <section id="oop-basics" class="mb-16 p-8 bg-white rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">8. Classes & Objects (OOP Basics)</h2>
+                <p class="text-gray-600 mb-8">
+                    **Object-Oriented Programming (OOP)** centers around **Objects**, which are instances of a **Class**. Key OOP principles are Encapsulation, Inheritance, and Polymorphism.
+                </p>
+
+                <div class="p-6 bg-blue-50 rounded-xl shadow-inner">
+                    <h3 class="text-2xl font-semibold text-blue-800 mb-4">Java Example: Defining a Class</h3>
+                    <p class="text-gray-700 mb-4">
+                        A Class is a blueprint; an Object is a real-world instance of that blueprint.
+                    </p>
+                    
+                    <div class="code-example border-l-4 border-red-500 pl-4">
+                        <pre><code>// Java Class Definition
+class Student {
+    // Attributes (Variables)
+    String name;
+    int rollNo;
+
+    // Constructor (Method to create the object)
+    public Student(String name, int rollNo) {
+        this.name = name;
+        this.rollNo = rollNo;
+    }
+
+    // Method (Function)
+    public void display() {
+        System.out.println(name + " (" + rollNo + ")");
+    }
+}
+
+// Usage: Student s1 = new Student("Alice", 101);</code></pre>
+                        <button class="copy-button bg-red-500 text-white hover:bg-red-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- --- 9. Time and Space Complexity --- -->
+            <section id="complexity" class="mb-16 p-8 bg-white rounded-2xl shadow-lg border-t-4 border-blue-900">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">9. Time & Space Complexity ($\mathcal{O}$ Notation)</h2>
+                <p class="text-gray-600 mb-8">
+                    **Big $\mathcal{O}$ Notation** describes the efficiency of algorithms. Always strive for the lowest complexity possible. 
+                </p>
+
+                <div class="space-y-6">
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm border-l-4 border-red-500">
+                        <h3 class="text-xl font-semibold text-red-800">Time Complexity (Speed)</h3>
+                        <p class="text-gray-700 mt-2">
+                            The time taken as a function of input size ($N$). Best-case for DSA is usually $\mathcal{O}(1)$ or $\mathcal{O}(\log N)$.
+                            <ul class="list-disc list-inside ml-4 mt-2">
+                                <li>**Fastest:** $\mathcal{O}(1)$ (Constant), $\mathcal{O}(\log N)$ (Logarithmic - Binary Search)</li>
+                                <li>**Moderate:** $\mathcal{O}(N)$ (Linear), $\mathcal{O}(N \log N)$ (Efficient Sorts)</li>
+                                <li>**Slowest:** $\mathcal{O}(N^2)$ (Quadratic), $\mathcal{O}(2^N)$ (Exponential - Brute-force Recursion)</li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- --- 10. Stacks & Queues (Linear ADTs) --- -->
+            <section id="stacks-queues" class="mb-16 p-8 bg-white rounded-2xl shadow-lg border-t-4 border-blue-900">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">10. Stacks & Queues (Linear ADTs)</h2>
+                <p class="text-gray-600 mb-8">
+                    These are Abstract Data Types (ADTs) based on specific insertion/deletion constraints. They can be implemented using Arrays/Vectors or Linked Lists.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="p-4 bg-blue-100 rounded-lg shadow-md border-l-4 border-sky-500">
+                        <h3 class="text-xl font-semibold text-sky-800 mb-3">Stack (LIFO)</h3>
+                        <p class="text-gray-700">
+                            **Last-In, First-Out.** Imagine a stack of plates. Operations: **Push** (add to top), **Pop** (remove from top). Used for function calls (recursion stack) and expression evaluation.
+                        </p>
+                        <div class="code-example mt-3">
+                            <h4 class="text-lg font-medium text-gray-700 mb-1">C++ `std::stack`</h4>
+                            <pre><code>// #include <stack>
+std::stack<int> s;
+s.push(10); // [10]
+s.push(20); // [10, 20]
+s.pop();    // Removes 20 (top)</code></pre>
+                            <button class="copy-button bg-sky-500 text-white hover:bg-sky-600" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-blue-100 rounded-lg shadow-md border-l-4 border-blue-500">
+                        <h3 class="text-xl font-semibold text-blue-800 mb-3">Queue (FIFO)</h3>
+                        <p class="text-gray-700">
+                            **First-In, First-Out.** Like a line at a store. Operations: **Enqueue** (add to back/rear), **Dequeue** (remove from front). Used in scheduling tasks (BFS algorithm).
+                        </p>
+                        <div class="code-example mt-3">
+                            <h4 class="text-lg font-medium text-gray-700 mb-1">Java `Queue`</h4>
+                            <pre><code>// import java.util.Queue;
+// import java.util.LinkedList;
+Queue<String> q = new LinkedList<>();
+q.offer("Job1"); // Add
+q.offer("Job2");
+q.poll();       // Removes Job1 (front)</code></pre>
+                            <button class="copy-button bg-blue-500 text-white hover:bg-blue-600" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- --- 11. Linked Lists (Theory & Use) --- -->
+            <section id="linked-lists" class="mb-16 p-8 bg-white rounded-2xl shadow-lg border-t-4 border-blue-900">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">11. Linked Lists (Theory & Use)</h2>
+                <p class="text-gray-600 mb-8">
+                    A **Linked List** is a sequence of **nodes** where each node points to the next. It excels at $\mathcal{O}(1)$ insertions and deletions, but suffers from slow $\mathcal{O}(N)$ access time.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-blue-800 mb-3">Comparison</h3>
+                        <table class="w-full text-left border border-gray-200 rounded-lg overflow-hidden">
+                            <thead class="bg-blue-100 text-blue-800">
+                                <tr>
+                                    <th class="p-3">Operation</th>
+                                    <th class="p-3">Array / Vector</th>
+                                    <th class="p-3">Linked List</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3 font-semibold">Random Access</td>
+                                    <td class="p-3 text-green-600 font-mono">$\mathcal{O}(1)$</td>
+                                    <td class="p-3 text-red-600 font-mono">$\mathcal{O}(N)$</td>
+                                </tr>
+                                <tr class="bg-gray-50 border-b">
+                                    <td class="p-3 font-semibold">Insertion/Deletion</td>
+                                    <td class="p-3 text-red-600 font-mono">$\mathcal{O}(N)$</td>
+                                    <td class="p-3 text-green-600 font-mono">$\mathcal{O}(1)$</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-blue-800 mb-3">C++ Node Structure</h3>
+                        <div class="code-example border-l-4 border-sky-500 pl-4">
+                            <pre><code>// C++ Node Structure
+struct Node {
+    int data;
+    Node* next; // Pointer to the next node
+
+    // Constructor
+    Node(int val) : data(val), next(nullptr) {}
+};
+
+// Start of the list is always the 'head' pointer.</code></pre>
+                            <button class="copy-button bg-sky-500 text-white hover:bg-sky-600" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- --- 12. Trees (Hierarchical DSA) --- -->
+            <section id="trees" class="mb-16 p-8 bg-white rounded-2xl shadow-lg border-t-4 border-blue-900">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">12. Trees (Hierarchical DSA)</h2>
+                <p class="text-gray-600 mb-8">
+                    A **Tree** is a non-linear data structure where data items are organized in a hierarchy, linked by edges. The most common type is the **Binary Tree**, where each node has at most two children. 
+                </p>
+
+                <div class="p-6 bg-blue-50 rounded-xl shadow-inner">
+                    <h3 class="text-2xl font-semibold text-blue-800 mb-4">Binary Search Trees (BST)</h3>
+                    <p class="text-gray-700 mb-4">
+                        A special kind of binary tree where the value in the left child is always less than the parent, and the value in the right child is always greater. This allows for very fast search, insertion, and deletion ($\mathcal{O}(\log N)$ average time).
+                    </p>
+                    
+                    <div class="code-example border-l-4 border-red-500 pl-4">
+                        <h4 class="text-xl font-medium text-gray-700 mb-2">Java Node Structure</h4>
+                        <pre><code>class TreeNode {
+    int data;
+    TreeNode left;
+    TreeNode right;
+
+    public TreeNode(int data) {
+        this.data = data;
+        this.left = null;
+        this.right = null;
+    }
+}</code></pre>
+                        <button class="copy-button bg-red-500 text-white hover:bg-red-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- --- 13. Graphs (Networks) --- -->
+            <section id="graphs" class="mb-16 p-8 bg-white rounded-2xl shadow-lg border-t-4 border-blue-900">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">13. Graphs (Networks)</h2>
+                <p class="text-gray-600 mb-8">
+                    A **Graph** is a set of **Vertices** (nodes) connected by **Edges**. Graphs are used to model networks (social networks, roads, the internet). 
+                </p>
+
+                <div class="p-6 bg-blue-50 rounded-xl shadow-inner">
+                    <h3 class="text-2xl font-semibold text-blue-800 mb-4">Representation</h3>
+                    <p class="text-gray-700 mb-4">
+                        Graphs are typically stored in two ways:
+                        <ul class="list-disc list-inside ml-4 mt-2">
+                            <li>**Adjacency Matrix:** A 2D array where `A[i][j]` is 1 if an edge exists from vertex $i$ to $j$. ($\mathcal{O}(V^2)$ space)</li>
+                            <li>**Adjacency List:** An array of lists/vectors where the array index represents a vertex, and the list stores its neighbors. ($\mathcal{O}(V+E)$ space - preferred for sparse graphs)</li>
+                        </ul>
+                    </p>
+                    
+                    <div class="code-example border-l-4 border-sky-500 pl-4">
+                        <h4 class="text-xl font-medium text-gray-700 mb-2">C++ Adjacency List Example</h4>
+                        <pre><code>// Represents an undirected graph with V vertices
+// Uses a vector of vectors (dynamic array of dynamic arrays)
+int V = 5; // Number of vertices
+std::vector<std::vector<int>> adj(V);
+
+void addEdge(int u, int v) {
+    adj[u].push_back(v);
+    adj[v].push_back(u); // For undirected graph
+}</code></pre>
+                        <button class="copy-button bg-sky-500 text-white hover:bg-sky-600" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- --- 14. DSA Sheet Iframe --- -->
+            <section id="dsa-sheet" class="mb-16 p-8 bg-white rounded-2xl shadow-lg border-t-4 border-blue-900">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 border-b pb-4">14. DSA Practice Sheet</h2>
+                <p class="text-gray-600 mb-4">
+                    Track your progress with a dedicated practice sheet focusing on high-priority interview and competitive programming questions.
+                </p>
+                <div class="rounded-lg overflow-hidden shadow-2xl h-[800px] border-4 border-sky-200">
+                    <!-- Iframe for the DSA Sheet -->
+                    <iframe 
+                        src="twss-awe.pages.dev/dsa" 
+                        title="DSA Practice Sheet" 
+                        class="w-full h-full" 
+                        frameborder="0">
+                    </iframe>
+                </div>
+            </section>
+
+            <!-- --- Learn More Courses --- -->
+            <section id="learn-more" class="p-8 bg-blue-900 text-white rounded-2xl shadow-xl">
+                <h2 class="text-3xl font-bold mb-6 border-b border-blue-700 pb-4">Continue Learning</h2>
+                <p class="text-gray-300 mb-6">
+                    Ready to deep-dive? Use the links below for comprehensive courses tailored for each language.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- C Course Link -->
+                    <a href="twss-awe.pages.dev/courses" target="_blank" class="block p-4 bg-blue-700 hover:bg-blue-600 rounded-xl text-center font-semibold transition transform hover:scale-105 shadow-md">
+                        C Course
+                    </a>
+                    <!-- C++ Course Link -->
+                    <a href="twss-awe.pages.dev/courses" target="_blank" class="block p-4 bg-sky-600 hover:bg-sky-700 rounded-xl text-center font-semibold transition transform hover:scale-105 shadow-md">
+                        C++ Course (Recommended)
+                    </a>
+                    <!-- Java Course Link -->
+                    <a href="twss-awe.pages.dev/courses" target="_blank" class="block p-4 bg-red-600 hover:bg-red-700 rounded-xl text-center font-semibold transition transform hover:scale-105 shadow-md">
+                        Java Course
+                    </a>
+                    <!-- Python Course Link -->
+                    <a href="twss-awe.pages.dev/courses" target="_blank" class="block p-4 bg-green-600 hover:bg-green-700 rounded-xl text-center font-semibold transition transform hover:scale-105 shadow-md">
+                        Python Course
+                    </a>
+                </div>
+                <div class="mt-8 text-center text-sm text-gray-400">
+                    All links redirect to: <a href="twss-awe.pages.dev/courses" target="_blank" class="text-sky-400 hover:underline">twss-awe.pages.dev/courses</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+
+            // --- Mobile Menu Toggle ---
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+
+            // --- Sidebar Navigation and Active State ---
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // 1. Get Target ID and Scroll
+                    const targetId = item.getAttribute('data-target');
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        const headerOffset = document.querySelector('header').offsetHeight;
+                        // Use getBoundingClientRect().top + window.scrollY for absolute position
+                        const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+                        const offsetPosition = elementPosition - headerOffset - 32; // 32px (8 units) extra padding
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+                        
+                        // 2. Hide sidebar on mobile after click
+                        if (window.innerWidth < 1024) {
+                            sidebar.classList.add('-translate-x-full');
+                        }
+
+                        // 3. Update Active State
+                        sidebarItems.forEach(i => i.classList.remove('active'));
+                        item.classList.add('active');
+                    }
+                });
+            });
+
+            // --- Intersection Observer for Active State Highlight (Desktop) ---
+            if (window.innerWidth >= 1024) {
+                const sections = document.querySelectorAll('main section');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        // Check if the section is the one currently intersecting the viewport trigger area
+                        if (entry.isIntersecting) {
+                            const id = entry.target.id;
+                            sidebarItems.forEach(item => {
+                                item.classList.remove('active');
+                                if (item.getAttribute('data-target') === id) {
+                                    item.classList.add('active');
+                                }
+                            });
+                        }
+                    });
+                }, {
+                    // This rootMargin defines the trigger zone at the top of the viewport
+                    rootMargin: '-15% 0px -70% 0px' 
+                });
+
+                sections.forEach(section => {
+                    observer.observe(section);
+                });
+            }
+        });
+
+        // --- Copy Code Function ---
+        function copyCode(button) {
+            const codeBlock = button.previousElementSibling;
+            const textToCopy = codeBlock.textContent.trim();
+
+            // Fallback for secure copying in an iframe environment
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            document.body.appendChild(textarea);
+            textarea.select();
+
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+                
+                // Store original color classes
+                const originalClasses = button.className.match(/bg-(blue|sky|red|green)-[0-9]+/g);
+
+                // Change to success state
+                button.classList.remove(...originalClasses);
+                button.classList.add('bg-green-700');
+                
+                setTimeout(() => {
+                    button.textContent = 'Copy Code';
+                    // Re-apply original color
+                    button.classList.remove('bg-green-700');
+                    button.classList.add(...originalClasses);
+                }, 2000);
+
+            } catch (err) {
+                console.error('Could not copy text: ', err);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+    </script>
+</body>
+</html>
+

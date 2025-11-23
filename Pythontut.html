@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TWSS - Python Programming Hub</title>
+    <title>Python Programming Hub - Build Strong Foundations</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <style>
         :root {
             --primary: #2c3e50;
@@ -14,6 +15,8 @@
             --dark: #34495e;
             --success: #2ecc71;
             --warning: #f39c12;
+            --code-bg: #2d2d2d;
+            --sidebar-width: 20%;
         }
         
         * {
@@ -27,6 +30,7 @@
             background-color: var(--light);
             color: var(--dark);
             line-height: 1.6;
+            overflow-x: hidden;
         }
         
         .container {
@@ -90,293 +94,373 @@
             color: var(--secondary);
         }
         
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.8)), url('https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 5rem 0;
-            text-align: center;
-        }
-        
-        .hero h2 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto 2rem;
-        }
-        
-        .btn {
-            display: inline-block;
-            background-color: var(--secondary);
-            color: white;
-            padding: 0.8rem 2rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        
-        .btn:hover {
-            background-color: var(--accent);
-            transform: translateY(-3px);
-        }
-        
-        /* Course Units Section */
-        .course-units {
-            padding: 4rem 0;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-        
-        .section-title p {
-            font-size: 1.1rem;
-            max-width: 700px;
-            margin: 0 auto;
-            color: var(--dark);
-        }
-        
-        .units-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .unit-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .unit-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-        
-        .unit-header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1.5rem;
-        }
-        
-        .unit-header h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .unit-content {
-            padding: 1.5rem;
-        }
-        
-        .unit-content ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        
-        .unit-content li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
+        /* Main Content Layout */
+        .main-container {
             display: flex;
-            align-items: center;
+            height: calc(100vh - 80px);
+            margin-top: 80px;
         }
         
-        .unit-content li:last-child {
-            border-bottom: none;
-        }
-        
-        .unit-content li i {
-            color: var(--secondary);
-            margin-right: 10px;
-        }
-        
-        /* Features Section */
-        .features {
-            background-color: var(--primary);
-            color: white;
-            padding: 4rem 0;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-        
-        .feature-card {
-            text-align: center;
+        /* Tutorial Content Section (80%) */
+        .tutorial-content {
+            width: 80%;
             padding: 2rem;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            transition: transform 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-        }
-        
-        .feature-card i {
-            font-size: 3rem;
-            color: var(--secondary);
-            margin-bottom: 1.5rem;
-        }
-        
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        /* Resources Section */
-        .resources {
-            padding: 4rem 0;
-        }
-        
-        .resources-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .resource-card {
+            overflow-y: auto;
             background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Code Editor Section (20%) */
+        .code-editor {
+            width: 20%;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            border-left: 1px solid #ddd;
+            background-color: var(--code-bg);
             display: flex;
             flex-direction: column;
         }
         
-        .resource-header {
-            background-color: var(--secondary);
+        .editor-header {
+            background-color: var(--primary);
             color: white;
-            padding: 1.5rem;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        .resource-header h3 {
-            font-size: 1.5rem;
-        }
-        
-        .resource-content {
-            padding: 1.5rem;
+        .editor-content {
             flex-grow: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         
-        .resource-content ul {
-            list-style-type: none;
-            padding-left: 0;
+        .editor-iframe {
+            flex-grow: 1;
+            border: none;
+            width: 100%;
+            height: 100%;
         }
         
-        .resource-content li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
+        /* Tutorial Content Styles */
+        .lesson {
+            margin-bottom: 3rem;
+            display: none;
         }
         
-        .resource-content li:last-child {
-            border-bottom: none;
+        .lesson.active {
+            display: block;
         }
         
-        .resource-content li strong {
-            color: var(--primary);
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--dark);
+        .lesson-header {
+            background-color: var(--primary);
             color: white;
-            padding: 3rem 0 1rem;
-        }
-        
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .footer-col h3 {
-            font-size: 1.5rem;
+            padding: 1rem;
+            border-radius: 5px;
             margin-bottom: 1.5rem;
+        }
+        
+        .lesson-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .lesson-header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .concept-section {
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--secondary);
+            padding-left: 1.5rem;
+        }
+        
+        .concept-section h3 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .concept-explanation {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .concept-explanation p {
+            margin-bottom: 1rem;
+        }
+        
+        .concept-syntax {
+            background-color: var(--code-bg);
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
             position: relative;
         }
         
-        .footer-col h3:after {
-            content: '';
+        .concept-syntax pre {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .concept-example {
+            margin: 1.5rem 0;
+        }
+        
+        .concept-example h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .code-example {
+            background-color: var(--code-bg);
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .code-example pre {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .copy-button {
             position: absolute;
-            left: 0;
-            bottom: -10px;
-            width: 50px;
-            height: 3px;
+            top: 10px;
+            right: 10px;
             background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
         }
         
-        .footer-col ul {
-            list-style: none;
+        .copy-button:hover {
+            background-color: var(--primary);
         }
         
-        .footer-col ul li {
-            margin-bottom: 0.8rem;
+        .try-button {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
         
-        .footer-col ul li a {
-            color: #bbb;
+        .try-button:hover {
+            background-color: #27ae60;
+        }
+        
+        .task-section {
+            background-color: #fffde7;
+            border: 1px solid #f0f0f0;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .task-section h4 {
+            color: var(--warning);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .task-section ol {
+            padding-left: 2rem;
+        }
+        
+        .task-section li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .hint-button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+        
+        .hint-content {
+            display: none;
+            background-color: #f0f0f0;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            font-family: monospace;
+        }
+        
+        .hint-content.show {
+            display: block;
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .nav-button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-button:hover {
+            background-color: var(--primary);
+        }
+        
+        .nav-button.prev {
+            flex-direction: row-reverse;
+        }
+        
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background-color: #e0e0e0;
+            margin-bottom: 2rem;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--success);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .toc h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .toc ul {
+            list-style-type: none;
+        }
+        
+        .toc li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .toc li:last-child {
+            border-bottom: none;
+        }
+        
+        .toc a {
+            color: var(--dark);
             text-decoration: none;
-            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        .footer-col ul li a:hover {
+        .toc a:hover {
             color: var(--secondary);
         }
         
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+        .toc a.completed {
+            color: var(--success);
         }
         
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: white;
-            transition: all 0.3s;
+        .output-box {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+            font-family: monospace;
         }
         
-        .social-links a:hover {
-            background-color: var(--secondary);
-            transform: translateY(-5px);
+        .note {
+            background-color: #e3f2fd;
+            border-left: 4px solid var(--secondary);
+            padding: 1rem;
+            margin: 1rem 0;
         }
         
-        .copyright {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #bbb;
-            font-size: 0.9rem;
+        .note i {
+            color: var(--secondary);
+            margin-right: 10px;
+        }
+        
+        .warning {
+            background-color: #fff8e1;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .warning i {
+            color: var(--warning);
+            margin-right: 10px;
         }
         
         /* Responsive */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .tutorial-content {
+                width: 100%;
+                height: auto;
+            }
+            
+            .code-editor {
+                width: 100%;
+                height: 500px;
+                position: relative;
+                top: 0;
+            }
+        }
+        
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -388,14 +472,6 @@
                 gap: 1rem;
                 text-align: center;
             }
-            
-            .hero h2 {
-                font-size: 2rem;
-            }
-            
-            .section-title h2 {
-                font-size: 2rem;
-            }
         }
     </style>
 </head>
@@ -405,275 +481,3117 @@
         <div class="container header-container">
             <div class="logo">
                 <i class="fas fa-code"></i>
-                <h1>TW<span>SS</span></h1>
+                <h1>Python <span>Foundations</span></h1>
             </div>
             <nav>
                 <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#topics">Topics</a></li>
-                    <li><a href="#resources">Resources</a></li>
-                    <li><a href="#about">About</a></li>
+                    <li><a href="#" onclick="showLesson(1)">Unit I</a></li>
+                    <li><a href="#" onclick="showLesson(2)">Unit II</a></li>
+                    <li><a href="#" onclick="showLesson(3)">Unit III</a></li>
+                    <li><a href="#" onclick="showLesson(4)">Unit IV</a></li>
+                    <li><a href="#" onclick="showLesson(5)">Unit V</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container">
-            <h2>Python Programming Hub</h2>
-            <p>Master Python from beginner to advanced level with our comprehensive course based on MRCET's curriculum</p>
-            <a href="#topics" class="btn">Explore Topics</a>
-        </div>
-    </section>
-
-    <!-- Course Units Section -->
-    <section class="course-units" id="topics">
-        <div class="container">
-            <div class="section-title">
-                <h2>Course Units</h2>
-                <p>Our Python programming course is structured into five comprehensive units covering everything from basics to advanced concepts</p>
+    <!-- Main Content Container -->
+    <div class="main-container">
+        <!-- Tutorial Content (80%) -->
+        <div class="tutorial-content">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-bar"></div>
             </div>
             
-            <div class="units-grid">
-                <!-- Unit I -->
-                <div class="unit-card">
-                    <div class="unit-header">
-                        <h3>Unit I: Introduction</h3>
-                    </div>
-                    <div class="unit-content">
-                        <ul>
-                            <li><i class="fas fa-play-circle"></i> Introduction to Python and installation</li>
-                            <li><i class="fas fa-play-circle"></i> Data types: Int, float, Boolean, string, List</li>
-                            <li><i class="fas fa-play-circle"></i> Variables and expressions</li>
-                            <li><i class="fas fa-play-circle"></i> Statements and operator precedence</li>
-                            <li><i class="fas fa-play-circle"></i> Comments and modules</li>
-                            <li><i class="fas fa-play-circle"></i> Functions: parameters and arguments</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Unit II -->
-                <div class="unit-card">
-                    <div class="unit-header">
-                        <h3>Unit II: Control Flow</h3>
-                    </div>
-                    <div class="unit-content">
-                        <ul>
-                            <li><i class="fas fa-play-circle"></i> Boolean values and operators</li>
-                            <li><i class="fas fa-play-circle"></i> Conditional statements (if, if-else)</li>
-                            <li><i class="fas fa-play-circle"></i> Chained conditionals (if-elif-else)</li>
-                            <li><i class="fas fa-play-circle"></i> Iteration with while loops</li>
-                            <li><i class="fas fa-play-circle"></i> For loops and iteration</li>
-                            <li><i class="fas fa-play-circle"></i> Break and continue statements</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Unit III -->
-                <div class="unit-card">
-                    <div class="unit-header">
-                        <h3>Unit III: Functions & Arrays</h3>
-                    </div>
-                    <div class="unit-content">
-                        <ul>
-                            <li><i class="fas fa-play-circle"></i> Fruitful functions and return values</li>
-                            <li><i class="fas fa-play-circle"></i> Parameters and scope (local/global)</li>
-                            <li><i class="fas fa-play-circle"></i> Function composition and recursion</li>
-                            <li><i class="fas fa-play-circle"></i> Strings: slices and immutability</li>
-                            <li><i class="fas fa-play-circle"></i> String functions and methods</li>
-                            <li><i class="fas fa-play-circle"></i> Python arrays and methods</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Unit IV -->
-                <div class="unit-card">
-                    <div class="unit-header">
-                        <h3>Unit IV: Data Structures</h3>
-                    </div>
-                    <div class="unit-content">
-                        <ul>
-                            <li><i class="fas fa-play-circle"></i> Lists: operations and methods</li>
-                            <li><i class="fas fa-play-circle"></i> List slices and loops</li>
-                            <li><i class="fas fa-play-circle"></i> Mutability, aliasing, cloning</li>
-                            <li><i class="fas fa-play-circle"></i> List parameters and comprehension</li>
-                            <li><i class="fas fa-play-circle"></i> Tuples: assignment and return values</li>
-                            <li><i class="fas fa-play-circle"></i> Dictionaries: operations and methods</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Unit V -->
-                <div class="unit-card">
-                    <div class="unit-header">
-                        <h3>Unit V: Files & Exceptions</h3>
-                    </div>
-                    <div class="unit-content">
-                        <ul>
-                            <li><i class="fas fa-play-circle"></i> Text files: reading and writing</li>
-                            <li><i class="fas fa-play-circle"></i> Command line arguments</li>
-                            <li><i class="fas fa-play-circle"></i> Errors and exceptions</li>
-                            <li><i class="fas fa-play-circle"></i> Handling exceptions</li>
-                            <li><i class="fas fa-play-circle"></i> Modules: datetime, time, OS, etc.</li>
-                            <li><i class="fas fa-play-circle"></i> Exploring packages</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features">
-        <div class="container">
-            <div class="section-title">
-                <h2>Why Learn Python?</h2>
-                <p>Discover the advantages of learning Python programming</p>
+            <!-- Table of Contents -->
+            <div class="toc">
+                <h3>Course Outline</h3>
+                <ul id="toc-list">
+                    <li><a href="#" onclick="showLesson(1)"><i class="fas fa-book"></i> Unit I: Introduction to Python</a></li>
+                    <li><a href="#" onclick="showLesson(2)"><i class="fas fa-book"></i> Unit II: Control Flow</a></li>
+                    <li><a href="#" onclick="showLesson(3)"><i class="fas fa-book"></i> Unit III: Functions & Arrays</a></li>
+                    <li><a href="#" onclick="showLesson(4)"><i class="fas fa-book"></i> Unit IV: Data Structures</a></li>
+                    <li><a href="#" onclick="showLesson(5)"><i class="fas fa-book"></i> Unit V: Files & Exceptions</a></li>
+                </ul>
             </div>
             
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fas fa-laptop-code"></i>
-                    <h3>Easy to Learn</h3>
-                    <p>Python has a simple syntax that makes it ideal for beginners</p>
+            <!-- Unit I: Introduction to Python -->
+            <div class="lesson active" id="lesson-1">
+                <div class="lesson-header">
+                    <h2>Unit I: Introduction to Python</h2>
+                    <p>Learn the basics of Python programming, from installation to fundamental concepts</p>
                 </div>
                 
-                <div class="feature-card">
-                    <i class="fas fa-industry"></i>
-                    <h3>Industry Standard</h3>
-                    <p>Widely used in data science, AI, web development, and automation</p>
+                <!-- Introduction to Python -->
+                <div class="concept-section">
+                    <h3>Introduction to Python</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Python is a high-level, interpreted programming language known for its simplicity and readability. Created by Guido van Rossum and first released in 1991, Python has become one of the most popular programming languages in the world.</p>
+                        
+                        <p>Python is widely used in various fields including web development, data analysis, artificial intelligence, scientific computing, and automation. Its clean syntax and extensive libraries make it an excellent choice for both beginners and experienced programmers.</p>
+                        
+                        <div class="note">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Why Python for Data Science?</strong> Python's simplicity, readability, and extensive libraries like NumPy, Pandas, and Scikit-learn make it the preferred language for data science and machine learning.
+                        </div>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># Python code is known for its readability
+print("Hello, World!")  # This is a comment</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>Python is used by companies like Google, Netflix, and Instagram for various purposes. For example, Instagram uses Python for its backend services, handling millions of requests daily.</p>
+                    </div>
                 </div>
                 
-                <div class="feature-card">
-                    <i class="fas fa-users"></i>
-                    <h3>Large Community</h3>
-                    <p>Extensive support and resources from a global community</p>
+                <!-- Installation and Setup -->
+                <div class="concept-section">
+                    <h3>Installation and Setup</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Before you can start writing Python code, you need to install Python on your system. Python is available for Windows, macOS, and Linux.</p>
+                        
+                        <p>To install Python:</p>
+                        <ol>
+                            <li>Visit the official Python website: <a href="https://www.python.org/downloads/" target="_blank">python.org/downloads</a></li>
+                            <li>Download the latest stable version for your operating system</li>
+                            <li>Run the installer and follow the instructions</li>
+                            <li>Make sure to check the box that says "Add Python to PATH" during installation on Windows</li>
+                        </ol>
+                        
+                        <p>To verify your installation, open a terminal or command prompt and type:</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre>python --version</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Python IDEs and Editors</h4>
+                        <p>While you can write Python code in any text editor, using an Integrated Development Environment (IDE) can enhance your productivity. Popular Python IDEs include:</p>
+                        <ul>
+                            <li>PyCharm</li>
+                            <li>Visual Studio Code with Python extension</li>
+                            <li>Jupyter Notebook (especially for data science)</li>
+                            <li>Spyder</li>
+                        </ul>
+                    </div>
                 </div>
                 
-                <div class="feature-card">
-                    <i class="fas fa-briefcase"></i>
-                    <h3>Career Opportunities</h3>
-                    <p>High demand for Python developers in the job market</p>
-                </div>
-            </div>
-        </div>
-    </section>
+                <!-- Variables and Data Types -->
+                <div class="concept-section">
+                    <h3>Variables and Data Types</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>In Python, a variable is a named location used to store data in memory. Unlike some other programming languages, Python is dynamically typed, which means you don't need to declare the type of a variable explicitly.</p>
+                        
+                        <p>Python has several built-in data types:</p>
+                        <ul>
+                            <li><strong>Integers (int):</strong> Whole numbers, e.g., 42, -10, 0</li>
+                            <li><strong>Floating-point numbers (float):</strong> Numbers with decimal points, e.g., 3.14, -0.001</li>
+                            <li><strong>Strings (str):</strong> Sequence of characters, e.g., "Hello", 'Python'</li>
+                            <li><strong>Booleans (bool):</strong> True or False values</li>
+                            <li><strong>Lists:</strong> Ordered collections of items, e.g., [1, 2, 3]</li>
+                            <li><strong>Dictionaries:</strong> Key-value pairs, e.g., {"name": "Alice", "age": 30}</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># Creating variables of different types
+name = "Alice"  # String
+age = 30  # Integer
+height = 5.6  # Float
+is_student = True  # Boolean
+grades = [85, 90, 78]  # List
+person = {"name": "Bob", "age": 25}  # Dictionary</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>In data analysis, variables are used to store data points. For example, when analyzing customer data, you might have variables for customer names, ages, purchase amounts, and more.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Working with different data types
+# Create variables
+customer_name = "John Doe"
+customer_age = 35
+account_balance = 1250.75
+is_premium_member = True
+purchase_history = [45.99, 23.50, 67.80]
+customer_info = {"id": 12345, "email": "john@example.com"}
 
-    <!-- Resources Section -->
-    <section class="resources" id="resources">
-        <div class="container">
-            <div class="section-title">
-                <h2>Learning Resources</h2>
-                <p>Recommended textbooks and reference materials for Python programming</p>
+# Print variables and their types
+print(f"Name: {customer_name}, Type: {type(customer_name)}")
+print(f"Age: {customer_age}, Type: {type(customer_age)}")
+print(f"Balance: ${account_balance}, Type: {type(account_balance)}")
+print(f"Premium Member: {is_premium_member}, Type: {type(is_premium_member)}")
+print(f"Purchase History: {purchase_history}, Type: {type(purchase_history)}")
+print(f"Customer Info: {customer_info}, Type: {type(customer_info)}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Operators and Expressions -->
+                <div class="concept-section">
+                    <h3>Operators and Expressions</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Operators are special symbols that perform operations on variables and values. Python supports various types of operators:</p>
+                        
+                        <ul>
+                            <li><strong>Arithmetic operators:</strong> +, -, *, /, %, **, //</li>
+                            <li><strong>Comparison operators:</strong> ==, !=, >, <, >=, <=</li>
+                            <li><strong>Logical operators:</strong> and, or, not</li>
+                            <li><strong>Assignment operators:</strong> =, +=, -=, *=, /=, etc.</li>
+                            <li><strong>Membership operators:</strong> in, not in</li>
+                            <li><strong>Identity operators:</strong> is, is not</li>
+                        </ul>
+                        
+                        <p>Expressions are combinations of variables, values, and operators that evaluate to a result.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># Arithmetic operators
+x = 10
+y = 3
+sum = x + y  # 13
+difference = x - y  # 7
+product = x * y  # 30
+quotient = x / y  # 3.333...
+remainder = x % y  # 1
+power = x ** y  # 1000
+floor_division = x // y  # 3
+
+# Comparison operators
+is_equal = (x == y)  # False
+is_not_equal = (x != y)  # True
+is_greater = (x > y)  # True
+
+# Logical operators
+result = (x > 5) and (y < 5)  # True
+result2 = (x > 15) or (y < 5)  # True
+result3 = not (x == y)  # True</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>Operators are used extensively in data analysis for calculations and comparisons. For example, you might use arithmetic operators to calculate averages or comparison operators to filter data based on certain conditions.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Using operators in a data analysis scenario
+# Sales data for a product
+product_price = 25.99
+quantity_sold = 120
+discount_rate = 0.1  # 10% discount
+shipping_cost = 5.99
+
+# Calculate total revenue before discount
+revenue = product_price * quantity_sold
+print(f"Revenue before discount: ${revenue:.2f}")
+
+# Apply discount
+discount_amount = revenue * discount_rate
+revenue_after_discount = revenue - discount_amount
+print(f"Revenue after discount: ${revenue_after_discount:.2f}")
+
+# Add shipping cost
+total_revenue = revenue_after_discount + shipping_cost
+print(f"Total revenue including shipping: ${total_revenue:.2f}")
+
+# Check if revenue meets target
+target_revenue = 3000
+meets_target = total_revenue >= target_revenue
+print(f"Meets target revenue: {meets_target}")
+
+# Check if quantity is high and price is moderate
+high_quantity = quantity_sold > 100
+moderate_price = product_price < 50
+good_product = high_quantity and moderate_price
+print(f"Is this a good product: {good_product}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Task Section -->
+                <div class="task-section">
+                    <h4><i class="fas fa-tasks"></i> Practice Task: Variables and Operators</h4>
+                    <p>Create a Python program that calculates the total cost of items in a shopping cart, applies a discount, and adds tax. Follow these steps:</p>
+                    <ol>
+                        <li>Create variables for at least 3 items with their prices and quantities</li>
+                        <li>Calculate the subtotal (price × quantity for each item, then sum them up)</li>
+                        <li>Apply a 10% discount if the subtotal is greater than $100</li>
+                        <li>Add a 7% sales tax to the discounted price</li>
+                        <li>Print the subtotal, discount amount, tax amount, and final total</li>
+                    </ol>
+                    <button class="hint-button" onclick="toggleHint('hint1')">Show Hint</button>
+                    <div id="hint1" class="hint-content">
+                        # Create variables for items<br>
+                        item1_price = 15.99<br>
+                        item1_quantity = 3<br>
+                        # ... and so on for other items<br><br>
+                        # Calculate subtotal<br>
+                        subtotal = (item1_price * item1_quantity) + ...<br><br>
+                        # Apply discount if applicable<br>
+                        if subtotal > 100:<br>
+                        &nbsp;&nbsp;discount = subtotal * 0.1<br>
+                        &nbsp;&nbsp;subtotal -= discount<br><br>
+                        # Add tax and print results
+                    </div>
+                </div>
+                
+                <!-- Comments and Modules -->
+                <div class="concept-section">
+                    <h3>Comments and Modules</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Comments are annotations in the code that are ignored by the Python interpreter. They are used to explain the code, making it more readable and maintainable.</p>
+                        
+                        <p>In Python, comments start with the # symbol. Everything after # on the same line is considered a comment.</p>
+                        
+                        <p>Modules are files containing Python code that can be imported and used in other Python scripts. Python has a rich standard library with many modules that provide useful functionality.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># This is a single-line comment
+
+"""
+This is a multi-line comment
+or docstring that can span multiple lines.
+It's often used to document functions, classes, or modules.
+"""
+
+# Importing modules
+import math  # Import the entire math module
+from datetime import datetime  # Import a specific class from a module
+import random as rd  # Import a module with an alias</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>Comments are crucial in data science projects to document data cleaning steps, model parameters, and analysis methods. Modules like NumPy, Pandas, and Matplotlib are essential for data manipulation and visualization.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Using comments and modules
+# Import necessary modules
+import math
+import random
+from datetime import datetime
+
+# Generate a list of random numbers
+random_numbers = []
+for i in range(10):
+    # Generate a random number between 1 and 100
+    num = random.randint(1, 100)
+    random_numbers.append(num)
+
+print(f"Random numbers: {random_numbers}")
+
+# Calculate the mean of the numbers
+total = sum(random_numbers)
+mean = total / len(random_numbers)
+print(f"Mean: {mean:.2f}")
+
+# Calculate the standard deviation
+# First, calculate the variance
+variance = sum((x - mean) ** 2 for x in random_numbers) / len(random_numbers)
+# Then, take the square root of the variance
+std_dev = math.sqrt(variance)
+print(f"Standard deviation: {std_dev:.2f}")
+
+# Get the current date and time
+current_time = datetime.now()
+print(f"Current date and time: {current_time.strftime('%Y-%m-%d %H:%M:%S')}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="navigation-buttons">
+                    <button class="nav-button prev" disabled>
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="nav-button next" onclick="showLesson(2)">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
             </div>
             
-            <div class="resources-grid">
-                <div class="resource-card">
-                    <div class="resource-header">
-                        <h3>Textbooks</h3>
-                    </div>
-                    <div class="resource-content">
-                        <ul>
-                            <li><strong>Think Python:</strong> How to Think Like a Computer Scientist by Allen B. Downey</li>
-                            <li><strong>Core Python Programming:</strong> by R. Nageswara Rao</li>
-                            <li><strong>Python Programming:</strong> A Modern Approach by Vamsi Kurama</li>
-                        </ul>
-                    </div>
+            <!-- Unit II: Control Flow -->
+            <div class="lesson" id="lesson-2">
+                <div class="lesson-header">
+                    <h2>Unit II: Control Flow</h2>
+                    <p>Learn how to control the execution flow of your Python programs with conditional statements and loops</p>
                 </div>
                 
-                <div class="resource-card">
-                    <div class="resource-header">
-                        <h3>Reference Books</h3>
-                    </div>
-                    <div class="resource-content">
+                <!-- Boolean Values and Operators -->
+                <div class="concept-section">
+                    <h3>Boolean Values and Operators</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Boolean values represent truth values in Python. There are only two Boolean values: True and False. These values are often used in conditional statements to control the flow of a program.</p>
+                        
+                        <p>Boolean operators are used to combine or modify Boolean values:</p>
                         <ul>
-                            <li><strong>Core Python Programming:</strong> by W. Chun</li>
-                            <li><strong>Introduction to Python:</strong> by Kenneth A. Lambert</li>
-                            <li><strong>Learning Python:</strong> by Mark Lutz</li>
+                            <li><strong>and:</strong> Returns True if both operands are True</li>
+                            <li><strong>or:</strong> Returns True if at least one operand is True</li>
+                            <li><strong>not:</strong> Returns the opposite of the operand</li>
+                        </ul>
+                        
+                        <p>Comparison operators return Boolean values:</p>
+                        <ul>
+                            <li><strong>==:</strong> Equal to</li>
+                            <li><strong>!=:</strong> Not equal to</li>
+                            <li><strong>&gt;:</strong> Greater than</li>
+                            <li><strong>&lt;:</strong> Less than</li>
+                            <li><strong>&gt;=:</strong> Greater than or equal to</li>
+                            <li><strong>&lt;=:</strong> Less than or equal to</li>
                         </ul>
                     </div>
-                </div>
-                
-                <div class="resource-card">
-                    <div class="resource-header">
-                        <h3>Online Resources</h3>
-                    </div>
-                    <div class="resource-content">
-                        <ul>
-                            <li><strong>Official Python Documentation:</strong> docs.python.org</li>
-                            <li><strong>Python Tutor:</strong> Visualize code execution</li>
-                            <li><strong>Real Python:</strong> Tutorials and articles</li>
-                            <li><strong>Codecademy:</strong> Interactive Python course</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                    
+                    <div class="concept-syntax">
+                        <pre># Boolean values
+is_true = True
+is_false = False
 
-    <!-- Footer -->
-    <footer id="about">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h3>TWSS</h3>
-                    <p>The Web School of Science provides comprehensive programming courses to help students master in-demand skills.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+# Boolean operators
+result1 = True and False  # False
+result2 = True or False   # True
+result3 = not True        # False
+
+# Comparison operators
+x = 10
+y = 20
+is_equal = (x == y)       # False
+is_not_equal = (x != y)   # True
+is_greater = (x > y)      # False
+is_less = (x < y)         # True</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>Boolean values are used extensively in data filtering and validation. For example, when analyzing customer data, you might use Boolean expressions to filter customers who meet certain criteria, such as age greater than 18 and purchase history exceeding a certain amount.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Using Boolean values in data filtering
+# Customer data
+customers = [
+    {"name": "Alice", "age": 25, "purchases": 5, "total_spent": 250.50},
+    {"name": "Bob", "age": 17, "purchases": 2, "total_spent": 45.75},
+    {"name": "Charlie", "age": 32, "purchases": 10, "total_spent": 520.30},
+    {"name": "Diana", "age": 28, "purchases": 3, "total_spent": 120.00}
+]
+
+# Filter customers who are adults and have spent more than $100
+adult_customers = []
+for customer in customers:
+    is_adult = customer["age"] >= 18
+    has_spent_more_than_100 = customer["total_spent"] > 100
+    
+    # Using Boolean operators to combine conditions
+    if is_adult and has_spent_more_than_100:
+        adult_customers.append(customer)
+
+print("Adult customers who spent more than $100:")
+for customer in adult_customers:
+    print(f"- {customer['name']}: ${customer['total_spent']:.2f}")
+
+# Check if any customer is a minor
+has_minor = any(customer["age"] < 18 for customer in customers)
+print(f"Are there any minor customers? {has_minor}")
+
+# Check if all customers have made at least one purchase
+all_have_purchases = all(customer["purchases"] > 0 for customer in customers)
+print(f"Have all customers made at least one purchase? {all_have_purchases}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Conditional Statements -->
+                <div class="concept-section">
+                    <h3>Conditional Statements</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Conditional statements allow you to execute different blocks of code based on certain conditions. Python provides the if, elif, and else statements for this purpose.</p>
+                        
+                        <ul>
+                            <li><strong>if:</strong> Executes a block of code if the condition is True</li>
+                            <li><strong>elif:</strong> Short for "else if", checks another condition if the previous ones were False</li>
+                            <li><strong>else:</strong> Executes a block of code if all previous conditions were False</li>
+                        </ul>
+                        
+                        <p>Conditional statements are fundamental for decision-making in programs.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># Simple if statement
+if condition:
+    # Code to execute if condition is True
+
+# if-else statement
+if condition:
+    # Code to execute if condition is True
+else:
+    # Code to execute if condition is False
+
+# if-elif-else statement
+if condition1:
+    # Code to execute if condition1 is True
+elif condition2:
+    # Code to execute if condition1 is False and condition2 is True
+else:
+    # Code to execute if both condition1 and condition2 are False</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>Conditional statements are used in data analysis to categorize data based on certain criteria. For example, you might categorize customers into different segments based on their purchase history, or classify products as high, medium, or low selling based on sales figures.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Using conditional statements for data categorization
+# Product data
+products = [
+    {"name": "Laptop", "price": 1200, "sales": 150},
+    {"name": "Mouse", "price": 25, "sales": 500},
+    {"name": "Keyboard", "price": 75, "sales": 300},
+    {"name": "Monitor", "price": 300, "sales": 200},
+    {"name": "USB Cable", "price": 10, "sales": 1000}
+]
+
+# Categorize products based on sales and price
+for product in products:
+    name = product["name"]
+    price = product["price"]
+    sales = product["sales"]
+    
+    # Determine category based on sales
+    if sales > 500:
+        sales_category = "High"
+    elif sales > 200:
+        sales_category = "Medium"
+    else:
+        sales_category = "Low"
+    
+    # Determine price range
+    if price > 500:
+        price_range = "Expensive"
+    elif price > 100:
+        price_range = "Moderate"
+    else:
+        price_range = "Affordable"
+    
+    # Print product information with categories
+    print(f"{name}: {sales_category} sales, {price_range} price")
+    
+    # Special handling for certain conditions
+    if sales_category == "High" and price_range == "Affordable":
+        print(f"  -> {name} is a bestseller!")
+    elif sales_category == "Low" and price_range == "Expensive":
+        print(f"  -> Consider discounting {name} to boost sales.")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Loops: while and for -->
+                <div class="concept-section">
+                    <h3>Loops: while and for</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Loops allow you to execute a block of code repeatedly. Python provides two main types of loops: while loops and for loops.</p>
+                        
+                        <ul>
+                            <li><strong>while loop:</strong> Repeats as long as a condition is True</li>
+                            <li><strong>for loop:</strong> Iterates over a sequence (like a list, tuple, or string)</li>
+                        </ul>
+                        
+                        <p>Loops are essential for tasks that require repetitive operations, such as processing items in a list or performing calculations until a certain condition is met.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># while loop
+while condition:
+    # Code to execute while condition is True
+
+# for loop with a list
+for item in list:
+    # Code to execute for each item in the list
+
+# for loop with range
+for i in range(start, stop, step):
+    # Code to execute for each value in the range</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>Loops are used extensively in data processing. For example, you might use a for loop to iterate through a dataset of customer records, or a while loop to repeatedly prompt a user for input until valid data is provided.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Using loops for data processing
+# Sales data for different months
+monthly_sales = [1200, 1500, 1800, 1400, 2000, 2200, 1900, 2100, 2300, 2500, 2400, 2800]
+
+# Calculate total sales using a for loop
+total_sales = 0
+for sale in monthly_sales:
+    total_sales += sale
+print(f"Total sales for the year: ${total_sales}")
+
+# Find the month with the highest sales
+max_sale = 0
+max_month = 0
+for i, sale in enumerate(monthly_sales):
+    if sale > max_sale:
+        max_sale = sale
+        max_month = i + 1  # +1 because months are 1-indexed
+print(f"Highest sales: ${max_sale} in month {max_month}")
+
+# Calculate running average using a while loop
+running_total = 0
+month = 0
+while month < len(monthly_sales):
+    running_total += monthly_sales[month]
+    month += 1
+    running_average = running_total / month
+    print(f"Month {month}: Running average = ${running_average:.2f}")
+
+# Find months with sales above the yearly average
+yearly_average = total_sales / len(monthly_sales)
+print(f"\nMonths with sales above the yearly average (${yearly_average:.2f}):")
+for i, sale in enumerate(monthly_sales):
+    if sale > yearly_average:
+        print(f"Month {i+1}: ${sale}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Break and Continue Statements -->
+                <div class="concept-section">
+                    <h3>Break and Continue Statements</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>The break and continue statements allow you to control the flow of loops more precisely.</p>
+                        
+                        <ul>
+                            <li><strong>break:</strong> Terminates the loop prematurely</li>
+                            <li><strong>continue:</strong> Skips the rest of the current iteration and moves to the next one</li>
+                        </ul>
+                        
+                        <p>These statements are useful when you need to exit a loop early under certain conditions or skip certain iterations.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># Using break in a loop
+for item in sequence:
+    if condition:
+        break  # Exit the loop immediately
+
+# Using continue in a loop
+for item in sequence:
+    if condition:
+        continue  # Skip the rest of this iteration and continue with the next</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>In data analysis, you might use break to stop processing data once you find what you're looking for, or use continue to skip invalid or irrelevant data points.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Using break and continue in data processing
+# Customer data with some invalid entries
+customers = [
+    {"name": "Alice", "age": 25, "purchases": 5},
+    {"name": "Bob", "age": 17, "purchases": 2},
+    {"name": "Charlie", "age": 32, "purchases": 10},
+    {"name": "Diana", "age": 28, "purchases": 3},
+    {"name": "Eve", "age": -5, "purchases": 1},  # Invalid age
+    {"name": "Frank", "age": 45, "purchases": 8}
+]
+
+# Find the first customer with more than 7 purchases
+print("Searching for first customer with more than 7 purchases...")
+for customer in customers:
+    if customer["purchases"] > 7:
+        print(f"Found: {customer['name']} with {customer['purchases']} purchases")
+        break  # Stop searching once we find the first match
+
+# Process valid customers only
+print("\nProcessing valid customers:")
+for customer in customers:
+    # Skip customers with invalid data
+    if customer["age"] <= 0:
+        print(f"Skipping {customer['name']} due to invalid age: {customer['age']}")
+        continue  # Skip to the next customer
+    
+    # Process valid customer
+    print(f"Processing {customer['name']}, age {customer['age']}")
+    
+    # Categorize by age
+    if customer["age"] < 18:
+        category = "Minor"
+    elif customer["age"] < 30:
+        category = "Young Adult"
+    elif customer["age"] < 50:
+        category = "Adult"
+    else:
+        category = "Senior"
+    
+    print(f"  Category: {category}, Purchases: {customer['purchases']}")
+
+# Example of using break in a while loop
+print("\nSearching for a specific customer...")
+target_name = "Diana"
+i = 0
+found = False
+while i < len(customers) and not found:
+    if customers[i]["name"] == target_name:
+        print(f"Found {target_name} at index {i}")
+        found = True
+    i += 1
+
+if not found:
+    print(f"{target_name} not found in the customer list")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Task Section -->
+                <div class="task-section">
+                    <h4><i class="fas fa-tasks"></i> Practice Task: Control Flow</h4>
+                    <p>Create a program that analyzes a list of student grades and provides statistics. Follow these steps:</p>
+                    <ol>
+                        <li>Create a list of student grades (numbers from 0 to 100)</li>
+                        <li>Use a loop to calculate the average grade</li>
+                        <li>Use conditional statements to categorize each grade as A (90-100), B (80-89), C (70-79), D (60-69), or F (below 60)</li>
+                        <li>Count how many students fall into each grade category</li>
+                        <li>Find the highest and lowest grades using appropriate loop control statements</li>
+                        <li>Print the average grade, grade distribution, and highest/lowest grades</li>
+                    </ol>
+                    <button class="hint-button" onclick="toggleHint('hint2')">Show Hint</button>
+                    <div id="hint2" class="hint-content">
+                        # Create a list of grades<br>
+                        grades = [85, 92, 78, 65, 95, 88, 72, 59, 81, 90]<br><br>
+                        # Initialize counters for each grade category<br>
+                        a_count = b_count = c_count = d_count = f_count = 0<br><br>
+                        # Initialize variables for highest and lowest grades<br>
+                        highest = 0<br>
+                        lowest = 100<br><br>
+                        # Loop through grades to calculate statistics<br>
+                        for grade in grades:<br>
+                        &nbsp;&nbsp;# Update highest and lowest<br>
+                        &nbsp;&nbsp;# Categorize grade and update counters<br><br>
+                        # Calculate average and print results
                     </div>
                 </div>
                 
-                <div class="footer-col">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#topics">Topics</a></li>
-                        <li><a href="#resources">Resources</a></li>
-                        <li><a href="#about">About</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-col">
-                    <h3>Course Units</h3>
-                    <ul>
-                        <li><a href="#">Introduction to Python</a></li>
-                        <li><a href="#">Control Flow</a></li>
-                        <li><a href="#">Functions & Arrays</a></li>
-                        <li><a href="#">Data Structures</a></li>
-                        <li><a href="#">Files & Exceptions</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-col">
-                    <h3>Contact Us</h3>
-                    <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> 123 Education St, Learning City</li>
-                        <li><i class="fas fa-phone"></i> (123) 456-7890</li>
-                        <li><i class="fas fa-envelope"></i> info@twss.edu</li>
-                    </ul>
+                <!-- Navigation Buttons -->
+                <div class="navigation-buttons">
+                    <button class="nav-button prev" onclick="showLesson(1)">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="nav-button next" onclick="showLesson(3)">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
             
-            <div class="copyright">
-                <p>&copy; 2023 TWSS - The Web School of Science. All Rights Reserved.</p>
+            <!-- Unit III: Functions & Arrays -->
+            <div class="lesson" id="lesson-3">
+                <div class="lesson-header">
+                    <h2>Unit III: Functions & Arrays</h2>
+                    <p>Learn how to create reusable code with functions and work with arrays in Python</p>
+                </div>
+                
+                <!-- Functions: Definition and Parameters -->
+                <div class="concept-section">
+                    <h3>Functions: Definition and Parameters</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Functions are reusable blocks of code that perform a specific task. They help organize code, reduce repetition, and make programs more modular and easier to maintain.</p>
+                        
+                        <p>In Python, functions are defined using the def keyword, followed by the function name and parentheses. Any input parameters are listed inside the parentheses.</p>
+                        
+                        <p>Functions can have:</p>
+                        <ul>
+                            <li><strong>Parameters:</strong> Variables listed inside the parentheses in the function definition</li>
+                            <li><strong>Arguments:</strong> Values sent to the function when it is called</li>
+                            <li><strong>Return values:</strong> Values that the function sends back to the caller</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># Function definition
+def function_name(parameter1, parameter2):
+    # Function body
+    return result  # Optional return statement
+
+# Function call
+result = function_name(argument1, argument2)</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>In data analysis, functions are used to perform repetitive calculations or data transformations. For example, you might create a function to calculate the compound interest for different investment scenarios, or a function to normalize data values.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Functions for data analysis
+# Function to calculate the mean of a list of numbers
+def calculate_mean(numbers):
+    if not numbers:  # Check if the list is empty
+        return 0
+    
+    total = sum(numbers)
+    count = len(numbers)
+    return total / count
+
+# Function to calculate the median of a list of numbers
+def calculate_median(numbers):
+    if not numbers:
+        return 0
+    
+    sorted_numbers = sorted(numbers)
+    count = len(sorted_numbers)
+    
+    if count % 2 == 0:  # Even number of elements
+        middle1 = sorted_numbers[count // 2 - 1]
+        middle2 = sorted_numbers[count // 2]
+        return (middle1 + middle2) / 2
+    else:  # Odd number of elements
+        return sorted_numbers[count // 2]
+
+# Function to filter data based on a condition
+def filter_data(data, condition_func):
+    """
+    Filter data based on a condition function.
+    condition_func should take a data item and return True or False.
+    """
+    filtered_data = []
+    for item in data:
+        if condition_func(item):
+            filtered_data.append(item)
+    return filtered_data
+
+# Example data
+sales_data = [120, 150, 80, 200, 175, 90, 110, 185, 140, 160]
+
+# Calculate statistics using functions
+mean_sales = calculate_mean(sales_data)
+median_sales = calculate_median(sales_data)
+print(f"Mean sales: {mean_sales:.2f}")
+print(f"Median sales: {median_sales:.2f}")
+
+# Define a condition function
+def is_high_sales(sale):
+    return sale > 150
+
+# Filter high sales data
+high_sales = filter_data(sales_data, is_high_sales)
+print(f"High sales data: {high_sales}")
+
+# Calculate mean of high sales
+mean_high_sales = calculate_mean(high_sales)
+print(f"Mean of high sales: {mean_high_sales:.2f}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Function Scope and Return Values -->
+                <div class="concept-section">
+                    <h3>Function Scope and Return Values</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Scope refers to the visibility of variables in different parts of the code. In Python, variables defined inside a function have local scope, meaning they are only accessible within that function. Variables defined outside all functions have global scope.</p>
+                        
+                        <p>Functions can return values using the return statement. A function can return multiple values by separating them with commas, which Python will pack into a tuple.</p>
+                        
+                        <p>Understanding scope is crucial for avoiding bugs and managing data flow in your programs.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># Local and global scope
+global_var = 10  # Global variable
+
+def function_with_scope():
+    local_var = 20  # Local variable
+    print(global_var)  # Can access global variable
+    # print(local_var)  # This would cause an error outside the function
+
+# Function with multiple return values
+def calculate_stats(numbers):
+    if not numbers:
+        return 0, 0, 0, 0  # Return zeros for empty list
+    
+    total = sum(numbers)
+    count = len(numbers)
+    mean = total / count
+    maximum = max(numbers)
+    
+    return total, mean, maximum, count  # Return multiple values</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>In data analysis, understanding scope is important when processing large datasets. You might use global variables for configuration settings and local variables for intermediate calculations. Functions that return multiple values are useful for calculating various statistics at once.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Function scope and return values in data analysis
+# Global configuration
+DISCOUNT_RATE = 0.1  # 10% discount
+TAX_RATE = 0.07      # 7% tax
+
+# Function to calculate final price with discount and tax
+def calculate_final_price(price, is_member=False):
+    # Local variables
+    discounted_price = price
+    
+    # Apply discount for members
+    if is_member:
+        discounted_price = price * (1 - DISCOUNT_RATE)
+    
+    # Apply tax
+    final_price = discounted_price * (1 + TAX_RATE)
+    
+    # Return multiple values
+    return discounted_price, final_price
+
+# Function to analyze sales data
+def analyze_sales(sales_data):
+    # Local variables for calculations
+    total_sales = sum(sales_data)
+    average_sale = total_sales / len(sales_data) if sales_data else 0
+    max_sale = max(sales_data) if sales_data else 0
+    min_sale = min(sales_data) if sales_data else 0
+    
+    # Return multiple values as a tuple
+    return {
+        "total": total_sales,
+        "average": average_sale,
+        "max": max_sale,
+        "min": min_sale
+    }
+
+# Example usage
+item_prices = [25.99, 45.50, 15.75, 89.99, 32.50]
+
+# Calculate prices for members and non-members
+for price in item_prices:
+    discounted, final = calculate_final_price(price, is_member=True)
+    print(f"Original: ${price:.2f}, Member discounted: ${discounted:.2f}, Final with tax: ${final:.2f}")
+
+# Analyze sales data
+sales_stats = analyze_sales(item_prices)
+print("\nSales Statistics:")
+print(f"Total sales: ${sales_stats['total']:.2f}")
+print(f"Average sale: ${sales_stats['average']:.2f}")
+print(f"Highest sale: ${sales_stats['max']:.2f}")
+print(f"Lowest sale: ${sales_stats['min']:.2f}")
+
+# Demonstrate scope
+def try_to_modify_global():
+    # This creates a new local variable, doesn't modify the global one
+    DISCOUNT_RATE = 0.2
+    print(f"Local DISCOUNT_RATE: {DISCOUNT_RATE}")
+
+try_to_modify_global()
+print(f"Global DISCOUNT_RATE remains: {DISCOUNT_RATE}")
+
+# To modify a global variable inside a function
+def modify_global():
+    global DISCOUNT_RATE
+    DISCOUNT_RATE = 0.15
+    print(f"Modified global DISCOUNT_RATE: {DISCOUNT_RATE}")
+
+modify_global()
+print(f"Global DISCOUNT_RATE after modification: {DISCOUNT_RATE}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Function Composition and Recursion -->
+                <div class="concept-section">
+                    <h3>Function Composition and Recursion</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Function composition is the process of combining functions to create more complex functions. In Python, you can pass functions as arguments to other functions, return functions from functions, and store functions in data structures.</p>
+                        
+                        <p>Recursion is a technique where a function calls itself to solve a problem. Recursive functions have a base case that stops the recursion and a recursive case that brings the problem closer to the base case.</p>
+                        
+                        <p>Both concepts are powerful tools for solving complex problems in a clean and elegant way.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># Function composition
+def compose(f, g):
+    return lambda x: f(g(x))
+
+# Recursive function
+def factorial(n):
+    # Base case
+    if n <= 1:
+        return 1
+    # Recursive case
+    else:
+        return n * factorial(n - 1)</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>In data analysis, function composition is used to create data processing pipelines, where each function performs a specific transformation on the data. Recursion is useful for processing hierarchical data structures, such as file systems or nested JSON objects.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Function composition and recursion in data analysis
+# Function composition example
+def apply_discount(price, rate):
+    return price * (1 - rate)
+
+def apply_tax(price, rate):
+    return price * (1 + rate)
+
+def format_currency(amount):
+    return f"${amount:.2f}"
+
+# Compose functions to create a pipeline
+def calculate_final_price_with_composition(price, discount_rate, tax_rate):
+    # Apply discount, then tax, then format
+    discounted_price = apply_discount(price, discount_rate)
+    final_price = apply_tax(discounted_price, tax_rate)
+    return format_currency(final_price)
+
+# Test the composed function
+original_price = 100
+final_price = calculate_final_price_with_composition(original_price, 0.1, 0.07)
+print(f"Original price: ${original_price}, Final price: {final_price}")
+
+# Recursion example: Processing hierarchical data
+# Simulating a nested structure (like a file system or nested JSON)
+data_structure = {
+    "name": "root",
+    "value": 10,
+    "children": [
+        {
+            "name": "child1",
+            "value": 5,
+            "children": [
+                {"name": "grandchild1", "value": 2, "children": []},
+                {"name": "grandchild2", "value": 3, "children": []}
+            ]
+        },
+        {
+            "name": "child2",
+            "value": 7,
+            "children": [
+                {"name": "grandchild3", "value": 4, "children": []}
+            ]
+        }
+    ]
+}
+
+# Recursive function to sum all values in the nested structure
+def sum_values(node):
+    # Base case: if the node has no children, return its value
+    if not node["children"]:
+        return node["value"]
+    
+    # Recursive case: sum the node's value plus the sum of all children
+    total = node["value"]
+    for child in node["children"]:
+        total += sum_values(child)
+    
+    return total
+
+# Recursive function to find a node by name
+def find_node_by_name(node, name):
+    # Base case: if this node matches, return it
+    if node["name"] == name:
+        return node
+    
+    # Recursive case: search in children
+    for child in node["children"]:
+        result = find_node_by_name(child, name)
+        if result:  # If found in a child
+            return result
+    
+    # Not found in this branch
+    return None
+
+# Test the recursive functions
+total_sum = sum_values(data_structure)
+print(f"\nTotal sum of all values: {total_sum}")
+
+target_node = find_node_by_name(data_structure, "grandchild2")
+if target_node:
+    print(f"Found node: {target_node['name']} with value: {target_node['value']}")
+else:
+    print("Node not found")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Strings: Slices and Immutability -->
+                <div class="concept-section">
+                    <h3>Strings: Slices and Immutability</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Strings in Python are sequences of characters. They are immutable, which means once a string is created, it cannot be changed. Any operation that appears to modify a string actually creates a new string.</p>
+                        
+                        <p>String slicing allows you to extract a portion of a string. The syntax for slicing is string[start:end:step], where:</p>
+                        <ul>
+                            <li><strong>start:</strong> Index where the slice begins (inclusive)</li>
+                            <li><strong>end:</strong> Index where the slice ends (exclusive)</li>
+                            <li><strong>step:</strong> Amount to skip between characters (optional)</li>
+                        </ul>
+                        
+                        <p>Understanding string operations is crucial for text processing and data cleaning in data analysis.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># String slicing
+text = "Python programming"
+slice1 = text[0:6]      # "Python"
+slice2 = text[7:]        # "programming"
+slice3 = text[:6]        # "Python"
+slice4 = text[::2]       # "Pto rgamn"
+slice5 = text[::-1]      # "gnimmargorp nohtyP" (reversed)
+
+# String methods
+upper_text = text.upper()        # "PYTHON PROGRAMMING"
+lower_text = text.lower()        # "python programming"
+title_text = text.title()        # "Python Programming"
+replaced_text = text.replace("Python", "Java")  # "Java programming"</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>In data analysis, string operations are used extensively for text processing and data cleaning. For example, you might use string methods to clean inconsistent data, extract information from text fields, or format output for reports.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: String operations for data cleaning and analysis
+# Sample data with inconsistencies
+customer_data = [
+    "  john.doe@example.com  ",
+    "JANE_SMITH@GMAIL.COM",
+    "bob.smith@company.co.uk",
+    "alice.johnson@university.edu",
+    "  DAVID.BROWN@CORPORATION.COM  "
+]
+
+# Function to clean and standardize email addresses
+def clean_email(email):
+    # Remove leading and trailing whitespace
+    cleaned = email.strip()
+    
+    # Convert to lowercase
+    cleaned = cleaned.lower()
+    
+    return cleaned
+
+# Function to extract domain from email
+def extract_domain(email):
+    # Find the position of @
+    at_index = email.find('@')
+    
+    # Extract the domain (everything after @)
+    if at_index != -1:
+        return email[at_index + 1:]
+    else:
+        return "Invalid email"
+
+# Function to categorize email by domain type
+def categorize_email(email):
+    domain = extract_domain(email)
+    
+    if domain.endswith('.com'):
+        return 'Commercial'
+    elif domain.endswith('.edu'):
+        return 'Educational'
+    elif domain.endswith('.gov'):
+        return 'Government'
+    elif domain.endswith('.org'):
+        return 'Non-profit'
+    else:
+        return 'Other'
+
+# Process the customer data
+cleaned_emails = []
+domains = []
+categories = []
+
+for email in customer_data:
+    # Clean the email
+    cleaned = clean_email(email)
+    cleaned_emails.append(cleaned)
+    
+    # Extract the domain
+    domain = extract_domain(cleaned)
+    domains.append(domain)
+    
+    # Categorize
+    category = categorize_email(cleaned)
+    categories.append(category)
+
+# Print the results
+print("Original Emails -> Cleaned Emails -> Domain -> Category")
+for i in range(len(customer_data)):
+    print(f"'{customer_data[i]}' -> '{cleaned_emails[i]}' -> {domains[i]} -> {categories[i]}")
+
+# Count emails by category
+category_counts = {}
+for category in categories:
+    if category in category_counts:
+        category_counts[category] += 1
+    else:
+        category_counts[category] = 1
+
+print("\nEmail distribution by category:")
+for category, count in category_counts.items():
+    print(f"{category}: {count}")
+
+# Example of string slicing for data extraction
+# Suppose we have product codes in format: CATEGORY-ID-NAME
+product_codes = [
+    "ELEC-001-Smartphone",
+    "CLOTH-025-T-Shirt",
+    "FOOD-012-Chocolate",
+    "BOOK-003-Novel"
+]
+
+# Function to extract parts of the product code
+def extract_product_info(code):
+    # Extract category (first 4 characters)
+    category = code[:4]
+    
+    # Extract ID (characters between the two hyphens)
+    first_hyphen = code.find('-')
+    second_hyphen = code.find('-', first_hyphen + 1)
+    id_code = code[first_hyphen + 1:second_hyphen]
+    
+    # Extract name (everything after the second hyphen)
+    name = code[second_hyphen + 1:]
+    
+    return category, id_code, name
+
+# Process the product codes
+print("\nProduct Information:")
+for code in product_codes:
+    category, id_code, name = extract_product_info(code)
+    print(f"Code: {code}, Category: {category}, ID: {id_code}, Name: {name}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- String Functions and Methods -->
+                <div class="concept-section">
+                    <h3>String Functions and Methods</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Python provides numerous built-in methods for string manipulation. These methods allow you to perform common operations like searching, replacing, formatting, and transforming strings.</p>
+                        
+                        <p>Some commonly used string methods include:</p>
+                        <ul>
+                            <li><strong>find() and index():</strong> Find the position of a substring</li>
+                            <li><strong>replace():</strong> Replace occurrences of a substring</li>
+                            <li><strong>split():</strong> Split a string into a list of substrings</li>
+                            <li><strong>join():</strong> Join elements of an iterable into a string</li>
+                            <li><strong>strip(), lstrip(), rstrip():</strong> Remove whitespace</li>
+                            <li><strong>startswith() and endswith():</strong> Check if a string starts/ends with a substring</li>
+                            <li><strong>isnumeric(), isalpha(), isalnum():</strong> Check string content</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># String methods examples
+text = "Hello, World!"
+
+# Find and replace
+position = text.find("World")  # 7
+new_text = text.replace("World", "Python")  # "Hello, Python!"
+
+# Split and join
+words = text.split(", ")  # ["Hello", "World!"]
+joined = "-".join(words)  # "Hello-World!"
+
+# Strip whitespace
+messy_text = "  some text  "
+clean_text = messy_text.strip()  # "some text"
+
+# Check string properties
+is_numeric = "123".isnumeric()  # True
+is_alpha = "abc".isalpha()  # True
+is_alnum = "abc123".isalnum()  # True</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>String methods are essential for data cleaning and text analysis. In data science, you might use these methods to process text data, extract features from text, or prepare data for natural language processing.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Advanced string methods for data analysis
+# Sample product reviews with various formatting issues
+reviews = [
+    "  Great product! Highly recommended.  ",
+    "NOT satisfied with the quality.",
+    "Average quality, but good value for money.",
+    "EXCELLENT! Would buy again.",
+    "Poor packaging, product was damaged.",
+    "good product, fast delivery",
+    "NOT WORTH THE PRICE",
+    "Would recommend to friends."
+]
+
+# Function to clean and analyze reviews
+def analyze_review(review):
+    # Clean the review
+    cleaned_review = review.strip().lower()
+    
+    # Determine sentiment based on keywords
+    positive_keywords = ["great", "excellent", "good", "recommended", "recommend", "fast"]
+    negative_keywords = ["not", "poor", "damaged", "average", "satisfied"]
+    
+    # Count positive and negative words
+    positive_count = sum(1 for word in positive_keywords if word in cleaned_review)
+    negative_count = sum(1 for word in negative_keywords if word in cleaned_review)
+    
+    # Determine sentiment
+    if positive_count > negative_count:
+        sentiment = "Positive"
+    elif negative_count > positive_count:
+        sentiment = "Negative"
+    else:
+        sentiment = "Neutral"
+    
+    # Check for emphasis (all caps)
+    has_emphasis = review.isupper()
+    
+    # Count words
+    word_count = len(cleaned_review.split())
+    
+    return {
+        "original": review,
+        "cleaned": cleaned_review,
+        "sentiment": sentiment,
+        "has_emphasis": has_emphasis,
+        "word_count": word_count
+    }
+
+# Process all reviews
+analyzed_reviews = [analyze_review(review) for review in reviews]
+
+# Print analysis results
+print("Review Analysis:")
+for i, result in enumerate(analyzed_reviews):
+    print(f"\nReview {i+1}:")
+    print(f"  Original: '{result['original']}'")
+    print(f"  Cleaned: '{result['cleaned']}'")
+    print(f"  Sentiment: {result['sentiment']}")
+    print(f"  Has Emphasis: {result['has_emphasis']}")
+    print(f"  Word Count: {result['word_count']}")
+
+# Example of using string methods for data extraction
+# Suppose we have a dataset of file paths with different formats
+file_paths = [
+    "/home/user/documents/report.pdf",
+    "C:\\Users\\John\\Desktop\\presentation.pptx",
+    "/var/log/system.log",
+    "D:\\Data\\sales\\2023\\q1_sales.xlsx",
+    "/tmp/temp_file.tmp"
+]
+
+# Function to extract file information
+def extract_file_info(path):
+    # Normalize path separators
+    normalized_path = path.replace("\\", "/")
+    
+    # Split the path into components
+    components = normalized_path.split("/")
+    
+    # Extract filename (last component)
+    filename = components[-1]
+    
+    # Extract file extension
+    if "." in filename:
+        name, extension = filename.rsplit(".", 1)
+    else:
+        name, extension = filename, ""
+    
+    # Extract directory path (everything except the filename)
+    directory = "/".join(components[:-1])
+    
+    return {
+        "original_path": path,
+        "directory": directory,
+        "filename": filename,
+        "name": name,
+        "extension": extension
+    }
+
+# Process all file paths
+file_info_list = [extract_file_info(path) for path in file_paths]
+
+# Print file information
+print("\nFile Information:")
+for i, info in enumerate(file_info_list):
+    print(f"\nFile {i+1}:")
+    print(f"  Original Path: {info['original_path']}")
+    print(f"  Directory: {info['directory']}")
+    print(f"  Filename: {info['filename']}")
+    print(f"  Name: {info['name']}")
+    print(f"  Extension: {info['extension']}")
+
+# Count files by extension
+extension_counts = {}
+for info in file_info_list:
+    ext = info['extension']
+    if ext in extension_counts:
+        extension_counts[ext] += 1
+    else:
+        extension_counts[ext] = 1
+
+print("\nFile Distribution by Extension:")
+for ext, count in extension_counts.items():
+    print(f".{ext}: {count} file(s)")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Python Arrays and Methods -->
+                <div class="concept-section">
+                    <h3>Python Arrays and Methods</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>In Python, the term "array" can refer to several different data structures. The most commonly used array-like structure is the list, which is a mutable, ordered collection of items.</p>
+                        
+                        <p>Python lists provide numerous methods for manipulating the collection:</p>
+                        <ul>
+                            <li><strong>append():</strong> Add an item to the end of the list</li>
+                            <li><strong>extend():</strong> Add all items from another iterable</li>
+                            <li><strong>insert():</strong> Insert an item at a specific position</li>
+                            <li><strong>remove():</strong> Remove the first occurrence of an item</li>
+                            <li><strong>pop():</strong> Remove and return an item at a specific position</li>
+                            <li><strong>clear():</strong> Remove all items from the list</li>
+                            <li><strong>index():</strong> Find the position of an item</li>
+                            <li><strong>count():</strong> Count occurrences of an item</li>
+                            <li><strong>sort():</strong> Sort the list in place</li>
+                            <li><strong>reverse():</strong> Reverse the list in place</li>
+                        </ul>
+                        
+                        <p>For numerical operations, Python also provides the array module and libraries like NumPy, which offer more efficient array structures for scientific computing.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># List methods examples
+numbers = [1, 2, 3]
+
+# Adding items
+numbers.append(4)           # [1, 2, 3, 4]
+numbers.extend([5, 6])       # [1, 2, 3, 4, 5, 6]
+numbers.insert(1, 1.5)       # [1, 1.5, 2, 3, 4, 5, 6]
+
+# Removing items
+numbers.remove(3)            # [1, 1.5, 2, 4, 5, 6]
+popped = numbers.pop(0)      # [1.5, 2, 4, 5, 6], popped = 1
+
+# Finding items
+index = numbers.index(4)     # 2
+count = numbers.count(5)      # 1
+
+# Sorting and reversing
+numbers.sort()               # [1.5, 2, 4, 5, 6]
+numbers.reverse()            # [6, 5, 4, 2, 1.5]</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>Lists are fundamental data structures in data analysis. They're used to store and manipulate collections of data points, such as customer records, sales figures, or experimental results. List methods provide efficient ways to add, remove, and organize data.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Using list methods for data manipulation
+# Sales data for different products
+sales_data = [
+    {"product": "Laptop", "sales": 120, "price": 999.99},
+    {"product": "Mouse", "sales": 450, "price": 25.99},
+    {"product": "Keyboard", "sales": 320, "price": 49.99},
+    {"product": "Monitor", "sales": 180, "price": 199.99}
+]
+
+# Extract product names into a list
+product_names = []
+for item in sales_data:
+    product_names.append(item["product"])
+print(f"Product names: {product_names}")
+
+# Add a new product to the sales data
+new_product = {"product": "Webcam", "sales": 250, "price": 79.99}
+sales_data.append(new_product)
+product_names.append(new_product["product"])
+print(f"Updated product names: {product_names}")
+
+# Insert a product at a specific position
+insert_product = {"product": "USB Hub", "sales": 380, "price": 19.99}
+sales_data.insert(2, insert_product)
+product_names.insert(2, insert_product["product"])
+print(f"Product names after insert: {product_names}")
+
+# Remove a product
+removed_product = sales_data.pop(1)  # Remove at index 1
+print(f"Removed product: {removed_product['product']}")
+product_names.pop(1)
+print(f"Product names after pop: {product_names}")
+
+# Find a product by name
+product_to_find = "Monitor"
+try:
+    index = product_names.index(product_to_find)
+    print(f"Found '{product_to_find}' at index {index}")
+except ValueError:
+    print(f"'{product_to_find}' not found in the list")
+
+# Count occurrences of a product (though in this case, all names are unique)
+product_to_count = "Keyboard"
+count = product_names.count(product_to_count)
+print(f"'{product_to_count}' appears {count} time(s) in the list")
+
+# Sort products by sales amount
+# First, create a list of (sales, product) tuples
+sales_product_pairs = []
+for item in sales_data:
+    sales_product_pairs.append((item["sales"], item["product"]))
+
+# Sort the list by sales (ascending)
+sales_product_pairs.sort()
+print(f"Products sorted by sales (ascending): {sales_product_pairs}")
+
+# Sort the list by sales (descending)
+sales_product_pairs.sort(reverse=True)
+print(f"Products sorted by sales (descending): {sales_product_pairs}")
+
+# Extract just the product names in order of sales
+sorted_products = [product for sales, product in sales_product_pairs]
+print(f"Products in order of sales: {sorted_products}")
+
+# Clear the list
+product_names.clear()
+print(f"Product names after clear: {product_names}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Task Section -->
+                <div class="task-section">
+                    <h4><i class="fas fa-tasks"></i> Practice Task: Functions and Arrays</h4>
+                    <p>Create a program that processes student data using functions and list methods. Follow these steps:</p>
+                    <ol>
+                        <li>Create a list of student dictionaries with name, age, and grades</li>
+                        <li>Write a function to calculate the average grade for a student</li>
+                        <li>Write a function to add a new student to the list</li>
+                        <li>Write a function to find a student by name</li>
+                        <li>Write a function to sort students by average grade</li>
+                        <li>Use list methods to manipulate the student data</li>
+                        <li>Print the sorted list of students with their average grades</li>
+                    </ol>
+                    <button class="hint-button" onclick="toggleHint('hint3')">Show Hint</button>
+                    <div id="hint3" class="hint-content">
+                        # Create a list of student dictionaries<br>
+                        students = [<br>
+                        &nbsp;&nbsp;{"name": "Alice", "age": 20, "grades": [85, 90, 78]},<br>
+                        &nbsp;&nbsp;# ... more students<br>
+                        ]<br><br>
+                        # Function to calculate average grade<br>
+                        def calculate_average(student):<br>
+                        &nbsp;&nbsp;grades = student["grades"]<br>
+                        &nbsp;&nbsp;return sum(grades) / len(grades)<br><br>
+                        # Function to add a new student<br>
+                        def add_student(students, name, age, grades):<br>
+                        &nbsp;&nbsp;new_student = {"name": name, "age": age, "grades": grades}<br>
+                        &nbsp;&nbsp;students.append(new_student)<br><br>
+                        # Function to find a student by name<br>
+                        def find_student(students, name):<br>
+                        &nbsp;&nbsp;for student in students:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if student["name"] == name:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return student<br>
+                        &nbsp;&nbsp;return None<br><br>
+                        # Function to sort students by average grade<br>
+                        def sort_by_average(students):<br>
+                        &nbsp;&nbsp;return sorted(students, key=calculate_average, reverse=True)
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="navigation-buttons">
+                    <button class="nav-button prev" onclick="showLesson(2)">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="nav-button next" onclick="showLesson(4)">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Unit IV: Data Structures -->
+            <div class="lesson" id="lesson-4">
+                <div class="lesson-header">
+                    <h2>Unit IV: Data Structures</h2>
+                    <p>Learn about advanced data structures in Python, including lists, tuples, and dictionaries</p>
+                </div>
+                
+                <!-- Lists: Operations and Methods -->
+                <div class="concept-section">
+                    <h3>Lists: Operations and Methods</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Lists are one of the most versatile and commonly used data structures in Python. They are ordered, mutable collections that can contain items of different types.</p>
+                        
+                        <p>Lists support various operations and methods:</p>
+                        <ul>
+                            <li><strong>Indexing and slicing:</strong> Access individual items or subsets of the list</li>
+                            <li><strong>Concatenation:</strong> Combine two lists using the + operator</li>
+                            <li><strong>Repetition:</strong> Repeat a list using the * operator</li>
+                            <li><strong>Membership testing:</strong> Check if an item is in a list using the in operator</li>
+                            <li><strong>Length:</strong> Get the number of items using len()</li>
+                            <li><strong>Sorting:</strong> Sort the list using sort() or sorted()</li>
+                            <li><strong>Manipulation:</strong> Add, remove, or modify items</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># List operations
+numbers = [1, 2, 3, 4, 5]
+
+# Indexing and slicing
+first = numbers[0]          # 1
+last = numbers[-1]           # 5
+subset = numbers[1:4]        # [2, 3, 4]
+
+# Concatenation and repetition
+combined = numbers + [6, 7]  # [1, 2, 3, 4, 5, 6, 7]
+repeated = numbers * 2       # [1, 2, 3, 4, 5, 1, 2, 3, 4, 5]
+
+# Membership testing
+is_three_in_list = 3 in numbers  # True
+is_ten_in_list = 10 in numbers   # False
+
+# Length
+length = len(numbers)        # 5
+
+# Sorting
+numbers.sort()               # Sort in place
+sorted_numbers = sorted(numbers)  # Return a new sorted list</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>In data analysis, lists are used to store and manipulate collections of data points. For example, you might use a list to store daily stock prices, customer ratings, or experimental measurements. List operations allow you to filter, transform, and analyze this data efficiently.</p>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Using list operations for data analysis
+# Monthly sales data for a product
+monthly_sales = [1200, 1500, 1800, 1400, 2000, 2200, 1900, 2100, 2300, 2500, 2400, 2800]
+
+# Basic list operations
+print(f"Monthly sales: {monthly_sales}")
+print(f"Total months: {len(monthly_sales)}")
+print(f"First month sales: ${monthly_sales[0]}")
+print(f"Last month sales: ${monthly_sales[-1]}")
+
+# Slicing to get quarterly data
+q1_sales = monthly_sales[0:3]  # First quarter
+q2_sales = monthly_sales[3:6]  # Second quarter
+q3_sales = monthly_sales[6:9]  # Third quarter
+q4_sales = monthly_sales[9:12] # Fourth quarter
+
+print(f"\nQ1 sales: {q1_sales}")
+print(f"Q2 sales: {q2_sales}")
+print(f"Q3 sales: {q3_sales}")
+print(f"Q4 sales: {q4_sales}")
+
+# Calculate quarterly totals
+q1_total = sum(q1_sales)
+q2_total = sum(q2_sales)
+q3_total = sum(q3_sales)
+q4_total = sum(q4_sales)
+
+print(f"\nQ1 total: ${q1_total}")
+print(f"Q2 total: ${q2_total}")
+print(f"Q3 total: ${q3_total}")
+print(f"Q4 total: ${q4_total}")
+
+# Create a list of quarterly totals
+quarterly_totals = [q1_total, q2_total, q3_total, q4_total]
+print(f"\nQuarterly totals: {quarterly_totals}")
+
+# Find the best and worst quarters
+best_quarter = max(quarterly_totals)
+worst_quarter = min(quarterly_totals)
+best_quarter_index = quarterly_totals.index(best_quarter)
+worst_quarter_index = quarterly_totals.index(worst_quarter)
+
+quarter_names = ["Q1", "Q2", "Q3", "Q4"]
+print(f"\nBest quarter: {quarter_names[best_quarter_index]} with ${best_quarter}")
+print(f"Worst quarter: {quarter_names[worst_quarter_index]} with ${worst_quarter}")
+
+# Sort quarterly totals
+sorted_quarters = sorted(quarterly_totals, reverse=True)
+print(f"\nQuarters sorted by performance: {sorted_quarters}")
+
+# Calculate year-over-year growth
+if len(monthly_sales) >= 12:
+    current_year_total = sum(monthly_sales[-12:])
+    previous_year_total = sum(monthly_sales[-24:-12]) if len(monthly_sales) >= 24 else 0
+    
+    if previous_year_total > 0:
+        growth_rate = ((current_year_total - previous_year_total) / previous_year_total) * 100
+        print(f"\nYear-over-year growth: {growth_rate:.2f}%")
+    else:
+        print("\nNot enough data for year-over-year comparison")
+
+# List comprehension for filtering high-sales months
+high_sales_months = [sale for sale in monthly_sales if sale > 2000]
+print(f"\nMonths with sales over $2000: {high_sales_months}")
+print(f"Number of high-sales months: {len(high_sales_months)}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- List Slices and Loops -->
+                <div class="concept-section">
+                    <h3>List Slices and Loops</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>List slicing is a powerful feature that allows you to extract subsets of lists. The syntax is list[start:end:step], where:</p>
+                        <ul>
+                            <li><strong>start:</strong> Index where the slice begins (inclusive)</li>
+                            <li><strong>end:</strong> Index where the slice ends (exclusive)</li>
+                            <li><strong>step:</strong> Amount to skip between elements (optional)</li>
+                        </ul>
+                        
+                        <p>Combined with loops, list slicing enables efficient data processing and transformation.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># List slicing examples
+numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+# Different slicing patterns
+first_three = numbers[:3]        # [0, 1, 2]
+last_three = numbers[-3:]        # [7, 8, 9]
+middle = numbers[3:6]         # [3, 4, 5]
+every_other = numbers[::2]        # [0, 2, 4, 6, 8]
+reversed_list = numbers[::-1]      # [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+
+# Using slicing with loops
+# Process data in chunks
+for i in range(0, len(numbers), 3):
+    chunk = numbers[i:i+3]
+    print(f"Chunk {i//3 + 1}: {chunk}")
+    # Output: Chunk 0: [0, 1, 2], Chunk 1: [3, 4, 5], etc.</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>In data analysis, list slicing with loops is commonly used for:</p>
+                        <ul>
+                            <li>Batch processing large datasets</li>
+                            <li>Creating moving averages or rolling statistics</li>
+                            <li>Implementing pagination for data display</li>
+                            <li>Splitting time series data into training and testing sets</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Advanced list slicing with loops for data analysis
+# Simulating daily temperature readings for a month
+daily_temperatures = [72, 74, 71, 68, 70, 73, 75, 77, 76, 74, 73, 72, 70, 69, 71, 73, 75, 78, 80, 82, 85, 83, 81, 79, 77, 75]
+
+# Calculate weekly averages using slicing and loops
+print("Weekly Temperature Analysis:")
+for week in range(0, len(daily_temperatures), 7):
+    week_start = week * 7
+    week_end = week_start + 7
+    week_temps = daily_temperatures[week_start:week_end]
+    week_avg = sum(week_temps) / len(week_temps)
+    
+    print(f"Week {week//7 + 1}: Average = {week_avg:.1f}°F")
+    print(f"  Daily temps: {week_temps}")
+
+# Find heat waves (consecutive days above 80°F)
+print("\nHeat Wave Detection:")
+heat_wave_days = []
+consecutive_days = 0
+
+for i in range(len(daily_temperatures)):
+    if daily_temperatures[i] > 80:
+        consecutive_days += 1
+        if i == len(daily_temperatures) - 1 or daily_temperatures[i-1] <= 80:
+            # Start of a new heat wave
+            if consecutive_days >= 3:
+                heat_wave_days.append({
+                    "start_day": i - consecutive_days + 1,
+                    "end_day": i,
+                    "duration": consecutive_days,
+                    "max_temp": max(daily_temperatures[i-consecutive_days+1:i+1])
+                })
+            consecutive_days = 0
+    else:
+        consecutive_days = 0
+
+# Print heat wave information
+for i, wave in enumerate(heat_wave_days):
+    print(f"Heat Wave {i+1}: Days {wave['start_day']+1}-{wave['end_day']+1}, "
+          f"Duration: {wave['duration']} days, Max Temp: {wave['max_temp']}°F")
+
+# Create moving averages using slicing
+window_size = 5
+moving_averages = []
+
+for i in range(len(daily_temperatures) - window_size + 1):
+    window = daily_temperatures[i:i+window_size]
+    moving_avg = sum(window) / window_size
+    moving_averages.append(moving_avg)
+
+print(f"\nMoving Averages (5-day window):")
+for i, avg in enumerate(moving_averages):
+    if i >= window_size - 1:  # Only print when we have a full window
+        print(f"Day {i+1}: {avg:.1f}°F")
+
+# Data splitting for analysis
+# Split data into first half and second half
+mid_point = len(daily_temperatures) // 2
+first_half = daily_temperatures[:mid_point]
+second_half = daily_temperatures[mid_point:]
+
+first_half_avg = sum(first_half) / len(first_half)
+second_half_avg = sum(second_half) / len(second_half)
+
+print(f"\nFirst half average: {first_half_avg:.1f}°F")
+print(f"Second half average: {second_half_avg:.1f}°F")
+
+# Find the longest warming trend
+max_warming_trend = 0
+current_trend = 0
+
+for i in range(1, len(daily_temperatures)):
+    if daily_temperatures[i] > daily_temperatures[i-1]:
+        current_trend += 1
+        if current_trend > max_warming_trend:
+            max_warming_trend = current_trend
+    else:
+        current_trend = 0
+
+print(f"\nLongest warming trend: {max_warming_trend} consecutive days")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Mutability, Aliasing, and Cloning -->
+                <div class="concept-section">
+                    <h3>Mutability, Aliasing, and Cloning</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Understanding list mutability is crucial for data manipulation in Python:</p>
+                        
+                        <ul>
+                            <li><strong>Mutability:</strong> Lists can be modified in place - changes affect all references</li>
+                            <li><strong>Aliasing:</strong> Multiple variables can reference the same list object</li>
+                            <li><strong>Cloning:</strong> Creating independent copies of lists</li>
+                        </ul>
+                        
+                        <p>These concepts are essential for avoiding unexpected side effects in data processing.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># List mutability examples
+original = [1, 2, 3]
+reference = original  # Both point to same list
+clone = original.copy()  # Independent copy
+
+# Modifying through reference affects both
+reference.append(4)
+print(f"Original: {original}")  # [1, 2, 3, 4]
+print(f"Reference: {reference}")  # [1, 2, 3, 4]
+
+# Modifying clone doesn't affect original
+clone.append(5)
+print(f"Clone: {clone}")  # [1, 2, 3, 5]
+print(f"Original after clone modification: {original}")  # [1, 2, 3, 4]
+
+# Alternative cloning methods
+shallow_copy = original[:]  # Slice copy
+deep_copy = original.copy()  # Explicit copy</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>In data analysis, proper list handling prevents data corruption and ensures reliable transformations. Common use cases include:</p>
+                        <ul>
+                            <li>Creating data snapshots before filtering</li>
+                            <li>Maintaining original datasets during analysis</li>
+                            <li>Preventing accidental modification of reference data</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: List mutability in<!-- Continue from where we left off with the remaining content -->
+                <!-- List Slices and Loops -->
+                <div class="concept-section">
+                    <h3>List Slices and Loops</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>List slicing is a powerful feature that allows you to extract subsets of lists. The syntax is list[start:end:step], where:</p>
+                        <ul>
+                            <li><strong>start:</strong> Index where the slice begins (inclusive)</li>
+                            <li><strong>end:</strong> Index where the slice ends (exclusive)</li>
+                            <li><strong>step:</strong> Amount to skip between elements (optional)</li>
+                        </ul>
+                        
+                        <p>Combined with loops, list slicing enables efficient data processing and transformation.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># List slicing examples
+numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+# Different slicing patterns
+first_three = numbers[:3]        # [0, 1, 2]
+last_three = numbers[-3:]        # [7, 8, 9]
+middle = numbers[3:6]         # [3, 4, 5]
+every_other = numbers[::2]        # [0, 2, 4, 6, 8]
+reversed_list = numbers[::-1]      # [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+
+# Using slicing with loops
+# Process data in chunks
+for i in range(0, len(numbers), 3):
+    chunk = numbers[i:i+3]
+    print(f"Chunk {i//3 + 1}: {chunk}")
+    # Output: Chunk 0: [0, 1, 2], Chunk 1: [3, 4, 5], etc.</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>In data analysis, list slicing with loops is commonly used for:</p>
+                        <ul>
+                            <li>Batch processing large datasets</li>
+                            <li>Creating moving averages or rolling statistics</li>
+                            <li>Implementing pagination for data display</li>
+                            <li>Splitting time series data into training and testing sets</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Advanced list slicing with loops for data analysis
+# Simulating daily temperature readings for a month
+daily_temperatures = [72, 74, 71, 68, 70, 73, 75, 77, 76, 74, 73, 72, 70, 69, 71, 73, 75, 78, 80, 82, 85, 83, 81, 79, 77, 75]
+
+# Calculate weekly averages using slicing and loops
+print("Weekly Temperature Analysis:")
+for week in range(0, len(daily_temperatures), 7):
+    week_start = week * 7
+    week_end = week_start + 7
+    week_temps = daily_temperatures[week_start:week_end]
+    week_avg = sum(week_temps) / len(week_temps)
+    
+    print(f"Week {week//7 + 1}: Average = {week_avg:.1f}°F")
+    print(f"  Daily temps: {week_temps}")
+
+# Find heat waves (consecutive days above 80°F)
+print("\nHeat Wave Detection:")
+heat_wave_days = []
+consecutive_days = 0
+
+for i in range(len(daily_temperatures)):
+    if daily_temperatures[i] > 80:
+        consecutive_days += 1
+        if i == len(daily_temperatures) - 1 or daily_temperatures[i-1] <= 80:
+            # Start of a new heat wave
+            if consecutive_days >= 3:
+                heat_wave_days.append({
+                    "start_day": i - consecutive_days + 1,
+                    "end_day": i,
+                    "duration": consecutive_days,
+                    "max_temp": max(daily_temperatures[i-consecutive_days+1:i+1])
+                })
+            consecutive_days = 0
+    else:
+        consecutive_days = 0
+
+# Print heat wave information
+for i, wave in enumerate(heat_wave_days):
+    print(f"Heat Wave {i+1}: Days {wave['start_day']+1}-{wave['end_day']+1}, "
+          f"Duration: {wave['duration']} days, Max Temp: {wave['max_temp']}°F")
+
+# Create moving averages using slicing
+window_size = 5
+moving_averages = []
+
+for i in range(len(daily_temperatures) - window_size + 1):
+    window = daily_temperatures[i:i+window_size]
+    moving_avg = sum(window) / window_size
+    moving_averages.append(moving_avg)
+
+print(f"\nMoving Averages (5-day window):")
+for i, avg in enumerate(moving_averages):
+    if i >= window_size - 1:  # Only print when we have a full window
+        print(f"Day {i+1}: {avg:.1f}°F")
+
+# Data splitting for analysis
+# Split data into first half and second half
+mid_point = len(daily_temperatures) // 2
+first_half = daily_temperatures[:mid_point]
+second_half = daily_temperatures[mid_point:]
+
+first_half_avg = sum(first_half) / len(first_half)
+second_half_avg = sum(second_half) / len(second_half)
+
+print(f"\nFirst half average: {first_half_avg:.1f}°F")
+print(f"Second half average: {second_half_avg:.1f}°F")
+
+# Find the longest warming trend
+max_warming_trend = 0
+current_trend = 0
+
+for i in range(1, len(daily_temperatures)):
+    if daily_temperatures[i] > daily_temperatures[i-1]:
+        current_trend += 1
+        if current_trend > max_warming_trend:
+            max_warming_trend = current_trend
+    else:
+        current_trend = 0
+
+print(f"\nLongest warming trend: {max_warming_trend} consecutive days")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Mutability, Aliasing, and Cloning -->
+                <div class="concept-section">
+                    <h3>Mutability, Aliasing, and Cloning</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Understanding list mutability is crucial for data manipulation in Python:</p>
+                        
+                        <ul>
+                            <li><strong>Mutability:</strong> Lists can be modified in place - changes affect all references</li>
+                            <li><strong>Aliasing:</strong> Multiple variables can reference the same list object</li>
+                            <li><strong>Cloning:</strong> Creating independent copies of lists</li>
+                        </ul>
+                        
+                        <p>These concepts are essential for avoiding unexpected side effects in data processing.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># List mutability examples
+original = [1, 2, 3]
+reference = original  # Both point to same list
+clone = original.copy()  # Independent copy
+
+# Modifying through reference affects both
+reference.append(4)
+print(f"Original: {original}")  # [1, 2, 3, 4]
+print(f"Reference: {reference}")  # [1, 2, 3, 4]
+
+# Modifying clone doesn't affect original
+clone.append(5)
+print(f"Clone: {clone}")  # [1, 2, 3, 5]
+print(f"Original after clone modification: {original}")  # [1, 2, 3, 4]
+
+# Alternative cloning methods
+shallow_copy = original[:]  # Slice copy
+deep_copy = original.copy()  # Explicit copy</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>In data analysis, proper list handling prevents data corruption and ensures reliable transformations. Common use cases include:</p>
+                        <ul>
+                            <li>Creating data snapshots before filtering</li>
+                            <li>Maintaining original datasets during analysis</li>
+                            <li>Preventing accidental modification of reference data</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: List mutability in data analysis
+# Original dataset of customer transactions
+transactions = [
+    {"id": 1, "customer": "Alice", "amount": 100.50, "date": "2023-01-01"},
+    {"id": 2, "customer": "Bob", "amount": 75.25, "date": "2023-01-02"},
+    {"id": 3, "customer": "Charlie", "amount": 120.00, "date": "2023-01-03"},
+    {"id": 4, "customer": "Diana", "amount": 89.99, "date": "2023-01-04"}
+]
+
+# Create different references to the same list
+reference1 = transactions  # Direct reference
+reference2 = transactions  # Another reference
+clone1 = transactions.copy()  # Shallow copy
+clone2 = [t.copy() for t in transactions]  # List comprehension copy
+
+print("Original transactions:", transactions)
+print("Reference1 points to:", reference1)
+print("Reference2 points to:", reference2)
+print("Clone1 (shallow copy):", clone1)
+print("Clone2 (list comprehension):", clone2)
+
+# Modifying through reference affects all references
+reference1.append({"id": 5, "customer": "Eve", "amount": 45.00, "date": "2023-01-05"})
+print("\nAfter modifying through reference1:")
+print("Original:", transactions)
+print("Reference1:", reference1)
+print("Clone1:", clone1)
+print("Clone2:", clone2)
+
+# Modifying clone1 doesn't affect original
+clone1[0]["amount"] = 999.99
+print("\nAfter modifying clone1:")
+print("Original:", transactions)
+print("Reference1:", reference1)
+print("Clone1:", clone1)
+print("Clone2:", clone2)
+
+# Creating independent copies for analysis
+high_value_transactions = [t for t in transactions if t["amount"] > 100]
+low_value_transactions = [t for t in transactions if t["amount"] <= 100]
+
+print("\nHigh value transactions:", high_value_transactions)
+print("Low value transactions:", low_value_transactions)
+
+# Safe filtering without affecting original
+filtered_high = [t for t in high_value_transactions if t["customer"] != "Charlie"]
+print("Filtered high value transactions:", filtered_high)
+print("Original high value transactions still intact:", high_value_transactions)</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- List Parameters and Comprehension -->
+                <div class="concept-section">
+                    <h3>List Parameters and Comprehension</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>List comprehension provides a concise way to create lists based on existing lists. The syntax is [expression for item in iterable].</p>
+                        
+                        <p>Key concepts include:</p>
+                        <ul>
+                            <li><strong>Expression:</strong> Any valid Python expression</li>
+                            <li><strong>Item variable:</strong> Temporary variable for each item</li>
+                            <li><strong>Iterable:</strong> Source list or other iterable</li>
+                            <li><strong>Optional condition:</strong> if clause to filter items</li>
+                        </ul>
+                        
+                        <p>List comprehension is more memory-efficient and often faster than equivalent for loops.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># Basic list comprehension
+squares = [x**2 for x in range(10)]  # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+# With condition
+even_squares = [x**2 for x in range(10) if x % 2 == 0]
+
+# Nested list comprehension
+matrix = [[i*j for j in range(3)] for i in range(3)]
+
+# Using functions in comprehension
+words = ["hello", "world", "python"]
+lengths = [len(word) for word in words]</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>List comprehension is extensively used in data science for:</p>
+                        <ul>
+                            <li>Feature engineering from existing columns</li>
+                            <li>Data filtering and transformation</li>
+                            <li>Creating matrices and grids</li>
+                            <li>Text processing and tokenization</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: List comprehension for data analysis
+# Sample sales data
+sales_data = [
+    {"product": "Laptop", "category": "Electronics", "price": 999.99, "units": 50},
+    {"product": "Mouse", "category": "Electronics", "price": 25.99, "units": 200},
+    {"product": "Keyboard", "category": "Electronics", "price": 49.99, "units": 150},
+    {"product": "Monitor", "category": "Electronics", "price": 299.99, "units": 80},
+    {"product": "Desk Chair", "category": "Furniture", "price": 149.99, "units": 30},
+    {"product": "Book", "category": "Education", "price": 29.99, "units": 100}
+]
+
+# Calculate total revenue per product using list comprehension
+revenues = [(item["price"] * item["units"], item["product"]) for item in sales_data]
+print("Product revenues:", revenues)
+
+# Filter high-revenue products (> $5000)
+high_revenue_products = [item for item in sales_data if item["price"] * item["units"] > 5000]
+print("High revenue products:", [p["product"] for p in high_revenue_products])
+
+# Extract product categories using set comprehension
+categories = list(set(item["category"] for item in sales_data))
+print("Unique categories:", categories)
+
+# Create price ranges using list comprehension
+price_ranges = [
+    ("Budget", [item for item in sales_data if item["price"] < 50]),
+    ("Mid-range", [item for item in sales_data if 50 <= item["price"] < 150]),
+    ("Premium", [item for item in sales_data if item["price"] >= 150])
+]
+
+print("Products by price range:")
+for range_name, products in price_ranges:
+    print(f"{range_name}: {[p['product'] for p in products]}")
+
+# Create summary statistics using nested list comprehension
+category_stats = {
+    category: {
+        "count": len([item for item in sales_data if item["category"] == category]),
+        "total_revenue": sum(item["price"] * item["units"] for item in sales_data if item["category"] == category),
+        "avg_price": sum(item["price"] for item in sales_data if item["category"] == category) / len([item for item in sales_data if item["category"] == category])
+    }
+    for category in categories:
+    category_stats[category] = category_stats[category]
+
+print("\nCategory statistics:")
+for category, stats in category_stats.items():
+    print(f"{category}: {stats['count']} products, "
+          f"Total revenue: ${stats['total_revenue']:.2f}, "
+          f"Average price: ${stats['avg_price']:.2f}")
+
+# Complex example: Flatten nested structure
+nested_data = [
+    {"department": "Sales", "employees": ["Alice", "Bob", "Charlie"]},
+    {"department": "Engineering", "employees": ["David", "Eve", "Frank"]},
+    {"department": "Marketing", "employees": ["Grace", "Henry"]}
+]
+
+# Flatten the structure using list comprehension
+all_employees = [emp for dept in nested_data for emp in dept["employees"]]
+print("All employees:", all_employees)
+
+# Create employee directory with department info
+employee_directory = [
+    {"name": emp, "department": dept["department"]} 
+    for dept in nested_data for emp in dept["employees"]
+]
+
+print("Employee directory:")
+for emp in employee_directory:
+    print(f"  {emp['name']} - {emp['department']}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- List Loops and Iteration -->
+                <div class="concept-section">
+                    <h3>List Loops and Iteration</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Python provides multiple ways to iterate over lists and other iterables. Each method has specific use cases:</p>
+                        
+                        <ul>
+                            <li><strong>for loop:</strong> Traditional iteration with access to index</li>
+                            <li><strong>enumerate():</strong> Get both index and value during iteration</li>
+                            <li><strong>zip():</strong> Iterate over multiple iterables simultaneously</li>
+                            <li><strong>map():</strong> Apply function to each item</li>
+                            <li><strong>filter():</strong> Create filtered list based on condition</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># Different iteration methods
+numbers = [1, 2, 3, 4, 5]
+
+# Basic for loop
+for num in numbers:
+    print(num)
+
+# With enumerate
+for index, num in enumerate(numbers):
+    print(f"Index {index}: {num}")
+
+# With zip (multiple lists)
+names = ["Alice", "Bob", "Charlie"]
+ages = [25, 30, 35]
+for name, age in zip(names, ages):
+    print(f"{name} is {age} years old")
+
+# Using map
+squared = list(map(lambda x: x**2, numbers))
+print("Squared:", squared)
+
+# Using filter
+even_numbers = list(filter(lambda x: x % 2 == 0, numbers))
+print("Even numbers:", even_numbers)
+
+# List comprehension with enumerate
+indexed_numbers = [(i, num) for i, num in enumerate(numbers)]
+print("Indexed numbers:", indexed_numbers)</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>Advanced iteration techniques are essential for:</p>
+                        <ul>
+                            <li>Processing multidimensional data</li>
+                            <li>Parallel processing of multiple datasets</li>
+                            <li>Creating complex data transformations</li>
+                            <li>Implementing custom iteration patterns</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Advanced list iteration for data analysis
+# Sample dataset: Monthly sales by multiple products
+monthly_sales = {
+    "January": {"Laptop": 45, "Mouse": 120, "Keyboard": 80},
+    "February": {"Laptop": 52, "Mouse": 135, "Keyboard": 95},
+    "March": {"Laptop": 61, "Mouse": 148, "Keyboard": 110},
+    "April": {"Laptop": 58, "Mouse": 162, "Keyboard": 125},
+    "May": {"Laptop": 72, "Mouse": 189, "Keyboard": 140}
+}
+
+# Calculate total monthly sales using nested iteration
+print("Monthly Sales Analysis:")
+for month, products in monthly_sales.items():
+    total_sales = sum(products.values())
+    print(f"\n{month}:")
+    print(f"  Total units sold: {sum(products.values())}")
+    print(f"  Total revenue: ${total_sales:.2f}")
+    
+    # Find best and worst performing products
+    best_product = max(products, key=lambda k: k[1])  # Product with max units
+    worst_product = min(products, key=lambda k: k[1])  # Product with min units
+    
+    print(f"  Best selling product: {best_product[0]} ({best_product[1]} units)")
+    print(f"  Worst selling product: {worst_product[0]} ({worst_product[1]} units)")
+    
+    # Calculate monthly growth rates
+months = list(monthly_sales.keys())
+growth_rates = {}
+for i in range(1, len(months)):
+    current_month = months[i]
+    prev_month = months[i-1] if i > 0 else months[-1]
+    
+    if prev_month in monthly_sales:
+        current_total = sum(monthly_sales[current_month].values())
+        prev_total = sum(monthly_sales[prev_month].values())
+        
+        if prev_total > 0:
+            growth_rate = ((current_total - prev_total) / prev_total) * 100
+            growth_rates[current_month] = growth_rate
+    
+    print("\nMonthly Growth Rates:")
+for month, rate in growth_rates.items():
+    if rate:
+        print(f"  {month}: {rate:.1f}% growth")
+
+# Parallel processing of multiple datasets
+# Simulating processing multiple store data
+stores = {
+    "Store A": {"Laptop": [10, 15, 20], "Mouse": [50, 60, 70]},
+    "Store B": {"Laptop": [8, 12, 18], "Mouse": [40, 55, 65]}
+}
+
+# Calculate total sales by product across all stores
+all_products = set()
+for store_data in stores.values():
+    all_products.update(store_data.keys())
+
+product_totals = {product: 0 for product in all_products}
+for store_name, products in stores.items():
+    for product, units in products.items():
+        product_totals[product] += units
+
+print("\nTotal sales by product across all stores:")
+for product, total_units in product_totals.items():
+    print(f"  {product}: {total_units} units")
+
+# Find top performing products across all stores
+top_products = sorted(product_totals.items(), key=lambda x: x[1], reverse=True)[:5]
+print("\nTop 5 products across all stores:")
+for rank, (product, units) in enumerate(top_products, 1):
+    print(f"  {rank}. {product}: {units} units")
+
+# Custom iteration pattern
+# Process data in weekly batches
+weekly_data = list(monthly_sales.items())
+for week in range(0, len(weekly_data), 7):
+    week_start = week * 7
+    week_end = min(week_start + 7, len(weekly_data))
+    week_data = weekly_data[week_start:week_end]
+    
+    week_total = sum(sum(products.values()) for products in week_data)
+    print(f"\nWeek {week+1}: Total sales - ${week_total:.2f}")
+
+# Using enumerate with custom start index
+for i, (month, products) in enumerate(monthly_sales.items(), start=1):
+    print(f"Month {i}: {month} (Starting from index {i})")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Task Section -->
+                <div class="task-section">
+                    <h4><i class="fas fa-tasks"></i> Practice Task: Advanced List Operations</h4>
+                    <p>Create a comprehensive program that demonstrates advanced list operations. Follow these steps:</p>
+                    <ol>
+                        <li>Create a nested list structure representing departments with employees</li>
+                        <li>Use list comprehension to extract all employees from all departments</li>
+                        <li>Use zip to pair employees with their departments</li>
+                        <li>Use filter to find employees meeting specific criteria</li>
+                        <li>Use map to transform employee data</li>
+                        <li>Use enumerate to add sequential IDs to employees</li>
+                        <li>Create a summary report using various iteration methods</li>
+                    </ol>
+                    <button class="hint-button" onclick="toggleHint('hint4')">Show Hint</button>
+                    <div id="hint4" class="hint-content">
+                        # Create nested structure<br>
+                        departments = [<br>
+                        &nbsp;&nbsp;{"name": "Engineering", "employees": ["Alice", "Bob", "Charlie"]},<br>
+                        &nbsp;&nbsp;# ... more departments<br>
+                        ]<br><br>
+                        # Flatten using list comprehension<br>
+                        all_employees = [emp for dept in departments for emp in dept["employees"]]<br><br>
+                        # Use zip for pairing<br>
+                        # Use filter for criteria<br>
+                        # Use map for transformation<br>
+                        # Use enumerate for IDs
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="navigation-buttons">
+                    <button class="nav-button prev" onclick="showLesson(3)">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="nav-button next" onclick="showLesson(5)">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Unit V: Files & Exceptions -->
+            <div class="lesson" id="lesson-5">
+                <div class="lesson-header">
+                    <h2>Unit V: Files & Exceptions</h2>
+                    <p>Learn how to work with files and handle errors in Python programs</p>
+                </div>
+                
+                <!-- Text Files: Reading and Writing -->
+                <div class="concept-section">
+                    <h3>Text Files: Reading and Writing</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>File I/O (Input/Output) allows your programs to interact with files on your computer. Python provides built-in functions for working with text files.</p>
+                        
+                        <p>Common file operations include:</p>
+                        <ul>
+                            <li><strong>Opening files:</strong> Using open() function</li>
+                            <li><strong>Reading files:</strong> read(), readline(), readlines()</li>
+                            <li><strong>Writing files:</strong> write(), writelines()</li>
+                            <li><strong>File positioning:</strong> seek(), tell()</li>
+                            <li><strong>Closing files:</strong> close() method</li>
+                        </ul>
+                        
+                        <p>The with statement provides automatic file closing and error handling.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># File operations
+# Opening files (different modes)
+file = open('filename.txt', 'r')  # Read mode
+file = open('filename.txt', 'w')  # Write mode
+file = open('filename.txt', 'a')  # Append mode
+file = open('filename.txt', 'r+')  # Read and write mode
+
+# Reading files
+with open('data.txt', 'r') as file:
+    content = file.read()
+    lines = file.readlines()
+
+# Writing files
+with open('output.txt', 'w') as file:
+    file.write('Hello, World!')
+    file.writelines(['Line 1', 'Line 2'])
+
+# Using with for automatic closing
+with open('data.txt', 'r') as file:
+    data = file.read()
+    # File automatically closed here
+
+# File positioning
+file = open('large_file.txt', 'r')
+file.seek(100)  # Move to byte 100
+chunk = file.read(50)  # Read 50 bytes from current position</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>File I/O is essential for:</p>
+                        <ul>
+                            <li>Data persistence between program runs</li>
+                            <li>Configuration file management</li>
+                            <li>Log file creation and analysis</li>
+                            <li>CSV file processing for data import/export</li>
+                            <li>Report generation</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: File operations for data management
+import os
+import json
+from datetime import datetime
+
+# Configuration management
+def load_config(config_file='config.json'):
+    """Load configuration from JSON file"""
+    try:
+        with open(config_file, 'r') as file:
+            config = json.load(file)
+        return config
+    except FileNotFoundError:
+        return {"theme": "light", "language": "en"}
+
+def save_config(config, config_file='config.json'):
+    """Save configuration to JSON file"""
+    with open(config_file, 'w') as file:
+        json.dump(config, file, indent=2)
+
+# Log file management
+def write_log(message, log_file='app.log'):
+    """Write message to log file with timestamp"""
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    with open(log_file, 'a') as file:
+        file.write(f"[{timestamp}] {message}\n")
+
+# CSV data processing
+def process_sales_csv(input_file='sales.csv', output_file='processed_sales.json'):
+    """Process CSV sales data and output to JSON"""
+    sales_data = []
+    
+    # Read CSV file
+    with open(input_file, 'r') as file:
+        header = file.readline().strip()
+        
+        for line in file:
+            if line.strip():
+                parts = line.strip().split(',')
+                if len(parts) == 4:  # Valid data row
+                    sale = {
+                        "date": parts[0],
+                        "product": parts[1],
+                        "quantity": int(parts[2]),
+                        "price": float(parts[3])
+                    }
+                    sales_data.append(sale)
+    
+    # Calculate statistics
+    total_sales = sum(sale["quantity"] for sale in sales_data)
+    total_revenue = sum(sale["quantity"] * sale["price"] for sale in sales_data)
+    
+    # Prepare output data
+    output_data = {
+        "processed_date": datetime.now().isoformat(),
+        "total_sales": total_sales,
+        "total_revenue": total_revenue,
+        "transaction_count": len(sales_data),
+        "average_price": total_revenue / total_sales if total_sales > 0 else 0
+    }
+    
+    # Write to JSON file
+    with open(output_file, 'w') as file:
+        json.dump(output_data, file, indent=2)
+    
+    print(f"Processed {len(sales_data)} sales transactions")
+    print(f"Total sales: {total_sales}")
+    print(f"Total revenue: ${total_revenue:.2f}")
+
+# Usage examples
+config = load_config()
+print(f"Current theme: {config['theme']}")
+
+write_log("Application started successfully")
+write_log("Processing completed", "process_log.txt")
+
+# Directory operations
+def ensure_directory_exists(directory):
+    """Create directory if it doesn't exist"""
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+        print(f"Created directory: {directory}")
+
+def list_files_by_extension(directory, extension):
+    """List all files with specific extension in directory"""
+    files = []
+    for filename in os.listdir(directory):
+        if filename.endswith(extension):
+            files.append(filename)
+    return files
+
+# Create data directory and list CSV files
+ensure_directory_exists('data')
+csv_files = list_files_by_extension('data', '.csv')
+print(f"CSV files in data directory: {csv_files}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Command Line Arguments -->
+                <div class="concept-section">
+                    <h3>Command Line Arguments</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Command line arguments allow you to pass information to your Python scripts when running them from the terminal. The sys module provides access to command line arguments.</p>
+                        
+                        <ul>
+                            <li><strong>sys.argv:</strong> List of command line arguments</li>
+                            <li><strong>sys.argv[0]:</strong> Script name</li>
+                            <li><strong>sys.argv[1:]:</strong> First argument</li>
+                            <li><strong>len(sys.argv):</strong> Total number of arguments</li>
+                        </ul>
+                        
+                        <p>The argparse module provides a more sophisticated way to handle command line arguments with help messages and type checking.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># Command line arguments
+import sys
+
+# Basic usage
+script_name = sys.argv[0]
+arguments = sys.argv[1:]  # All arguments except script name
+
+print(f"Script: {script_name}")
+print(f"Arguments: {arguments}")
+print(f"Total arguments: {len(sys.argv)}")
+
+# Using argparse for better argument handling
+import argparse
+
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('integers', metavar='N', type=int, nargs='+',
+                    help='an integer for the accumulator')
+args = parser.parse_args()
+
+print(f"Sum of {args.integers}: {sum(args.integers)}")</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>Command line arguments are essential for creating flexible data processing scripts:</p>
+                        <ul>
+                            <li>Data file processors with configurable input/output paths</li>
+                            <li>Batch processing tools with operation parameters</li>
+                            <li>Utility scripts with various options and flags</li>
+                            <li>Machine learning scripts with model and data parameters</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Command line argument processing
+import sys
+import argparse
+import json
+from pathlib import Path
+
+def process_data_file(input_path, output_path, operation='sum'):
+    """Process data file with specified operation"""
+    try:
+        with open(input_path, 'r') as file:
+            numbers = [float(line.strip()) for line in file if line.strip()]
+        
+        if operation == 'sum':
+            result = sum(numbers)
+        elif operation == 'average':
+            result = sum(numbers) / len(numbers)
+        elif operation == 'max':
+            result = max(numbers)
+        elif operation == 'min':
+            result = min(numbers)
+        else:
+            result = 0
+        
+        # Save result
+        output_data = {
+            "input_file": str(input_path),
+            "operation": operation,
+            "result": result,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        with open(output_path, 'w') as file:
+            json.dump(output_data, file, indent=2)
+        
+        print(f"Processed {len(numbers)} numbers")
+        print(f"Result of {operation}: {result}")
+        print(f"Output saved to: {output_path}")
+        
+    except FileNotFoundError:
+        print(f"Error: Input file {input_path} not found")
+    except Exception as e:
+        print(f"Error processing file: {e}")
+
+# Command line interface
+def main():
+    parser = argparse.ArgumentParser(
+        description='Data file processor',
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    
+    parser.add_argument('input', type=str, help='Input data file path')
+    parser.add_argument('output', type=str, help='Output file path')
+    parser.add_argument('--operation', choices=['sum', 'average', 'max', 'min'],
+                        default='sum', help='Operation to perform')
+    
+    args = parser.parse_args()
+    
+    # Create output directory if it doesn't exist
+    output_dir = Path(args.output).parent
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Process the file
+    process_data_file(args.input, output_dir / 'result.json', args.operation)
+
+if __name__ == '__main__':
+    main()</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Errors and Exceptions -->
+                <div class="concept-section">
+                    <h3>Errors and Exceptions</h3>
+                    
+                    <div class="concept-explanation">
+                        <p>Exceptions are unexpected events that occur during program execution. Python's exception handling allows you to gracefully handle these situations.</p>
+                        
+                        <p>Common types of exceptions include:</p>
+                        <ul>
+                            <li><strong>IOError:</strong> File input/output errors</li>
+                            <li><strong>ValueError:</strong> Invalid value for operation</li>
+                            <li><strong>KeyError:</strong> Dictionary key not found</li>
+                            <li><strong>IndexError:</strong> List index out of range</li>
+                            <li><strong>TypeError:</strong> Operation on incompatible type</li>
+                            <li><strong>ZeroDivisionError:</strong> Division by zero</li>
+                        </ul>
+                        
+                        <p>Exception handling uses try-except-else blocks and can catch specific exception types.</p>
+                    </div>
+                    
+                    <div class="concept-syntax">
+                        <pre># Exception handling
+try:
+    # Code that might raise an exception
+    result = risky_operation()
+except ValueError as e:
+    print(f"ValueError occurred: {e}")
+except TypeError as e:
+    print(f"TypeError occurred: {e}")
+except Exception as e:
+    print(f"Unexpected error: {e}")
+else:
+    print("Operation completed successfully")
+
+# Multiple except blocks
+try:
+    result = operation1()
+except (ValueError, IndexError) as e:
+    print(f"Data error: {e}")
+    result = operation2()  # Fallback operation
+except Exception as e:
+    print(f"General error: {e}")
+
+# Finally block
+try:
+    file = open('data.txt', 'r')
+    data = file.read()
+finally:
+    file.close()  # Always executed</pre>
+                    </div>
+                    
+                    <div class="concept-example">
+                        <h4>Real-world Application</h4>
+                        <p>Proper exception handling is crucial for robust applications:</p>
+                        <ul>
+                            <li>Data validation and user input handling</li>
+                            <li>Network operation retries with timeout</li>
+                            <li>Resource cleanup and memory management</li>
+                            <li>Graceful degradation when services are unavailable</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="code-example">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Example: Comprehensive exception handling
+import json
+import os
+from pathlib import Path
+
+class DataProcessor:
+    def __init__(self, data_file):
+        self.data_file = data_file
+        self.data = []
+        self.load_data()
+    
+    def load_data(self):
+        """Load data from file with exception handling"""
+        try:
+            if os.path.exists(self.data_file):
+                with open(self.data_file, 'r') as file:
+                    for line in file:
+                        if line.strip():
+                            try:
+                                item = json.loads(line)
+                                self.data.append(item)
+                            except json.JSONDecodeError:
+                                print(f"Warning: Invalid JSON in line: {line}")
+            else:
+                print(f"Data file {self.data_file} not found. Starting with empty data.")
+        except IOError as e:
+            print(f"Error loading data file: {e}")
+            raise
+    
+    def save_data(self, output_file):
+        """Save data to file with exception handling"""
+        try:
+            # Ensure output directory exists
+            output_path = Path(output_file)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            with open(output_path, 'w') as file:
+                for item in self.data:
+                    json.dump(item, file)
+                    file.write('\n')
+            
+            print(f"Data saved to {output_path}")
+        except IOError as e:
+            print(f"Error saving data: {e}")
+            raise
+    
+    def get_statistics(self):
+        """Calculate statistics with exception handling"""
+        if not self.data:
+            return {"error": "No data available"}
+        
+        try:
+            total_items = len(self.data)
+            if total_items == 0:
+                return {"error": "Empty dataset"}
+            
+            # Calculate various statistics
+            numeric_fields = []
+            for item in self.data:
+                for key, value in item.items():
+                    if isinstance(value, (int, float)):
+                        numeric_fields.append(value)
+            
+            if not numeric_fields:
+                return {"error": "No numeric data found"}
+            
+            return {
+                "total_items": total_items,
+                "sum": sum(numeric_fields),
+                "average": sum(numeric_fields) / len(numeric_fields),
+                "min": min(numeric_fields),
+                "max": max(numeric_fields)
+            }
+        except Exception as e:
+            return {"error": f"Calculation error: {e}"}
+    
+    def process_with_retry(self, max_retries=3):
+        """Process data with retry mechanism"""
+        for attempt in range(max_retries):
+            try:
+                stats = self.get_statistics()
+                if "error" not in stats:
+                    print(f"Attempt {attempt + 1}: {stats}")
+                    return stats
+            except Exception as e:
+                print(f"Attempt {attempt + 1} failed: {e}")
+                if attempt == max_retries - 1:
+                    raise  # Re-raise the exception after max retries
+
+# Usage example
+try:
+    processor = DataProcessor('sales_data.json')
+    stats = processor.process_with_retry()
+    print("Processing results:")
+    for key, value in stats.items():
+        print(f"  {key}: {value}")
+    
+    # Simulate various error conditions
+    processor_empty = DataProcessor('nonexistent.json')
+    empty_stats = processor_empty.get_statistics()
+    print("\nEmpty file test:")
+    for key, value in empty_stats.items():
+        print(f"  {key}: {value}")
+    
+    # Custom exception example
+class CustomError(Exception):
+    pass
+
+def validate_data(data):
+    """Validate data and raise custom exception if invalid"""
+    if not data:
+        raise CustomError("Data cannot be empty")
+    if not isinstance(data, list):
+        raise CustomError("Data must be a list")
+    return True
+
+# Test custom exception
+try:
+    validate_data([])  # This will raise CustomError
+except CustomError as e:
+    print(f"Custom exception caught: {e}")</pre>
+                    </div>
+                    <button class="try-button" onclick="loadInEditor(this)"><i class="fas fa-play"></i> Try in Editor</button>
+                </div>
+                
+                <!-- Task Section -->
+                <div class="task-section">
+                    <h4><i class="fas fa-tasks"></i> Practice Task: File Operations and Exception Handling</h4>
+                    <p>Create a comprehensive file processing application with proper exception handling. Follow these steps:</p>
+                    <ol>
+                        <li>Create a program that reads a configuration file</li>
+                        <li>Process a data file (CSV or JSON format)</li>
+                        <li>Handle various file-related exceptions gracefully</li>
+                        <li>Generate summary reports and save them</li>
+                        <li>Implement retry logic for transient failures</li>
+                        <li>Use command line arguments for file paths</li>
+                        <li>Ensure proper resource cleanup in all cases</li>
+                    </ol>
+                    <button class="hint-button" onclick="toggleHint('hint5')">Show Hint</button>
+                    <div id="hint5" class="hint-content">
+                        # Create a configuration file reader<br>
+                        def read_config_file(filepath):<br>
+                        &nbsp;&nbsp;try:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;with open(filepath, 'r') as file:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return json.load(file)<br>
+                        &nbsp;&nbsp;except FileNotFoundError:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return None<br>
+                        &nbsp;&nbsp;except Exception as e:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"Error: {e}")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return None<br><br>
+                        # Create a data processor class<br>
+                        # ... with methods for loading, saving, and statistics<br>
+                        # Use try-except blocks for file operations<br>
+                        # Implement retry logic for network operations<br>
+                        # Use with statements for automatic cleanup<br>
+                        # Create custom exceptions for specific error conditions<br>
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="navigation-buttons">
+                    <button class="nav-button prev" onclick="showLesson(4)">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="nav-button next" disabled>
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
             </div>
         </div>
-    </footer>
+        
+        <!-- Code Editor Section (20%) -->
+        <div class="code-editor">
+            <div class="editor-header">
+                <span>Code Editor</span>
+                <button id="toggle-editor" onclick="toggleEditorSize()">
+                    <i class="fas fa-expand-alt"></i>
+                </button>
+            </div>
+            <div class="editor-content">
+                <iframe id="gdb-frame" class="editor-iframe" src="https://www.onlinegdb.com/online_python_compiler"></iframe>
+            </div>
+        </div>
+    </div>
 
     <script>
+        // Show specific lesson
+        function showLesson(lessonNumber) {
+            // Hide all lessons
+            const lessons = document.querySelectorAll('.lesson');
+            lessons.forEach(lesson => lesson.classList.remove('active'));
+            
+            // Show selected lesson
+            const selectedLesson = document.getElementById(`lesson-${lessonNumber}`);
+            if (selectedLesson) {
+                selectedLesson.classList.add('active');
+                
+                // Update progress bar
+                const progressFill = document.getElementById('progress-bar');
+                const progress = (lessonNumber / 5) * 100;
+                progressFill.style.width = `${progress}%`;
+                
+                // Update TOC
+                const tocLinks = document.querySelectorAll('#toc-list a');
+                tocLinks.forEach((link, index) => {
+                    if (index + 1 === lessonNumber) {
+                        link.classList.add('completed');
+                    }
+                });
+                
+                // Scroll to top of content
+                document.querySelector('.tutorial-content').scrollTop = 0;
+            }
+            
+            // Update navigation buttons
+            const prevButton = document.querySelector('.nav-button.prev');
+            const nextButton = document.querySelector('.nav-button.next');
+            
+            prevButton.disabled = lessonNumber === 1;
+            nextButton.disabled = lessonNumber === 5;
+        }
+        
+        // Toggle editor size
+        function toggleEditorSize() {
+            const editor = document.querySelector('.code-editor');
+            const content = document.querySelector('.tutorial-content');
+            const toggleBtn = document.getElementById('toggle-editor');
+            const icon = toggleBtn.querySelector('i');
+            
+            if (editor.style.width === '50%') {
+                editor.style.width = '20%';
+                content.style.width = '80%';
+                icon.className = 'fas fa-expand-alt';
+            } else {
+                editor.style.width = '50%';
+                content.style.width = '50%';
+                icon.className = 'fas fa-compress-alt';
+            }
+        }
+        
+        // Copy code to clipboard
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling.querySelector('pre');
+            const textArea = document.createElement('textarea');
+            textArea.value = codeBlock.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            // Update button text
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
+        }
+        
+        // Load code in editor
+        function loadInEditor(button) {
+            const codeBlock = button.previousElementSibling.querySelector('pre');
+            const code = codeBlock.textContent;
+            
+            // Expand editor for better visibility
+            const editor = document.querySelector('.code-editor');
+            const content = document.querySelector('.tutorial-content');
+            if (editor.style.width !== '50%') {
+                toggleEditorSize();
+            }
+            
+            // Copy code to clipboard
+            const textArea = document.createElement('textarea');
+            textArea.value = code;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            // Show notification
+            showNotification('Code has been copied to clipboard. You can now paste it in the editor.');
+        }
+        
+        // Toggle hint visibility
+        function toggleHint(hintId) {
+            const hint = document.getElementById(hintId);
+            if (hint) {
+                hint.classList.toggle('show');
+            }
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.backgroundColor = '#2ecc71';
+            notification.style.color = 'white';
+            notification.style.padding = '10px 20px';
+            notification.style.borderRadius = '5px';
+            notification.style.zIndex = '1000';
+            notification.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 5000);
+        }
+        
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
             });
+        });
+        
+        // Auto-login functionality
+        window.addEventListener('load', function() {
+            // This would typically be handled server-side
+            // For demonstration, we'll show a notification
+            setTimeout(() => {
+                showNotification('Welcome to Python Tutorial! Please login with alok123@gmail.com and password 123456 to access full features.');
+            }, 3000);
         });
     </script>
 </body>
